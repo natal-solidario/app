@@ -18,7 +18,7 @@ class Beneficiado_model extends CI_Model
     {
         return $this->db->get_where('beneficiado',array('id'=>$id))->row_array();
     }
-        
+
     /*
      * Get all beneficiados
      */
@@ -29,7 +29,7 @@ class Beneficiado_model extends CI_Model
         $this->db->order_by('beneficiado.id', 'desc');
         return $this->db->get('beneficiado')->result_array();
     }
-        
+
     /*
      * function to add new beneficiado
      */

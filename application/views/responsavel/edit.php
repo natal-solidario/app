@@ -7,17 +7,17 @@
 			<?php echo form_open('responsavel/edit/'.$responsavel['id']); ?>
 			<div class="box-body">
 				<div class="row clearfix">
-					<div class="col-md-6">
+					<!--<div class="col-md-6">
 						<div class="form-group">
 							<input type="checkbox" name="removido" value="1" <?php echo ($responsavel['removido']==1 ? 'checked="checked"' : ''); ?> id='removido' />
 							<label for="removido" class="control-label">Removido</label>
 						</div>
-					</div>
+					</div>-->
 					<div class="col-md-6">
 						<label for="documento_tipo" class="control-label">Documento Tipo</label>
 						<div class="form-group">
 							<select name="documento_tipo" class="form-control">
-								<option value="">select</option>
+								<option value="">Selecione</option>
 								<?php 
 								$documento_tipo_values = array(
 									'CPF'=>'CPF',

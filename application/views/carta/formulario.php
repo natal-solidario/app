@@ -228,13 +228,13 @@
 					<div class="panel-body">
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Nome:</label>
+        						<label for="responsavel1Nome" class="control-label">Nome:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Nome" value="<?php echo $responsavel['nome']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Data de Nascimento:</label>
+        						<label for="responsavel1DataNascimento" class="control-label">Data de Nascimento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1DataNascimento" value="<?php echo $responsavel['data_nascimento']; ?>" class="has-datepicker form-control" />
         						</div>
@@ -242,13 +242,13 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Número do documento:</label>
+        						<label for="responsavel1NumeroDocumento" class="control-label">Número do documento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1NumeroDocumento" value="<?php echo $responsavel['documento_numero']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Documento:</label>
+        						<label for="responsavel1Documento" class="control-label">Documento:</label>
         						<div class="form-group">
         							<select name="responsavel1Documento" class="form-control">
         								<option value="">selecione</option>
@@ -262,13 +262,13 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">E-mail:</label>
+        						<label for="responsavel1Email" class="control-label">E-mail:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Email" value="<?php echo $responsavel['email']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-6">
-        						<label for="responsavel1" class="control-label">Endereço:</label>
+        						<label for="responsavel1Endereco" class="control-label">Endereço:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Endereco" value="<?php echo $responsavel['endereco']; ?>" class="form-control"/>
         						</div>
@@ -276,13 +276,13 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Telefone:</label>
+        						<label for="responsavel1Telefone" class="control-label">Telefone:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Telefone" value="<?php echo $responsavel['telefone']; ?>" class="form-control phones"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Operadora:</label>
+        						<label for="responsavel1TelefoneOperadora" class="control-label">Operadora:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel1TelefoneOperadora">
         								<option value="">selecione</option>
@@ -295,7 +295,7 @@
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Whatsapp:</label>
+        						<label for="responsavel1TelefoneWhatsapp" class="control-label">Whatsapp:</label>
         						<div class="form-group">
         							<input type="radio" name="responsavel1TelefoneWhatsapp" value="1" <?php echo ($responsavel['telefone_whatsapp']) ? 'checked':''; ?>/><label style="margin-left:5px;">Sim</label>
         							<input type="radio" name="responsavel1TelefoneWhatsapp" value="0" <?php echo (!$responsavel['telefone_whatsapp']) ? 'checked':''; ?>/><label style="margin-left:5px;">Não</label>
@@ -304,7 +304,7 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-8">
-        						<label for="responsavel1" class="control-label">Ocupação principal:</label>
+        						<label for="responsavel1Ocupacao" class="control-label">Ocupação principal:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Ocupacao" value="<?php echo $responsavel['ocupacao']; ?>" class="form-control"/>
         						</div>
@@ -312,10 +312,10 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-8">
-        						<label for="responsavel1" class="control-label">Escolaridade:</label>
+        						<label for="responsavel1Escolaridade" class="control-label">Escolaridade:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel1Escolaridade">
-        								<option value="">selecione</option>
+        								<option value="">Selecione</option>
         								<option value="Analfabeto" <?php echo ($responsavel['escolaridade'] == 'Analfabeto') ? 'selected' : ''; ?>>Analfabeto</option>
         								<option value="Alfabetizado" <?php echo ($responsavel['escolaridade'] == 'Alfabetizado') ? 'selected' : ''; ?>>Alfabetizado</option>
         								<option value="1ª à 4ª serie" <?php echo ($responsavel['escolaridade'] == '1ª à 4ª serie') ? 'selected' : ''; ?>>1ª à 4ª serie</option>
@@ -323,6 +323,7 @@
         								<option value="Ensino médio completo" <?php echo ($responsavel['escolaridade'] == 'Ensino médio completo') ? 'selected' : ''; ?>>Ensino médio completo</option>
         								<option value="Ensino médio incompleto" <?php echo ($responsavel['escolaridade'] == 'Ensino médio incompleto') ? 'selected' : ''; ?>>Ensino médio incompleto</option>
         								<option value="Ensino superior incompleto" <?php echo ($responsavel['escolaridade'] == 'Ensino superior incompleto') ? 'selected' : ''; ?>>Ensino superior incompleto</option>
+        								<option value="Ensino superior completo" <?php echo ($responsavel['escolaridade'] == 'Ensino superior completo') ? 'selected' : ''; ?>>Ensino superior completo</option>
         							</select>
         						</div>
         					</div>
@@ -334,13 +335,13 @@
 					<div class="panel-body">
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Nome:</label>
+        						<label for="responsavel2Nome" class="control-label">Nome:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Nome" value="<?php echo $responsavel_adicional['nome']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel2" class="control-label">Data de Nascimento:</label>
+        						<label for="responsavel2DataNascimento" class="control-label">Data de Nascimento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2DataNascimento" value="<?php echo $responsavel_adicional['data_nascimento']; ?>" class="has-datepicker form-control" />
         						</div>
@@ -348,16 +349,16 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Número do documento:</label>
+        						<label for="responsavel2NumeroDocumento" class="control-label">Número do documento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2NumeroDocumento" value="<?php echo $responsavel_adicional['documento_numero']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel1" class="control-label">Documento:</label>
+        						<label for="responsavel2Documento" class="control-label">Documento:</label>
         						<div class="form-group">
         							<select name="responsavel2Documento" class="form-control">
-        								<option value="">selecione</option>
+        								<option value="">Selecione</option>
         								<option value="CPF" <?php echo ($responsavel_adicional['documento_tipo'] == 'CPF') ? 'śelected' : ''; ?>>CPF</option>
         								<option value="RG" <?php echo ($responsavel_adicional['documento_tipo'] == 'RG') ? 'śelected' : ''; ?>>RG</option>
         								<option value="CNH" <?php echo ($responsavel_adicional['documento_tipo'] == 'CNH') ? 'śelected' : ''; ?>>CNH</option>
@@ -368,13 +369,13 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel2" class="control-label">E-mail:</label>
+        						<label for="responsavel2Email" class="control-label">E-mail:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Email" value="<?php echo $responsavel_adicional['email']; ?>" class="form-control"/>
         						</div>
         					</div>
         					<div class="col-md-6">
-        						<label for="responsavel2" class="control-label">Endereço:</label>
+        						<label for="responsavel2Endereco" class="control-label">Endereço:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Endereco" value="<?php echo $responsavel_adicional['endereco']; ?>" class="form-control"/>
         						</div>
@@ -382,13 +383,13 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-4">
-        						<label for="responsavel2" class="control-label">Telefone:</label>
+        						<label for="responsavel2Telefone" class="control-label">Telefone:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Telefone" value="<?php echo $responsavel_adicional['telefone']; ?>" class="form-control phones"/>
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel2" class="control-label">Operadora:</label>
+        						<label for="responsavel2TelefoneOperadora" class="control-label">Operadora:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel2TelefoneOperadora">
         								<option value="">selecione</option>
@@ -401,7 +402,7 @@
         						</div>
         					</div>
         					<div class="col-md-4">
-        						<label for="responsavel2" class="control-label">Whatsapp:</label>
+        						<label for="responsavel2TelefoneWhatsapp" class="control-label">Whatsapp:</label>
         						<div class="form-group">
         							<input type="radio" name="responsavel2TelefoneWhatsapp" value="1" <?php echo ($responsavel_adicional['telefone_whatsapp']) ? 'checked':''; ?>/><label style="margin-left:5px;">Sim</label>
         							<input type="radio" name="responsavel2TelefoneWhatsapp" value="0" <?php echo (!$responsavel_adicional['telefone_whatsapp']) ? 'checked':''; ?>/><label style="margin-left:5px;">Não</label>
@@ -410,7 +411,7 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-8">
-        						<label for="responsavel1" class="control-label">Ocupação principal:</label>
+        						<label for="responsavel2Ocupacao" class="control-label">Ocupação principal:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Ocupacao" value="<?php echo $responsavel_adicional['ocupacao']; ?>" class="form-control"/>
         						</div>
@@ -418,10 +419,10 @@
         				</div>
         				<div class="row clearfix">
         					<div class="col-md-8">
-        						<label for="responsavel1" class="control-label">Escolaridade:</label>
+        						<label for="responsavel2Escolaridade" class="control-label">Escolaridade:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel2Escolaridade">
-        								<option value="">selecione</option>
+        								<option value="">Selecione</option>
         								<option value="Analfabeto" <?php echo ($responsavel_adicional['escolaridade'] == 'Analfabeto') ? 'selected' : ''; ?>>Analfabeto</option>
         								<option value="Alfabetizado" <?php echo ($responsavel_adicional['escolaridade'] == 'Alfabetizado') ? 'selected' : ''; ?>>Alfabetizado</option>
         								<option value="1ª à 4ª serie" <?php echo ($responsavel_adicional['escolaridade'] == '1ª à 4ª serie') ? 'selected' : ''; ?>>1ª à 4ª serie</option>
@@ -429,6 +430,7 @@
         								<option value="Ensino médio completo" <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino médio completo') ? 'selected' : ''; ?>>Ensino médio completo</option>
         								<option value="Ensino médio incompleto" <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino médio incompleto') ? 'selected' : ''; ?>>Ensino médio incompleto</option>
         								<option value="Ensino superior incompleto" <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino superior incompleto') ? 'selected' : ''; ?>>Ensino superior incompleto</option>
+        								<option value="Ensino superior completo" <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino superior completo') ? 'selected' : ''; ?>>Ensino superior completo</option>
         							</select>
         						</div>
         					</div>

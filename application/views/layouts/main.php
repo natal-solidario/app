@@ -6,19 +6,22 @@
         <title>Natal Solidário</title>
         <!-- Tell the browser to be responsive to screen width -->
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <link rel="icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" />
         <!-- Bootstrap 3.3.6 -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css'); ?>">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
         <!-- Datetimepicker -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css'); ?>">
         <!-- Theme style -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/AdminLTE.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/AdminLTE.min.css'); ?>">
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
-        <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css');?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css'); ?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/libs/datatables/css/jquery.dataTables.min.css'); ?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/libs/select2/css/select2.min.css'); ?>">
 
     </head>
     
@@ -47,13 +50,13 @@
                         <!-- User Account: style can be found in dropdown.less -->
                             <li class="dropdown user user-menu">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <img src="<?php echo site_url('resources/img/logo-natalsolidario.png');?>" class="user-image" alt="User Image">
+                                    <img src="<?php echo site_url('resources/img/logo-natalsolidario.png'); ?>" class="user-image" alt="User Image">
                                     <span class="hidden-xs"><?php echo $this->session->userdata('usuario_logado'); ?></span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <!-- User image -->
                                     <li class="user-header">
-                                        <img src="<?php echo site_url('resources/img/logo-natalsolidario.png');?>" class="img-circle" alt="User Image">
+                                        <img src="<?php echo site_url('resources/img/logo-natalsolidario.png'); ?>" class="img-circle" alt="User Image">
 
                                     <p>
                                         <?php echo $this->session->userdata('usuario_logado'); ?>
@@ -65,7 +68,7 @@
                                             <a href="#" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         <div class="pull-right">
-                                            <a href="<?php echo site_url('login/logout');?>" class="btn btn-default btn-flat">Sair</a>
+                                            <a href="<?php echo site_url('login/logout'); ?>" class="btn btn-default btn-flat">Sair</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -81,7 +84,7 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="<?php echo site_url('resources/img/logo-natalsolidario.png');?>" class="img-circle" alt="User Image">
+                            <img src="<?php echo site_url('resources/img/logo-natalsolidario.png'); ?>" class="img-circle" alt="User Image">
                         </div>
                         <div class="pull-left info">
                             <p>Natal Solidário</p>
@@ -92,7 +95,7 @@
                     <ul class="sidebar-menu">
                         <li class="header">MENU</li>
                         <li>
-                            <a href="<?php echo site_url();?>">
+                            <a href="<?php echo site_url(); ?>">
                                 <i class="fa fa-dashboard"></i> <span>Painel</span>
                             </a>
                         </li>
@@ -110,23 +113,49 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li class="active">
-                                        <a href="<?php echo site_url('usuario/add');?>"><i class="fa fa-plus"></i> Novo</a>
+                                        <a href="<?php echo site_url('usuario/add'); ?>"><i class="fa fa-plus"></i> Novo</a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo site_url('usuario/index');?>"><i class="fa fa-list-ul"></i> Listar</a>
+                                        <a href="<?php echo site_url('usuario/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
                                 <a href="#">
-                                    <i class="fa fa-address-card"></i> <span>Programação </span>
+                                    <i class="fa fa-calendar-check-o"></i> <span>Programação </span>
                                 </a>
                                 <ul class="treeview-menu">
                                     <li>
-                                        <a href="<?php echo site_url('palestra/index');?>"><i class="fa fa-list-ul"></i> Salas para palestra</a>
+                                        <a href="<?php echo site_url('palestra/index'); ?>"><i class="fa fa-list-ul"></i> Salas para palestra</a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo site_url('entrega/index');?>"><i class="fa fa-list-ul"></i> Salas para entrega dos presentes</a>
+                                        <a href="<?php echo site_url('entrega/index'); ?>"><i class="fa fa-list-ul"></i> Salas para entrega dos presentes</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-bank"></i> <span>Instituição </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="<?php echo site_url('instituicao/add'); ?>"><i class="fa fa-plus"></i> Nova</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo site_url('instituicao/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-newspaper-o"></i> <span>Campanha </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="<?php echo site_url('campanha/add'); ?>"><i class="fa fa-plus"></i> Nova</a>
+                                    </li>
+                                    <li>
+                                        <a href="<?php echo site_url('campanha/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                     </li>
                                 </ul>
                             </li>
@@ -136,14 +165,14 @@
 
                         <li>
                             <a href="#">
-                                <i class="fa fa-address-card"></i> <span>Responsável</span>
+                                <i class="fa fa-user-o"></i> <span>Responsável</span>
                             </a>
                             <ul class="treeview-menu">
                                 <li class="active">
-                                    <a href="<?php echo site_url('responsavel/add');?>"><i class="fa fa-plus"></i> Novo</a>
+                                    <a href="<?php echo site_url('responsavel/add'); ?>"><i class="fa fa-plus"></i> Novo</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo site_url('responsavel/index');?>"><i class="fa fa-list-ul"></i> Listar</a>
+                                    <a href="<?php echo site_url('responsavel/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                 </li>
                             </ul>
                         </li>
@@ -153,10 +182,10 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li class="active">
-                                    <a href="<?php echo site_url('beneficiado/add');?>"><i class="fa fa-plus"></i> Novo</a>
+                                    <a href="<?php echo site_url('beneficiado/add'); ?>"><i class="fa fa-plus"></i> Novo</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo site_url('beneficiado/index');?>"><i class="fa fa-list-ul"></i> Listar</a>
+                                    <a href="<?php echo site_url('beneficiado/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                 </li>
                             </ul>
                         </li>
@@ -166,10 +195,10 @@
                             </a>
                             <ul class="treeview-menu">
 								<li class="active">
-                                    <a href="<?php echo site_url('carta/add');?>"><i class="fa fa-plus"></i> Novo</a>
+                                    <a href="<?php echo site_url('carta/add'); ?>"><i class="fa fa-plus"></i> Novo</a>
                                 </li>
 								<li>
-                                    <a href="<?php echo site_url('carta/index');?>"><i class="fa fa-list-ul"></i> Listar</a>
+                                    <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                 </li>
                                 <?php 
                                 if($this->session->userdata('grupos_usuario'))
@@ -177,9 +206,9 @@
                                     if (in_array("admin", $grupos_usuario, true)):
                                 ?>
                                 <li>
-                                    <a href="<?php echo site_url('entrega/listagem_local_entrega');?>"><i class="fa fa-list-ul"></i> Acompanhamento</a>
+                                    <a href="<?php echo site_url('entrega/listagem_local_entrega'); ?>"><i class="fa fa-list-ul"></i> Acompanhamento</a>
                                 </li>
-                                <?php endif;?>
+                                <?php endif; ?>
 							</ul>
                         </li>
 
@@ -199,13 +228,13 @@
                                 </a>
                                 <ul class="treeview-menu">
                                 <li class="active">
-                                    <a href="<?php echo site_url('presente/receberPresente');?>"><i class="fa fa-gift"></i> Recebimento</a>
+                                    <a href="<?php echo site_url('presente/receberPresente'); ?>"><i class="fa fa-gift"></i> Recebimento</a>
                                 </li>
                                 <li class="active">
-                                    <a href="<?php echo site_url('presente/conferencia');?>"><i class="fa fa-gift"></i> Conferência</a>
+                                    <a href="<?php echo site_url('presente/conferencia'); ?>"><i class="fa fa-gift"></i> Conferência</a>
                                 </li>
                                 <li class="active">
-                                    <a href="<?php echo site_url('presente/entrega');?>"><i class="fa fa-gift"></i> Entrega</a>
+                                    <a href="<?php echo site_url('presente/entrega'); ?>"><i class="fa fa-gift"></i> Entrega</a>
                                 </li>
                             </ul>
                             </li>
@@ -247,7 +276,7 @@
             </div>
             <!-- /.content-wrapper -->
             <footer class="main-footer">
-                <strong>Natal Solidário 2017</strong>
+                <strong>Natal Solidário 2017-<?php echo date("Y"); ?></strong>
             </footer>
 
             <!-- Control Sidebar -->
@@ -277,19 +306,27 @@
         <!-- ./wrapper -->
 
         <!-- jQuery 2.2.3 -->
-        <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js'); ?>"></script>
         <!-- Bootstrap 3.3.6 -->
-        <script src="<?php echo site_url('resources/js/bootstrap.min.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/bootstrap.min.js'); ?>"></script>
         <!-- FastClick -->
-        <script src="<?php echo site_url('resources/js/fastclick.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/fastclick.js'); ?>"></script>
         <!-- AdminLTE App -->
-        <script src="<?php echo site_url('resources/js/app.min.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/app.min.js'); ?>"></script>
         <!-- AdminLTE for demo purposes -->
-        <script src="<?php echo site_url('resources/js/demo.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/demo.js'); ?>"></script>
         <!-- DatePicker -->
-        <script src="<?php echo site_url('resources/js/moment.js');?>"></script>
-        <script src="<?php echo site_url('resources/js/bootstrap-datetimepicker.min.js');?>"></script>
-        <script src="<?php echo site_url('resources/js/jquery.mask.min.js');?>"></script>
-        <script src="<?php echo site_url('resources/js/global.js');?>"></script>
+        <script src="<?php echo site_url('resources/js/moment.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/js/bootstrap-datetimepicker.min.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/js/jquery.mask.min.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/js/global.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/libs/datatables/js/jquery.dataTables.min.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/libs/select2/js/select2.min.js'); ?>"></script>
+
+        <?php if (isset($js_scripts)): ?>
+            <?php  foreach($js_scripts as $script): ?>
+            <script type="text/javascript" src="<?php echo site_url('resources/js/' . $script); ?>"></script>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </body>
 </html>

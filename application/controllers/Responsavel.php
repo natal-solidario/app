@@ -32,6 +32,7 @@ class Responsavel extends CI_Controller{
     {
         $data['responsaveis'] = $this->Responsavel_model->get_all_responsaveis();
         
+        $data['js_scripts'] = array('responsavel/index.js');
         $data['_view'] = 'responsavel/index';
         $this->load->view('layouts/main',$data);
     }
@@ -44,11 +45,12 @@ class Responsavel extends CI_Controller{
         
         $this->load->library('form_validation');
 
-		//$this->form_validation->set_rules('data_cadastro','Data Cadastro','required');
+		$this->form_validation->set_rules('documento_numero','CPF','required');
 		$this->form_validation->set_rules('nome','Nome','required');
-		$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');
-		$this->form_validation->set_rules('endereco','Endereco','required');
+		$this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
+		$this->form_validation->set_rules('endereco','Endereço','required');
 		$this->form_validation->set_rules('cidade','Cidade','required');
+		$this->form_validation->set_rules('bairro','Bairro','required');
 		$this->form_validation->set_rules('uf','Uf','required|max_length[2]|alpha');
 		$this->form_validation->set_rules('cep','Cep','integer|exact_length[8]');
 		
@@ -58,7 +60,7 @@ class Responsavel extends CI_Controller{
             
             $params = array(
 				//'removido' => $this->input->post('removido'),
-				//'documento_tipo' => $this->input->post('documento_tipo'),
+				'documento_tipo' => 'CPF',
 				'data_cadastro' => date('Y-m-d H:i:s'),
 				'nome' => $this->input->post('nome'),
 				'data_nascimento' => date('Y-m-d', strtotime($date1)),
