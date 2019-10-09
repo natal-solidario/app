@@ -10,8 +10,4 @@ $(function(){
         }
     };
     $('#DE_TELEFONE').mask(SPMaskBehavior, spOptions);
-    console.log("TESTE");
 });
-
-
-

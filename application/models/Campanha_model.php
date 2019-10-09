@@ -6,21 +6,28 @@ class Campanha_model extends CI_Model
         parent::__construct();
         $this->campanhaTbl = 'TBC01_CAMPANHA';
     }
-    
+
     function get($id)
     {
         return $this->db->get_where($this->campanhaTbl, array('NU_TBC01' => $id))->row();
     }
-        
+
+    function get_campanha_atual()
+    {
+        $this->db->select_max('AA_CAMPANHA');
+        $this->db->from($this->campanhaTbl);
+        return $this->db->get_where($this->campanhaTbl, array('AA_CAMPANHA' => $this->db->get()->row()->AA_CAMPANHA))->row_array();
+    }
+
     function get_all()
     {
-        $this->db->order_by('NU_TBC01', 'desc');
+        $this->db->order_by('AA_CAMPANHA', 'desc');
         return $this->db->get($this->campanhaTbl)->result();
     }
-        
+
     function get_instituicoes($id)
     {
-        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBBC02');
+        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02');
         $this->db->from('TBP01_INSTITUICAO');
         $this->db->join('TBH01_ENDERECO', 'TBH01_ENDERECO.NU_TBH01 = TBP01_INSTITUICAO.NU_TBH01', 'INNER');
         $this->db->join('regiao_administrativa', 'regiao_administrativa.id = TBP01_INSTITUICAO.ID_REGIAO_ADMINISTRATIVA', 'INNER');
@@ -30,14 +37,14 @@ class Campanha_model extends CI_Model
         // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->get()->result_array();
     }
-        
+
     function add($params)
     {
         $this->db->insert($this->campanhaTbl, $params);
-        echo "<pre>" . $this->db->get_compiled_select(); exit();
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->insert_id();
     }
-        
+
     function add_instituicao($params)
     {
         $this->db->insert('TBC02_ABRANGENCIA_INSTITUICAO', $params);
@@ -46,7 +53,7 @@ class Campanha_model extends CI_Model
 
     function del_instituicao($id)
     {
-        return $this->db->delete('TBC02_ABRANGENCIA_INSTITUICAO', array('NU_TBBC02' => $id));
+        return $this->db->delete('TBC02_ABRANGENCIA_INSTITUICAO', array('NU_TBC02' => $id));
     }
     
     function update($id, $params)

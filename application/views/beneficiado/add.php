@@ -22,26 +22,8 @@
                         <div class="form-group">
                             <input type="text" name="data_nascimento"
                                 value="<?php echo $this->input->post('data_nascimento'); ?>"
-                                class="has-datepicker form-control" id="data_nascimento" />
+                                class="form-control" id="data_nascimento" />
                             <span class="text-danger"><?php echo form_error('data_nascimento');?></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="responsavel" class="control-label"><span
-                                class="text-danger">*</span>Responsável</label>
-                        <div class="form-group">
-                            <select name="responsavel" class="form-control">
-                                <option value=""></option>
-                                <?php 
-																foreach($all_responsaveis as $responsavel)
-																{
-																	$selected = ($responsavel['id'] == $this->input->post('responsavel')) ? ' selected="selected"' : "";
-
-																	echo '<option value="'.$responsavel['id'].'" '.$selected.'>'.$responsavel['nome'].'</option>';
-																} 
-																?>
-                            </select>
-                            <span class="text-danger"><?php echo form_error('responsavel');?></span>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -53,6 +35,24 @@
                                 <option value="M">Masculino</option>
                             </select>
                             <span class="text-danger"><?php echo form_error('sexo'); ?></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="responsavel" class="control-label"><span
+                                class="text-danger">*</span>Responsável</label>
+                        <div class="form-group">
+                            <select name="responsavel" id="responsavel" class="form-control">
+                                <option value=""></option>
+                                <?php 
+																foreach($all_responsaveis as $responsavel)
+																{
+																	$selected = ($responsavel['id'] == $this->input->post('responsavel')) ? ' selected="selected"' : "";
+
+																	echo '<option value="'.$responsavel['id'].'" '.$selected.'>'.$responsavel['nome'].'</option>';
+																} 
+																?>
+                            </select>
+                            <span class="text-danger"><?php echo form_error('responsavel');?></span>
                         </div>
                     </div>
                 </div>

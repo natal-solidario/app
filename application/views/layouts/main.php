@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css'); ?>">
         <link rel="stylesheet" href="<?php echo site_url('resources/libs/datatables/css/jquery.dataTables.min.css'); ?>">
         <link rel="stylesheet" href="<?php echo site_url('resources/libs/select2/css/select2.min.css'); ?>">
+        <link rel="stylesheet" href="<?php echo site_url('resources/libs/sweetalert2/css/sweetalert2.min.css'); ?>">
 
     </head>
     
@@ -102,9 +103,7 @@
 
                         <?php
                         $grupos_usuario = $this->session->userdata('grupos_usuario');
-                        
                         if($this->session->userdata('grupos_usuario'))
-                            //echo print_r($grupos_usuario);
                             if (in_array("admin", $grupos_usuario, true)):
                         ?>
                             <li>
@@ -198,6 +197,9 @@
                                     <a href="<?php echo site_url('carta/add'); ?>"><i class="fa fa-plus"></i> Novo</a>
                                 </li>
 								<li>
+                                    <a href="<?php echo site_url('carta/new'); ?>"><i class="fa fa-plus"></i> Pré-Cadastro</a>
+                                </li>
+								<li>
                                     <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i> Listar</a>
                                 </li>
                                 <?php 
@@ -213,8 +215,6 @@
                         </li>
 
                         <?php
-                        $grupos_usuario = $this->session->userdata('grupos_usuario');
-                        
                         if($this->session->userdata('grupos_usuario'))
                             //echo print_r($grupos_usuario);
                             if (in_array("admin", $grupos_usuario, true) ||
@@ -322,6 +322,7 @@
         <script src="<?php echo site_url('resources/js/global.js'); ?>"></script>
         <script src="<?php echo site_url('resources/libs/datatables/js/jquery.dataTables.min.js'); ?>"></script>
         <script src="<?php echo site_url('resources/libs/select2/js/select2.min.js'); ?>"></script>
+        <script src="<?php echo site_url('resources/libs/sweetalert2/js/sweetalert2.all.min.js'); ?>"></script>
 
         <?php if (isset($js_scripts)): ?>
             <?php  foreach($js_scripts as $script): ?>

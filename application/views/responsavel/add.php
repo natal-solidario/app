@@ -21,7 +21,7 @@
                         <label for="nome" class="control-label"><span class="text-danger">*</span>Nome</label>
                         <div class="form-group">
                             <input type="text" name="nome" value="<?php echo $this->input->post('nome'); ?>"
-                                class="form-control" id="nome" />
+                                class="form-control segunda-validacao" id="nome" />
                             <span class="text-danger"><?php echo form_error('nome');?></span>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <input type="text" name="data_nascimento"
                                 value="<?php echo $this->input->post('data_nascimento'); ?>"
-                                class="has-datepicker form-control" id="data_nascimento" />
+                                class="form-control segunda-validacao" id="data_nascimento" />
                             <span class="text-danger"><?php echo form_error('data_nascimento');?></span>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                         <label for="cep" class="control-label">CEP</label>
                         <div class="form-group">
                             <input type="text" name="cep" value="<?php echo $this->input->post('cep'); ?>"
-                                class="form-control" id="cep" />
+                                class="form-control demais-campos" id="cep" />
                             <span class="text-danger"><?php echo form_error('cep');?></span>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                         <label for="endereco" class="control-label"><span class="text-danger">*</span>Logradouro</label>
                         <div class="form-group">
                             <input type="text" name="endereco" value="<?php echo $this->input->post('endereco'); ?>"
-                                class="form-control" id="endereco" />
+                                class="form-control demais-campos" id="endereco" />
                             <span class="text-danger"><?php echo form_error('endereco');?></span>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                         <label for="numero" class="control-label">Número</label>
                         <div class="form-group">
                             <input type="text" name="numero" value="<?php echo $this->input->post('numero'); ?>"
-                                class="form-control" id="numero" />
+                                class="form-control demais-campos" id="numero" />
                             <span class="text-danger"><?php echo form_error('numero');?></span>
                         </div>
                     </div>
@@ -68,31 +68,31 @@
                         <label for="complemento" class="control-label">Complemento</label>
                         <div class="form-group">
                             <input type="text" name="complemento"
-                                value="<?php echo $this->input->post('complemento'); ?>" class="form-control"
-                                id="complemento" />
+                                value="<?php echo $this->input->post('complemento'); ?>"
+                                class="form-control demais-campos" id="complemento" />
                             <span class="text-danger"><?php echo form_error('complemento');?></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="cidade" class="control-label"><span class="text-danger">*</span>Cidade</label>
-                        <div class="form-group">
-                            <input type="text" name="cidade" value="<?php echo $this->input->post('cidade'); ?>"
-                                class="form-control" id="cidade" />
-                            <span class="text-danger"><?php echo form_error('cidade');?></span>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="bairro" class="control-label"><span class="text-danger">*</span>Bairro</label>
                         <div class="form-group">
                             <input type="text" name="bairro" value="<?php echo $this->input->post('bairro'); ?>"
-                                class="form-control" id="bairro" />
+                                class="form-control demais-campos" id="bairro" />
                             <span class="text-danger"><?php echo form_error('bairro');?></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cidade" class="control-label"><span class="text-danger">*</span>Cidade</label>
+                        <div class="form-group">
+                            <input type="text" name="cidade" value="<?php echo $this->input->post('cidade'); ?>"
+                                class="form-control demais-campos" id="cidade" />
+                            <span class="text-danger"><?php echo form_error('cidade');?></span>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="uf" class="control-label"><span class="text-danger">*</span>UF</label>
                         <div class="form-group">
-                            <select name="uf" class="form-control" id="uf" required>
+                            <select name="uf" class="form-control demais-campos" id="uf" required>
                                 <option value="">Selecione</option>
                                 <option value="AC" <?php echo ($this->input->post('uf') == "AC" ? " selected" : ""); ?>>
                                     Acre</option>
@@ -152,19 +152,15 @@
                             <span class="text-danger"><?php echo form_error('uf');?></span>
                         </div>
                     </div>
-                </div>
-                </select>
-            </div>
-        </div>
 
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-check"></i> Salvar
+                </button>
+            </div>
+            <?php echo form_close(); ?>
+        </div>
     </div>
-</div>
-<div class="box-footer">
-    <button type="submit" class="btn btn-success">
-        <i class="fa fa-check"></i> Salvar
-    </button>
-</div>
-<?php echo form_close(); ?>
-</div>
-</div>
 </div>

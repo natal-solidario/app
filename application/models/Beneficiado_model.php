@@ -70,4 +70,15 @@ class Beneficiado_model extends CI_Model
         $this->db->order_by('beneficiado.nome', 'asc');
         return $this->db->get('beneficiado')->result_array();
     }
+
+    /*
+     * Get all beneficiados
+     */
+    function get_all_beneficiados_por_responsavel($idResponsavel)
+    {
+        $this->db->select('beneficiado.*');
+        $this->db->where('responsavel', $idResponsavel);
+        $this->db->order_by('beneficiado.nome', 'asc');
+        return $this->db->get('beneficiado')->result_array();
+    }
 }

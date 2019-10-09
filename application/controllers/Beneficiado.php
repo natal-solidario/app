@@ -68,6 +68,7 @@ class Beneficiado extends CI_Controller{
 			$this->load->model('Responsavel_model');
 			$data['all_responsaveis'] = $this->Responsavel_model->get_all_responsaveis();
             
+            $data['js_scripts'] = array('beneficiado/add.js');
             $data['_view'] = 'beneficiado/add';
             $this->load->view('layouts/main',$data);
         }
@@ -115,4 +116,10 @@ class Beneficiado extends CI_Controller{
         else
             show_error('The beneficiado you are trying to edit does not exist.');
     }
+
+    function get_beneficiados()
+    {
+        $idResponsavel = $this->input->post('responsavel');
+        echo json_encode($this->Beneficiado_model->get_all_beneficiados_por_responsavel($idResponsavel));
+    } 
 }

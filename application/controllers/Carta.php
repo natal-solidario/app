@@ -19,6 +19,9 @@ class Carta extends CI_Controller{
     {
         parent::__construct();
         $this->load->model('Carta_model');
+        $this->load->model('Usuario_model');
+        $this->load->model('Instituicao_Model');
+        $this->load->model('Campanha_model');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
         $this->load->library('ion_auth');
@@ -95,10 +98,8 @@ class Carta extends CI_Controller{
         }
         $data['total_registros'] = $total_records;
         
-        $this->load->model('Usuario_model');
         $data['carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
 
-        $this->load->model('Usuario_model');
         $data['mobilizadores'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_MOBILIZADORES);
         
         $this->load->model('NatalSolidario_model');
@@ -213,13 +214,10 @@ class Carta extends CI_Controller{
 			$this->load->model('Beneficiado_model');
 			$data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
 
-            $this->load->model('Usuario_model');
             $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
 
-            $this->load->model('Usuario_model');
             $data['all_repr_comunidade'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_REPRESENTANTE_COMUNIDADE);
 
-			//$this->load->model('Usuario_model');
 			//$data['all_usuarios'] = $this->Usuario_model->get_all_usuarios();
 			//$data['all_usuarios'] = $this->Usuario_model->get_all_usuarios();
 
@@ -304,13 +302,10 @@ class Carta extends CI_Controller{
 				$this->load->model('Beneficiado_model');
 				$data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
 
-				$this->load->model('Usuario_model');
-                $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
+               $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
 
-                $this->load->model('Usuario_model');
                 $data['all_repr_comunidade'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_REPRESENTANTE_COMUNIDADE);
 
-                $this->load->model('Usuario_model');
                 $data['all_mobilizadores'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_MOBILIZADORES);
 				//$data['all_usuarios'] = $this->Usuario_model->get_all_usuarios();
 
@@ -622,10 +617,8 @@ class Carta extends CI_Controller{
                 $this->load->model('Beneficiado_model');
                 $data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
                 
-                $this->load->model('Usuario_model');
                 $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
                 
-                $this->load->model('Usuario_model');
                 $data['all_repr_comunidade'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_REPRESENTANTE_COMUNIDADE);
                 //$data['all_usuarios'] = $this->Usuario_model->get_all_usuarios();
                 
@@ -648,8 +641,6 @@ class Carta extends CI_Controller{
     
     function adotante($id) {
         if(isset($id)) {
-            
-            $this->load->model('Carta_model');
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             
             $this->load->model('Beneficiado_model');
@@ -716,8 +707,6 @@ class Carta extends CI_Controller{
     function credenciar($id)
     {
         if(isset($id)) {
-            
-            $this->load->model('Carta_model');
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             $params = array(
                 'credenciado' => true,
@@ -727,5 +716,16 @@ class Carta extends CI_Controller{
             $this->Carta_model->atualizar_carta_credenciamento($id,$params);
         } 
         redirect('carta/index');
+    }
+
+    function new()
+    {
+        $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
+        $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
+        // echo "<pre>"; print_r($data['instituicoes']); exit();
+        
+        $data['js_scripts'] = array('carta/new.js');
+        $data['_view'] = 'carta/new';
+        $this->load->view('layouts/main',$data);
     }
 }

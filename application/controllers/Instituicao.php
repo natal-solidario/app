@@ -64,20 +64,27 @@ class Instituicao extends CI_Controller
             );
 
             $endereco_id = $this->Instituicao_Model->add_endereco($params_endereco);
+            
+            // Adicionar o telefone            
+            $telefone = preg_replace("/\D/", "", $this->input->post('DE_TELEFONE'));
+
+            $params_telefone = array(
+                'NU_DDD' => substr($telefone, 0, 2),
+                'NU_TELEFONE' => substr($telefone, 2),
+            );
+
+            $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
 
             // Adicionar a Instituição
-            $telefone = preg_replace("/\D/", "", $this->input->post('DE_TELEFONE'));
             $params_instituicao = array(
                 'NO_INSTITUICAO' => $this->input->post('NO_INSTITUICAO'),
                 'NU_CNPJ' => preg_replace("/\D/", "", $this->input->post('NU_CNPJ')),
-                'NU_DDD_TELEFONE' => substr($telefone, 0, 2),
-                'NU_TELEFONE' => substr($telefone, 2),
                 'ID_REGIAO_ADMINISTRATIVA' => $this->input->post('ID_REGIAO_ADMINISTRATIVA'),
                 'NU_TBH01' => $endereco_id,
+                'NU_TBH02' => $telefone_id
             );
           
             $instituicao_id = $this->Instituicao_Model->add_instituicao($params_instituicao);
-
 
             $params_vinculo_instituicao_usuario = array(
                 'NU_TBP01' => $instituicao_id,
@@ -133,15 +140,24 @@ class Instituicao extends CI_Controller
 
                 $endereco_id = $this->Instituicao_Model->update_endereco($data['instituicao']['NU_TBH01'], $params_endereco);
 
-                // Adicionar a Instituição
+                // Adicionar o telefone            
                 $telefone = preg_replace("/\D/", "", $this->input->post('DE_TELEFONE'));
+
+                $params_telefone = array(
+                    'NU_DDD' => substr($telefone, 0, 2),
+                    'NU_TELEFONE' => substr($telefone, 2),
+                );
+
+                $telefone_id = $this->Instituicao_Model->update_telefone($data['instituicao']['NU_TBH02'], $params_telefone);
+
+
+                // Adicionar a Instituição
                 $params_instituicao = array(
                     'NO_INSTITUICAO' => $this->input->post('NO_INSTITUICAO'),
                     'NU_CNPJ' => preg_replace("/\D/", "", $this->input->post('NU_CNPJ')),
-                    'NU_DDD_TELEFONE' => substr($telefone, 0, 2),
-                    'NU_TELEFONE' => substr($telefone, 2),
                     'ID_REGIAO_ADMINISTRATIVA' => $this->input->post('ID_REGIAO_ADMINISTRATIVA'),
                     'NU_TBH01' => $endereco_id,
+                    'NU_TBH02' => $telefone_id,
                 );
                 
                 $instituicao_id = $this->Instituicao_Model->update_instituicao($data['instituicao']['NU_TBP01'], $params_instituicao);

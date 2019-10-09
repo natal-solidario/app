@@ -11,7 +11,7 @@
                 <table class="table table-striped" id="tabela-responsaveis">
                 <thead>
                     <tr>
-                        <!-- <th>ID</th> -->
+                        <th>CPF</th>
                         <th>Nome</th>
                         <th>Data Nascimento</th>
                         <th>Endereco</th>
@@ -24,7 +24,7 @@
                     <tbody>
                     <?php foreach($responsaveis as $r){ ?>
                     <tr>
-                        <!-- <td><//?php echo $r['id']; ?></td> -->
+                        <td><?php echo $r['documento_numero']; ?></td>
                         <td><?php echo $r['nome']; ?></td>
                         <td><?php echo date("d/m/Y", strtotime($r['data_nascimento'])); ?></td>
                         <td><?php echo $r['endereco']; ?></td>

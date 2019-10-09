@@ -25,7 +25,7 @@
 						<td><?php echo $i['NO_CIDADE']; ?></td>
 						<td><?php echo $i['SG_UF']; ?></td>
 						<td><?php echo $i['regiao_administrativa_nome']; ?></td>
-						<td>(<?php echo $i['NU_DDD_TELEFONE']; ?>) <?php echo preg_replace("/(\d{4,5})(\d{4})/", "$1-$2", $i['NU_TELEFONE']); ?></td>
+						<td><?php echo ($i['NU_DDD'] != 0 && $i['NU_TELEFONE'] != 0 ? "(" . $i['NU_DDD'] . ") " . preg_replace("/(\d{4,5})(\d{4})/", "$1-$2", $i['NU_TELEFONE']) : ""); ?></td>
 						<td>
                             <a href="<?php echo site_url('instituicao/edit/'.$i['NU_TBP01']); ?>" class="btn btn-info btn-xs"><span class="fa fa-pencil"></span> Editar</a>
                         </td>
