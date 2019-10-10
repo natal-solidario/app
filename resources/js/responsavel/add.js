@@ -1,3 +1,4 @@
+var base_url = $('#base_url').val();
 var finalizado = false;
 $(function() {
     $('#documento_numero').mask('000.000.000-00', {reverse: true});
@@ -16,7 +17,7 @@ $(function() {
             
             $.ajax({
                 method: "POST",
-                url: "/responsavel/get_responsavel",
+                url: base_url + "responsavel/get_responsavel",
                 data: {
                     etapa: 1,
                     cpf: valor,
@@ -70,7 +71,7 @@ $(function() {
             
             $.ajax({
                 method: "POST",
-                url: "/responsavel/get_responsavel/",
+                url: base_url + "responsavel/get_responsavel/",
                 data: {
                     nome: nome,
                     data_nascimento: data,

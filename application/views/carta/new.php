@@ -1,13 +1,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
-            <?php echo form_open('carta/new'); ?>
             <div class="box-header with-border">
                 <h3 class="box-title">Pré-Cadastro da Carta</h3>
             </div>
             <div class="box-body">
+            <?php echo form_open('carta/new', array('id'=>'form-carta')); ?>
                 <h4>Responsável</h4>
                 <input type="hidden" id="responsavel_id" name="responsavel_id" value="" />
+                <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
                 <div class="row clearfix">
                     <div class="col-md-3">
                         <label for="documento_numero" class="control-label"><span
@@ -17,6 +18,7 @@
                                 value="<?php echo $this->input->post('documento_numero'); ?>" class="form-control"
                                 id="documento_numero" />
                             <span class="text-danger"><?php echo form_error('documento_numero');?></span>
+                            <small id="enter-cpf">Após digitar o CPF aperte a tecla ENTER</small>
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -35,6 +37,7 @@
                                 value="<?php echo $this->input->post('data_nascimento'); ?>"
                                 class="form-control segunda-validacao" id="data_nascimento" />
                             <span class="text-danger"><?php echo form_error('data_nascimento');?></span>
+                            <small id="enter-data" style="display:none;">Após digitar os dados aperte ENTER</small>
                         </div>
                     </div>
                 </div>
@@ -193,12 +196,27 @@
                             <span class="text-danger"><?php echo form_error('data_nascimento_beneficiado');?></span>
                         </div>
                     </div>
+                    <div class="col-md-2">
+                        <label for="sexo_beneficiado" class="control-label"><span class="text-danger">*</span>Sexo</label>
+                        <div class="form-group">
+                            <select name="sexo_beneficiado" id="sexo_beneficiado" class="form-control">
+                                <option value=""></option>
+                                <option value="F">Feminino</option>
+                                <option value="M">Masculino</option>
+                            </select>
+                            <span class="text-danger"><?php echo form_error('sexo_beneficiado'); ?></span>
+                        </div>
+                    </div>
                 </div>
 
                 <?php
                 $grupos_usuario = $this->session->userdata('grupos_usuario');
+
+
                 if($this->session->userdata('grupos_usuario')) {
-                    if (in_array("admin", $grupos_usuario, true)) {
+
+                $isAdmin = in_array("admin", $grupos_usuario, true);
+                $isRepresentanteComunidade = in_array("representante-comunidade", $grupos_usuario, true);
                 ?>
                 <h4>Instituição</h4>
                 <div class="row clearfix" id="select-instituicao">
@@ -206,12 +224,12 @@
                         <label for="representante" class="control-label"><span
                                 class="text-danger">*</span>Instituição</label>
                         <div class="form-group">
-                            <select name="representante" class="form-control demais-campos" id="representante" required>
+                            <select name="representante" class="form-control<?php echo ($isRepresentanteComunidade && !$isAdmin ? "" : " demais-campos"); ?>" id="representante" required<?php echo ($isRepresentanteComunidade && !$isAdmin ? " disabled" : ""); ?>>
 
                             <?php if (sizeof($instituicoes) > 0) { ?>
                                 <option value="">Selecione</option>
                                 <?php foreach ($instituicoes as $i) { ?>
-                                    <option value="<?php echo $i["NU_TBP01"]; ?>"><?php echo $i["NO_INSTITUICAO"]; ?></option>
+                                    <option value="<?php echo $i["NU_TBP01"]; ?>"<?php echo ($i["NU_TBP01"] == $instituicao_usuario["NU_TBP01"] ? " selected" : ""); ?>><?php echo $i["NO_INSTITUICAO"]; ?></option>
                                 <?php
                                 }
                             }
@@ -225,22 +243,15 @@
                     </div>
                 </div>
                 <?php
-                    }
-                    elseif (in_array("representante-comunidade", $grupos_usuario, true)) {
-                ?>
-                    <input type="hidden" id="representante" name="representante" value="<?php echo $this->session->userdata('usuario_logado_id') ?>" />
-                <?php
-                    }
                 }
                 ?>
-
+            <?php echo form_close(); ?>
             </div>
             <div class="box-footer">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success" id="salvar-carta">
                     <i class="fa fa-check"></i> Salvar
                 </button>
             </div>
-            <?php echo form_close(); ?>
         </div>
     </div>
 </div>

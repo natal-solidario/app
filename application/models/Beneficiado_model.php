@@ -42,10 +42,11 @@ class Beneficiado_model extends CI_Model
     /*
      * function to update beneficiado
      */
-    function update_beneficiado($id,$params)
+    function update_beneficiado($id, $params)
     {
-        $this->db->where('id',$id);
-        return $this->db->update('beneficiado',$params);
+        $this->db->where('id', $id);
+        $update = $this->db->update('beneficiado', $params);
+        return ($update ? $id : $update);
     }
     
     /*

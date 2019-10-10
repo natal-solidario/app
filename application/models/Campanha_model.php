@@ -27,9 +27,10 @@ class Campanha_model extends CI_Model
 
     function get_instituicoes($id)
     {
-        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02');
+        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE');
         $this->db->from('TBP01_INSTITUICAO');
         $this->db->join('TBH01_ENDERECO', 'TBH01_ENDERECO.NU_TBH01 = TBP01_INSTITUICAO.NU_TBH01', 'INNER');
+        $this->db->join('TBH02_TELEFONE', 'TBH02_TELEFONE.NU_TBH02 = TBP01_INSTITUICAO.NU_TBH02', 'LEFT');
         $this->db->join('regiao_administrativa', 'regiao_administrativa.id = TBP01_INSTITUICAO.ID_REGIAO_ADMINISTRATIVA', 'INNER');
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
         $this->db->order_by('TBP01_INSTITUICAO.NU_TBP01', 'desc');

@@ -59,7 +59,7 @@ class Responsavel extends CI_Controller
 		$this->form_validation->set_rules('numero','Número','numeric');
 		
 		if($this->form_validation->run())     
-        {   
+        {
             $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
             
             $params = array(
@@ -145,7 +145,7 @@ class Responsavel extends CI_Controller
     {
         $etapa = $this->input->post('etapa');
         $cpf = $this->input->post('cpf');
-        $nome = $this->input->post('nome');
+        $nome = trim($this->input->post('nome'));
         $data_nascimento = $this->input->post('data_nascimento');
 
         $date1 = strtr($this->input->post('data_nascimento'), '/', '-');

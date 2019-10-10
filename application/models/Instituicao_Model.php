@@ -13,11 +13,12 @@ class Instituicao_Model extends CI_Model
      */
     function get_instituicao($id)
     {
-        $this->db->select('TBP01_INSTITUICAO.*, TBH01_ENDERECO.NU_CEP, TBH01_ENDERECO.NO_LOGRADOURO, TBH01_ENDERECO.NU_ENDERECO, TBH01_ENDERECO.DE_COMPLEMENTO, TBH01_ENDERECO.NO_BAIRRO, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, usuario.id as ID_USUARIO, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE');
+        $this->db->select('TBP01_INSTITUICAO.*, TBH01_ENDERECO.NU_CEP, TBH01_ENDERECO.NO_LOGRADOURO, TBH01_ENDERECO.NU_ENDERECO, TBH01_ENDERECO.DE_COMPLEMENTO, TBH01_ENDERECO.NO_BAIRRO, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, usuario.id as ID_USUARIO, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02 as ABRANGENCIA_ID');
         $this->db->from('TBP01_INSTITUICAO');
         $this->db->join('TBH01_ENDERECO', 'TBH01_ENDERECO.NU_TBH01 = TBP01_INSTITUICAO.NU_TBH01', 'INNER');
         $this->db->join('TBH02_TELEFONE', 'TBH02_TELEFONE.NU_TBH02 = TBP01_INSTITUICAO.NU_TBH02', 'LEFT');
-        $this->db->join('TBP02_RESPONSAVEL_INSTITUICAO', 'TBP02_RESPONSAVEL_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBH01', 'INNER');
+        $this->db->join('TBP02_RESPONSAVEL_INSTITUICAO', 'TBP02_RESPONSAVEL_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
+        $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
         $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'INNER');
         $this->db->where(array('TBP01_INSTITUICAO.NU_TBP01' => $id));
         // echo "<pre>" . $this->db->get_compiled_select(); exit();
@@ -29,14 +30,27 @@ class Instituicao_Model extends CI_Model
      */
     function get_all_instituicoes()
     {
-        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE');
+        $this->db->select('TBP01_INSTITUICAO.*, regiao_administrativa.nome as regiao_administrativa_nome, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02 as ABRANGENCIA_ID');
         $this->db->from('TBP01_INSTITUICAO');
         $this->db->join('TBH01_ENDERECO', 'TBH01_ENDERECO.NU_TBH01 = TBP01_INSTITUICAO.NU_TBH01', 'INNER');
         $this->db->join('TBH02_TELEFONE', 'TBH02_TELEFONE.NU_TBH02 = TBP01_INSTITUICAO.NU_TBH02', 'LEFT');
         $this->db->join('regiao_administrativa', 'regiao_administrativa.id = TBP01_INSTITUICAO.ID_REGIAO_ADMINISTRATIVA', 'INNER');
+        $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
         $this->db->order_by('TBP01_INSTITUICAO.NU_TBP01', 'desc');
         // echo $this->db->get_compiled_select();
         return $this->db->get()->result_array();
+    }
+
+    function get_instituicao_by_usuario($usuario_id)
+    {
+        $this->db->select('TBP01_INSTITUICAO.*, usuario.id as ID_USUARIO, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02 as ABRANGENCIA_ID');
+        $this->db->from('TBP01_INSTITUICAO');
+        $this->db->join('TBP02_RESPONSAVEL_INSTITUICAO', 'TBP02_RESPONSAVEL_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
+        $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
+        $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'INNER');
+        $this->db->where(array('TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO' => $usuario_id));
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        return $this->db->get()->row_array();
     }
 
     /*
@@ -78,25 +92,29 @@ class Instituicao_Model extends CI_Model
     function update_instituicao($id, $params)
     {
         $this->db->where('NU_TBP01', $id);
-        return $this->db->update('TBP01_INSTITUICAO', $params);
+        $update = $this->db->update('TBP01_INSTITUICAO', $params);
+        return ($update ? $id : $update);
     }
 
     function update_endereco($id, $params)
     {
         $this->db->where('NU_TBH01', $id);
-        return $this->db->update('TBH01_ENDERECO', $params);
+        $update = $this->db->update('TBH01_ENDERECO', $params);
+        return ($update ? $id : $update);
     }
 
     function update_telefone($id, $params)
     {
         $this->db->where('NU_TBH02', $id);
-        return $this->db->update('TBH02_TELEFONE', $params);
+        $update = $this->db->update('TBH02_TELEFONE', $params);
+        return ($update ? $id : $update);
     }
 
     function update_vinculo_instituicao_usuario($id, $params)
     {
         $this->db->where('NU_TBP01', $id);
-        return $this->db->update('TBP02_RESPONSAVEL_INSTITUICAO', $params);
+        $update = $this->db->update('TBP02_RESPONSAVEL_INSTITUICAO', $params);
+        return ($update ? $id : $update);
     }
     
     /*

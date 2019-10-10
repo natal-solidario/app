@@ -24,7 +24,7 @@ class Carta_model extends CI_Model
         $this->db->join('responsavel r', 'beneficiado.responsavel = r.id');
         $this->db->join('adotante a', 'carta.adotante = a.id', 'left');
         $this->db->like('carta.removida', false);
-        $this->db->order_by('numero', 'desc');
+        $this->db->order_by('carta.numero', 'desc');
         return $this->db->get('carta')->result_array();
     }
     
@@ -138,7 +138,7 @@ class Carta_model extends CI_Model
             $this->db->where('carta.mobilizador', $idMobilizador);
         }
         if ($numero_carta) {
-            $this->db->where('numero', $numero_carta);
+            $this->db->where('carta.numero', $numero_carta);
         }
         if ($idRegiaoAdministrativa) {
             $this->db->where('regiao_administrativa', $idRegiaoAdministrativa);
@@ -175,7 +175,7 @@ class Carta_model extends CI_Model
             $this->db->where('mobilizador', $idMobilizador);
         }
         if ($numero_carta) {
-            $this->db->where('numero', $numero_carta);
+            $this->db->where('carta.numero', $numero_carta);
         }
         if ($idRegiaoAdministrativa) {
             $this->db->where('regiao_administrativa', $idRegiaoAdministrativa);
@@ -216,7 +216,7 @@ class Carta_model extends CI_Model
     }
 
     function get_carta_by_numeroCarta($numeroCarta) {
-        return $this->db->get_where('carta',array('numero'=>$numeroCarta))->row_array();
+        return $this->db->get_where('carta',array('carta.numero'=>$numeroCarta))->row_array();
     }
 
     function get_dados_complementares_carta_por_id($idCarta) {
@@ -249,5 +249,11 @@ class Carta_model extends CI_Model
         $this->db->order_by('r.nome', 'asc');
         $this->db->where('carta.removida', false);
         return $this->db->get('carta')->result_array();
+    }
+
+    function get_total_cartas_por_instituicao_campanha($id) {
+        $this->db->select('COUNT(1) as total');
+        $this->db->where('carta.NU_TBC02', $id);
+        return $this->db->get('carta')->row_array();
     }
 }

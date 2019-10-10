@@ -69,7 +69,8 @@ class Responsavel_model extends CI_Model
     function update_responsavel($id, $params)
     {
         $this->db->where('id', $id);
-        return $this->db->update('responsavel', $params);
+        $update = $this->db->update('responsavel', $params);
+        return ($update ? $id : $update);
     }
     
     /*

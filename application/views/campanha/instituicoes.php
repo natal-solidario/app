@@ -71,7 +71,7 @@
                         <td><?php echo $i['NO_CIDADE']; ?></td>
                         <td><?php echo $i['SG_UF']; ?></td>
                         <td><?php echo $i['regiao_administrativa_nome']; ?></td>
-                            <td><?php echo ($i['NU_DDD_TELEFONE'] != 0 && $i['NU_TELEFONE'] != 0 ? "(" . $i['NU_DDD_TELEFONE'] . ") " . preg_replace("/(\d{4,5})(\d{4})/", "$1-$2", $i['NU_TELEFONE']) : ""); ?></td>
+                            <td><?php echo ($i['NU_DDD'] != 0 && $i['NU_TELEFONE'] != 0 ? "(" . $i['NU_DDD'] . ") " . preg_replace("/(\d{4,5})(\d{4})/", "$1-$2", $i['NU_TELEFONE']) : ""); ?></td>
                         <td>
                             <a href="<?php echo site_url('campanha/del_instituicao/' . $campanha_id . "/" . $i['NU_TBC02']); ?>"
                                 class="btn btn-danger btn-xs"><span class="fa fa-trash"></span> Excluir</a>

@@ -113,7 +113,7 @@ class Instituicao extends CI_Controller
         // verifica se a instituição já existe antes de atualizar
         $data['instituicao'] = $this->Instituicao_Model->get_instituicao($id);
         
-        if(isset($data['instituicao']['NU_TBP01']))
+       if(isset($data['instituicao']['NU_TBP01']))
         {
             $this->load->library('form_validation');
             $this->form_validation->set_rules('NU_CNPJ','CNPJ','required');
@@ -126,7 +126,7 @@ class Instituicao extends CI_Controller
             $this->form_validation->set_rules('ID_USUARIO','Usuário Responsável','required');
                 
             if($this->form_validation->run())     
-            {  
+            {
                 // Adicionar primeiro o endereço
                 $params_endereco = array(
                     'NU_CEP' => preg_replace("/\D/", "", $this->input->post('NU_CEP')),
@@ -148,7 +148,12 @@ class Instituicao extends CI_Controller
                     'NU_TELEFONE' => substr($telefone, 2),
                 );
 
-                $telefone_id = $this->Instituicao_Model->update_telefone($data['instituicao']['NU_TBH02'], $params_telefone);
+                if ($data['instituicao']['NU_TBH02'] == 0) {
+                    $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
+                }
+                else {
+                    $telefone_id = $this->Instituicao_Model->update_telefone($data['instituicao']['NU_TBH02'], $params_telefone);
+                }
 
 
                 // Adicionar a Instituição

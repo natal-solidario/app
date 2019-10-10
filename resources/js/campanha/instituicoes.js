@@ -1,3 +1,4 @@
+var base_url = $('#base_url').val();
 $(function() {
     
     $("#select-instituicao").select2({
@@ -12,7 +13,7 @@ $(function() {
         if (campanha > 0 && instituicao > 0) {
             console.log("Clicou pra add a instituição de id " + instituicao + " na campanha " + campanha);
 
-            window.location.href = "../../campanha/add_instituicao/" + campanha + "/" + instituicao;
+            window.location.href = base_url + "campanha/add_instituicao/" + campanha + "/" + instituicao;
 
             console.log(window.location);
             /*$.ajax({

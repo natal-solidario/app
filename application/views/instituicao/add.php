@@ -18,16 +18,18 @@
                     <div class="col-md-6">
                         <label for="NO_INSTITUICAO" class="control-label"><span class="text-danger">*</span>Nome</label>
                         <div class="form-group">
-                            <input type="text" name="NO_INSTITUICAO" value="<?php echo $this->input->post('NO_INSTITUICAO'); ?>"
-                                class="form-control" id="NO_INSTITUICAO" required />
+                            <input type="text" name="NO_INSTITUICAO"
+                                value="<?php echo $this->input->post('NO_INSTITUICAO'); ?>" class="form-control"
+                                id="NO_INSTITUICAO" required />
                             <span class="text-danger"><?php echo form_error('NO_INSTITUICAO');?></span>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <label for="DE_TELEFONE" class="control-label">Telefone</label>
                         <div class="form-group">
-                            <input type="text" name="DE_TELEFONE" value="<?php echo $this->input->post('DE_TELEFONE'); ?>"
-                                class="form-control" id="DE_TELEFONE" />
+                            <input type="text" name="DE_TELEFONE"
+                                value="<?php echo $this->input->post('DE_TELEFONE'); ?>" class="form-control"
+                                id="DE_TELEFONE" />
                             <span class="text-danger"><?php echo form_error('DE_TELEFONE');?></span>
                         </div>
                     </div>
@@ -92,44 +94,99 @@
                         <div class="form-group">
                             <select name="SG_UF" class="form-control" id="SG_UF" required>
                                 <option value="">Selecione</option>
-                                <option value="AC"<?php echo ($this->input->post('SG_UF') == "AC" ? " selected" : ""); ?>>Acre</option>
-                                <option value="AL"<?php echo ($this->input->post('SG_UF') == "AL" ? " selected" : ""); ?>>Alagoas</option>
-                                <option value="AP"<?php echo ($this->input->post('SG_UF') == "AP" ? " selected" : ""); ?>>Amapá</option>
-                                <option value="AM"<?php echo ($this->input->post('SG_UF') == "AM" ? " selected" : ""); ?>>Amazonas</option>
-                                <option value="BA"<?php echo ($this->input->post('SG_UF') == "BA" ? " selected" : ""); ?>>Bahia</option>
-                                <option value="CE"<?php echo ($this->input->post('SG_UF') == "CE" ? " selected" : ""); ?>>Ceará</option>
-                                <option value="DF"<?php echo ($this->input->post('SG_UF') == "DF" ? " selected" : ""); ?>>Distrito Federal</option>
-                                <option value="ES"<?php echo ($this->input->post('SG_UF') == "ES" ? " selected" : ""); ?>>Espírito Santo</option>
-                                <option value="GO"<?php echo ($this->input->post('SG_UF') == "GO" ? " selected" : ""); ?>>Goiás</option>
-                                <option value="MA"<?php echo ($this->input->post('SG_UF') == "MA" ? " selected" : ""); ?>>Maranhão</option>
-                                <option value="MT"<?php echo ($this->input->post('SG_UF') == "MT" ? " selected" : ""); ?>>Mato Grosso</option>
-                                <option value="MS"<?php echo ($this->input->post('SG_UF') == "MS" ? " selected" : ""); ?>>Mato Grosso do Sul</option>
-                                <option value="MG"<?php echo ($this->input->post('SG_UF') == "MG" ? " selected" : ""); ?>>Minas Gerais</option>
-                                <option value="PA"<?php echo ($this->input->post('SG_UF') == "PA" ? " selected" : ""); ?>>Pará</option>
-                                <option value="PB"<?php echo ($this->input->post('SG_UF') == "PB" ? " selected" : ""); ?>>Paraíba</option>
-                                <option value="PR"<?php echo ($this->input->post('SG_UF') == "PR" ? " selected" : ""); ?>>Paraná</option>
-                                <option value="PE"<?php echo ($this->input->post('SG_UF') == "PE" ? " selected" : ""); ?>>Pernambuco</option>
-                                <option value="PI"<?php echo ($this->input->post('SG_UF') == "PI" ? " selected" : ""); ?>>Piauí</option>
-                                <option value="RJ"<?php echo ($this->input->post('SG_UF') == "RJ" ? " selected" : ""); ?>>Rio de Janeiro</option>
-                                <option value="RN"<?php echo ($this->input->post('SG_UF') == "RN" ? " selected" : ""); ?>>Rio Grande do Norte</option>
-                                <option value="RS"<?php echo ($this->input->post('SG_UF') == "RS" ? " selected" : ""); ?>>Rio Grande do Sul</option>
-                                <option value="RO"<?php echo ($this->input->post('SG_UF') == "RO" ? " selected" : ""); ?>>Rondônia</option>
-                                <option value="RR"<?php echo ($this->input->post('SG_UF') == "RR" ? " selected" : ""); ?>>Roraima</option>
-                                <option value="SC"<?php echo ($this->input->post('SG_UF') == "SC" ? " selected" : ""); ?>>Santa Catarina</option>
-                                <option value="SP"<?php echo ($this->input->post('SG_UF') == "SP" ? " selected" : ""); ?>>São Paulo</option>
-                                <option value="SE"<?php echo ($this->input->post('SG_UF') == "SE" ? " selected" : ""); ?>>Sergipe</option>
-                                <option value="TO"<?php echo ($this->input->post('SG_UF') == "TO" ? " selected" : ""); ?>>Tocantins</option>
+                                <option value="AC"
+                                    <?php echo ($this->input->post('SG_UF') == "AC" ? " selected" : ""); ?>>Acre
+                                </option>
+                                <option value="AL"
+                                    <?php echo ($this->input->post('SG_UF') == "AL" ? " selected" : ""); ?>>Alagoas
+                                </option>
+                                <option value="AP"
+                                    <?php echo ($this->input->post('SG_UF') == "AP" ? " selected" : ""); ?>>Amapá
+                                </option>
+                                <option value="AM"
+                                    <?php echo ($this->input->post('SG_UF') == "AM" ? " selected" : ""); ?>>Amazonas
+                                </option>
+                                <option value="BA"
+                                    <?php echo ($this->input->post('SG_UF') == "BA" ? " selected" : ""); ?>>Bahia
+                                </option>
+                                <option value="CE"
+                                    <?php echo ($this->input->post('SG_UF') == "CE" ? " selected" : ""); ?>>Ceará
+                                </option>
+                                <option value="DF"
+                                    <?php echo ($this->input->post('SG_UF') == "DF" ? " selected" : ""); ?>>Distrito
+                                    Federal</option>
+                                <option value="ES"
+                                    <?php echo ($this->input->post('SG_UF') == "ES" ? " selected" : ""); ?>>Espírito
+                                    Santo</option>
+                                <option value="GO"
+                                    <?php echo ($this->input->post('SG_UF') == "GO" ? " selected" : ""); ?>>Goiás
+                                </option>
+                                <option value="MA"
+                                    <?php echo ($this->input->post('SG_UF') == "MA" ? " selected" : ""); ?>>Maranhão
+                                </option>
+                                <option value="MT"
+                                    <?php echo ($this->input->post('SG_UF') == "MT" ? " selected" : ""); ?>>Mato Grosso
+                                </option>
+                                <option value="MS"
+                                    <?php echo ($this->input->post('SG_UF') == "MS" ? " selected" : ""); ?>>Mato Grosso
+                                    do Sul</option>
+                                <option value="MG"
+                                    <?php echo ($this->input->post('SG_UF') == "MG" ? " selected" : ""); ?>>Minas Gerais
+                                </option>
+                                <option value="PA"
+                                    <?php echo ($this->input->post('SG_UF') == "PA" ? " selected" : ""); ?>>Pará
+                                </option>
+                                <option value="PB"
+                                    <?php echo ($this->input->post('SG_UF') == "PB" ? " selected" : ""); ?>>Paraíba
+                                </option>
+                                <option value="PR"
+                                    <?php echo ($this->input->post('SG_UF') == "PR" ? " selected" : ""); ?>>Paraná
+                                </option>
+                                <option value="PE"
+                                    <?php echo ($this->input->post('SG_UF') == "PE" ? " selected" : ""); ?>>Pernambuco
+                                </option>
+                                <option value="PI"
+                                    <?php echo ($this->input->post('SG_UF') == "PI" ? " selected" : ""); ?>>Piauí
+                                </option>
+                                <option value="RJ"
+                                    <?php echo ($this->input->post('SG_UF') == "RJ" ? " selected" : ""); ?>>Rio de
+                                    Janeiro</option>
+                                <option value="RN"
+                                    <?php echo ($this->input->post('SG_UF') == "RN" ? " selected" : ""); ?>>Rio Grande
+                                    do Norte</option>
+                                <option value="RS"
+                                    <?php echo ($this->input->post('SG_UF') == "RS" ? " selected" : ""); ?>>Rio Grande
+                                    do Sul</option>
+                                <option value="RO"
+                                    <?php echo ($this->input->post('SG_UF') == "RO" ? " selected" : ""); ?>>Rondônia
+                                </option>
+                                <option value="RR"
+                                    <?php echo ($this->input->post('SG_UF') == "RR" ? " selected" : ""); ?>>Roraima
+                                </option>
+                                <option value="SC"
+                                    <?php echo ($this->input->post('SG_UF') == "SC" ? " selected" : ""); ?>>Santa
+                                    Catarina</option>
+                                <option value="SP"
+                                    <?php echo ($this->input->post('SG_UF') == "SP" ? " selected" : ""); ?>>São Paulo
+                                </option>
+                                <option value="SE"
+                                    <?php echo ($this->input->post('SG_UF') == "SE" ? " selected" : ""); ?>>Sergipe
+                                </option>
+                                <option value="TO"
+                                    <?php echo ($this->input->post('SG_UF') == "TO" ? " selected" : ""); ?>>Tocantins
+                                </option>
                             </select>
                             <span class="text-danger"><?php echo form_error('SG_UF');?></span>
                         </div>
                     </div>
                 </div>
                 <div class="row clearfix">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label for="ID_REGIAO_ADMINISTRATIVA" class="control-label"><span
                                 class="text-danger">*</span>Região Administrativa</label>
                         <div class="form-group">
-                            <select class="form-control" name="ID_REGIAO_ADMINISTRATIVA" id="ID_REGIAO_ADMINISTRATIVA" required>
+                            <select class="form-control" name="ID_REGIAO_ADMINISTRATIVA" id="ID_REGIAO_ADMINISTRATIVA"
+                                required>
                                 <option value="">Selecione</option>
                                 <?php 
                                     foreach($ras as $ra)
@@ -142,11 +199,9 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div class="row clearfix">
-                    <div class="col-md-4">
-                        <label for="ID_USUARIO" class="control-label"><span
-                                class="text-danger">*</span>Usuário Responsável</label>
+                    <div class="col-md-6">
+                        <label for="ID_USUARIO" class="control-label"><span class="text-danger">*</span>Usuário
+                            Responsável</label>
                         <div class="form-group">
                             <select class="form-control" name="ID_USUARIO" id="ID_USUARIO" required>
                                 <option value="">Selecione</option>

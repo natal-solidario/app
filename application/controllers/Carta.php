@@ -22,6 +22,8 @@ class Carta extends CI_Controller{
         $this->load->model('Usuario_model');
         $this->load->model('Instituicao_Model');
         $this->load->model('Campanha_model');
+        $this->load->model('Responsavel_model');
+         $this->load->model('Beneficiado_model');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
         $this->load->library('ion_auth');
@@ -32,17 +34,17 @@ class Carta extends CI_Controller{
             $this->session->set_flashdata('message', 'You must be an admin to view this page');
             redirect('login');
         } else {
-            $user = $this->ion_auth->user()->row();
+            $this->user = $this->ion_auth->user()->row();
             $user_groups = $this->ion_auth->get_users_groups()->result();
 
-            $grupos = array();
+            $this->grupos = array();
             foreach ($user_groups as $grupo) {
-                array_push($grupos, $grupo->name);
+                array_push($this->grupos, $grupo->name);
             }
 
-            $this->session->set_userdata('usuario_logado', $user->email);
-            $this->session->set_userdata('grupos_usuario', $grupos);
-            $this->session->set_userdata('usuario_logado_id', $user->id);
+            $this->session->set_userdata('usuario_logado', $this->user->email);
+            $this->session->set_userdata('grupos_usuario', $this->grupos);
+            $this->session->set_userdata('usuario_logado_id', $this->user->id);
         }
 
     } 
@@ -146,7 +148,7 @@ class Carta extends CI_Controller{
      * Adding a new carta_pedido
      */
     function add()
-    {   
+    {
         $this->load->library('form_validation');
 
 		$this->form_validation->set_rules('beneficiado','Beneficiado','required');
@@ -211,7 +213,6 @@ class Carta extends CI_Controller{
         }
         else
         {
-			$this->load->model('Beneficiado_model');
 			$data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
 
             $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
@@ -299,10 +300,9 @@ class Carta extends CI_Controller{
             }
             else
             {
-				$this->load->model('Beneficiado_model');
 				$data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
 
-               $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
+                $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
 
                 $data['all_repr_comunidade'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_REPRESENTANTE_COMUNIDADE);
 
@@ -329,7 +329,6 @@ class Carta extends CI_Controller{
         // check if the carta_pedido exists before trying to edit it
         $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
         
-        $this->load->model('Beneficiado_model');
         $data['beneficiado']  = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
         
         if ($data['beneficiado']['data_nascimento'] != null) {
@@ -337,7 +336,6 @@ class Carta extends CI_Controller{
         }
         //log_message('info',print_r('PAIS_SEPARADOS:' . $data['beneficiado']['pais_separados'], TRUE));
         
-        $this->load->model('Responsavel_model');
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
         if ($data['responsavel']['data_nascimento'] != null) {
             $data['responsavel']['data_nascimento'] = date("d-m-Y", strtotime($data['responsavel']['data_nascimento']));
@@ -614,7 +612,6 @@ class Carta extends CI_Controller{
             }
             else
             {
-                $this->load->model('Beneficiado_model');
                 $data['all_beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
                 
                 $data['all_carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
@@ -643,7 +640,6 @@ class Carta extends CI_Controller{
         if(isset($id)) {
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             
-            $this->load->model('Beneficiado_model');
             $data['beneficiado'] = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
             
             $this->load->model('Adotante_model');
@@ -720,12 +716,132 @@ class Carta extends CI_Controller{
 
     function new()
     {
-        $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
-        $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
-        // echo "<pre>"; print_r($data['instituicoes']); exit();
+        $this->load->library('form_validation');
+
+		$this->form_validation->set_rules('documento_numero','CPF','required');
+        $this->form_validation->set_rules('nome','Nome','required');
+        $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
+        $this->form_validation->set_rules('endereco','Logradouro','required');
+        $this->form_validation->set_rules('bairro','Bairro','required');
+        $this->form_validation->set_rules('cidade','Cidade','required');
+        $this->form_validation->set_rules('uf','UF','required');
+        $this->form_validation->set_rules('select_beneficiado','Beneficiado','required');
+        $this->form_validation->set_rules('nome_beneficiado','Nome do Beneficiado','required');
+        $this->form_validation->set_rules('data_nascimento_beneficiado','Data de Nascimento do Beneficiado','required');
+        $this->form_validation->set_rules('sexo_beneficiado','Sexo do Beneficiado','required');
+        $this->form_validation->set_rules('representante','Instituição','required');
         
-        $data['js_scripts'] = array('carta/new.js');
-        $data['_view'] = 'carta/new';
-        $this->load->view('layouts/main',$data);
+        $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
+		
+		if($this->form_validation->run())     
+        {
+            $campanha_atual = $data['campanha_atual'];
+            if (in_array('admin', $this->grupos, true)) {
+                $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+            }
+            elseif (in_array("representante-comunidade", $grupos_usuario, true)) {
+                $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            }
+            else {
+                $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
+                redirect('carta/index');
+            }
+
+            /*
+            O campo Método da Busca determina se o responsável foi localizado na base de dados
+            0 = não localizado na base
+            1 = pelo cpf
+            2 = pelo nome e data de nascimento
+            */
+            
+            // echo "<pre>";
+            // print_r($this->input->post());
+            // print_r($campanha_atual);
+            // print_r($instituicao);
+            // exit();
+
+
+            // Adiciona ou atualiza o Responsável
+            $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
+
+            $params_responsavel = array(
+				'documento_tipo' => 'CPF',
+				'nome' => mb_strtoupper(trim($this->input->post('nome'))),
+				'data_nascimento' => date('Y-m-d', strtotime($date1)),
+				'endereco' => $this->input->post('endereco'),
+				'numero' => $this->input->post('numero'),
+				'complemento' => $this->input->post('complemento'),
+				'bairro' => $this->input->post('bairro'),
+				'cidade' => $this->input->post('cidade'),
+				'uf' => $this->input->post('uf'),
+                'cep' => str_replace('-', '', $this->input->post('cep'))
+            );
+
+            if (in_array($this->input->post('metodo_busca'), array("0", "2"))) {
+                $params_responsavel['documento_numero'] = $this->input->post('documento_numero');
+            }
+
+            $responsavel_id = $this->input->post('responsavel_id');
+            if ($responsavel_id) {
+                $responsavel_id = $this->Responsavel_model->update_responsavel($responsavel_id, $params_responsavel);
+            }
+            else {
+                $params_responsavel['data_cadastro'] = date('Y-m-d H:i:s');
+                $responsavel_id = $this->Responsavel_model->add_responsavel($params_responsavel);
+            }
+            // print_r($params_responsavel);
+
+            // Adiciona ou atualiza a criança beneficiada
+            $date2 = strtr($this->input->post('data_nascimento_beneficiado'), '/', '-');
+            $params_beneficiado = array(
+				'responsavel' => $responsavel_id,
+                'nome' => $this->input->post('nome_beneficiado'),
+                'data_nascimento' => date('Y-m-d', strtotime($date2)),
+                'sexo' => $this->input->post('sexo_beneficiado'),
+            );
+
+            $beneficiado_id = $this->input->post('select_beneficiado');
+            if ($beneficiado_id == 'outro') {
+                $params_beneficiado['data_cadastro'] = date('Y-m-d H:i:s');
+                $beneficiado_id = $this->Beneficiado_model->add_beneficiado($params_beneficiado);
+            }
+            elseif ($beneficiado_id > 0) {
+                $beneficiado_id = $this->Beneficiado_model->update_beneficiado($beneficiado_id, $params_beneficiado);
+            }
+            // print_r($params_beneficiado);
+
+
+            // Adiciona a carta
+            $ano = date('Y');
+            $regiaoAdministrativa = str_pad($instituicao['ID_REGIAO_ADMINISTRATIVA'], 3, "0", STR_PAD_LEFT);
+            $instituicao_id = str_pad($instituicao['NU_TBP01'], 3, "0", STR_PAD_LEFT);
+            $total_cartas = $this->Carta_model->get_total_cartas_por_instituicao_campanha($instituicao['ABRANGENCIA_ID']);
+            $sequencial_cartas = str_pad($total_cartas['total']+1, 4, "0", STR_PAD_LEFT);
+
+            $params_carta = array(
+				'data_cadastro' => date('Y-m-d H:i:s'),
+				'beneficiado' => $beneficiado_id,
+				'numero' => $ano . $regiaoAdministrativa . $instituicao_id . $sequencial_cartas,
+				'representante_comunidade' => $instituicao['ID_USUARIO'],
+                'regiao_administrativa' => $instituicao['ID_REGIAO_ADMINISTRATIVA'],
+                'NU_TBC02' => $instituicao['ABRANGENCIA_ID'],
+            );
+            $carta_pedido_id = $this->Carta_model->add_carta_pedido($params_carta);
+            // print_r($params_carta);
+
+            // exit();
+
+            redirect('carta/index');
+        }
+        else
+        {
+            $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
+            $data['instituicao_usuario'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            // echo "<pre>"; print_r($data['instituicoes']);print_r($data['instituicao_usuario']); exit();
+            
+            $data['js_scripts'] = array('carta/new.js');
+            $data['_view'] = 'carta/new';
+            $this->load->view('layouts/main',$data);
+        }
     }
 }
