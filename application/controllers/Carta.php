@@ -837,7 +837,13 @@ class Carta extends CI_Controller{
         {
             $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
             $data['instituicao_usuario'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
-            // echo "<pre>"; print_r($data['instituicoes']);print_r($data['instituicao_usuario']); exit();
+
+            $isAdmin = in_array("admin", $this->grupos, true);
+            $isRepresentanteComunidade = in_array("representante-comunidade", $this->grupos, true);
+            if (($isRepresentanteComunidade && !$isAdmin) && !$this->Instituicao_Model->checar_instituicao_vinculo_campanha_atual($data['instituicao_usuario']['NU_TBP01'])) {
+                $this->session->set_flashdata('message', 'A sua instituição não está habilitada à participar da campanha atual "' . $data['campanha_atual']['NO_CAMPANHA'] . '".');
+                redirect('');
+            }
             
             $data['js_scripts'] = array('carta/new.js');
             $data['_view'] = 'carta/new';

@@ -211,12 +211,9 @@
 
                 <?php
                 $grupos_usuario = $this->session->userdata('grupos_usuario');
-
-
-                if($this->session->userdata('grupos_usuario')) {
-
-                $isAdmin = in_array("admin", $grupos_usuario, true);
-                $isRepresentanteComunidade = in_array("representante-comunidade", $grupos_usuario, true);
+                if ($grupos_usuario) {
+                    $isAdmin = in_array("admin", $grupos_usuario, true);
+                    $isRepresentanteComunidade = in_array("representante-comunidade", $grupos_usuario, true);
                 ?>
                 <h4>Instituição</h4>
                 <div class="row clearfix" id="select-instituicao">

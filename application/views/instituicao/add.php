@@ -216,6 +216,11 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="checkbox" value="1" name="vinculo-campanha-atual" id="vinculo-campanha-atual" <?php echo ($this->input->post('ID_USUARIO') ? ' checked' : '');?> /> <label for="vinculo-campanha-atual" class="control-label">Vincular com a campanha vigente</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">

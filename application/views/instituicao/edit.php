@@ -6,6 +6,7 @@
             </div>
             <?php echo form_open('instituicao/edit/'.$instituicao['NU_TBP01']); ?>
             <div class="box-body">
+                <input type="hidden" id="NU_TBC02" name="NU_TBC02" value="<?php echo $instituicao['ABRANGENCIA_ID'] ?>" />
                 <div class="row clearfix">
                     <div class="col-md-3">
                         <label for="NU_CNPJ" class="control-label"><span class="text-danger">*</span>CNPJ</label>
@@ -218,6 +219,11 @@
                                     }
                                 ?>
                             </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="checkbox" value="1" name="vinculo-campanha-atual" id="vinculo-campanha-atual" <?php echo (($this->input->post('ID_USUARIO') ? $this->input->post('ID_USUARIO') : $instituicao['vinculo_campanha_atual']) ? ' checked' : '');?> /> <label for="vinculo-campanha-atual" class="control-label">Vincular com a campanha vigente</label>
                         </div>
                     </div>
                 </div>
