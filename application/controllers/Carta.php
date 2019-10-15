@@ -24,6 +24,7 @@ class Carta extends CI_Controller{
         $this->load->model('Campanha_model');
         $this->load->model('Responsavel_model');
         $this->load->model('Beneficiado_model');
+        $this->load->model('NatalSolidario_model');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
         $this->load->library('ion_auth');
@@ -792,7 +793,8 @@ class Carta extends CI_Controller{
                 'NU_TBC02' => $instituicao['ABRANGENCIA_ID'],
             );
             $carta_pedido_id = $this->Carta_model->add_carta_pedido($params_carta);
-
+            
+            $this->session->set_flashdata('message_ok', 'Pré-cadastro da carta realizado com sucesso.');
             redirect('carta/index');
         }
         else
@@ -811,5 +813,29 @@ class Carta extends CI_Controller{
             $data['_view'] = 'carta/new';
             $this->load->view('layouts/main',$data);
         }
+    }
+    
+    function check_cpf_unique($cpf) {
+        $cpf = preg_replace("/\D/", "", $cpf);
+        if($this->input->post('responsavel_id'))
+            $id = $this->input->post('responsavel_id');
+        else
+            $id = '';
+        $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
+        if($result == 0) {
+            $response = true;
+            $result = $this->NatalSolidario_model->validar_cpf($cpf);
+            if ($result == 1)
+                $response = true;
+            else {
+                $this->form_validation->set_message('check_cpf_unique', 'CPF inválido.');
+                $response = false;
+            }
+        }
+        else {
+            $this->form_validation->set_message('check_cpf_unique', 'CPF já existe na base de dados.');
+            $response = false;
+        }
+        return $response;
     }
 }

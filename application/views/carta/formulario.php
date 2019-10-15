@@ -30,6 +30,7 @@
         						<label for="beneficiado" class="control-label">Atendimento preferencial</label>
         						<div class="form-group">
         							<div class="col-md-8">
+                						<input type="radio" value="" name="preferencial" <?php echo ($carta_pedido['atendimento_preferencial'] == '') ? ' checked' : "";?> /><label class="distancia">Não</label>
                 						<input type="radio" value="Até 1 ano e 11 meses" name="preferencial" <?php echo ($carta_pedido['atendimento_preferencial'] == 'Até 1 ano e 11 meses') ? ' checked' : "";?> /><label class="distancia">Até 1 ano e 11 meses</label>
                 					    <input type="radio" value="Criança PNE" name="preferencial" <?php echo ($carta_pedido['atendimento_preferencial'] == 'Criança PNE') ? ' checked' : "";?>  /><label class="distancia">Criança PNE</label>
                 					    <input type="radio" value="Gestante" name="preferencial"  <?php echo ($carta_pedido['atendimento_preferencial'] == 'Gestante') ? ' checked' : "";?> /><label class="distancia">Gestante</label>
@@ -227,36 +228,22 @@
 					<div class="panel-heading">Pai/Mãe/Responsável 1</div>
 					<div class="panel-body">
         				<div class="row clearfix">
-        					<div class="col-md-4">
+        					<div class="col-md-3">
+        						<label for="responsavel1NumeroDocumento" class="control-label">CPF:</label>
+        						<div class="form-group">
+        							<input type="text" name="responsavel1NumeroDocumento" value="<?php echo $responsavel['documento_numero']; ?>" class="form-control"/>
+        						</div>
+        					</div>
+        					<div class="col-md-7">
         						<label for="responsavel1Nome" class="control-label">Nome:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1Nome" value="<?php echo $responsavel['nome']; ?>" class="form-control"/>
         						</div>
         					</div>
-        					<div class="col-md-4">
+        					<div class="col-md-2">
         						<label for="responsavel1DataNascimento" class="control-label">Data de Nascimento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel1DataNascimento" value="<?php echo $responsavel['data_nascimento']; ?>" class="has-datepicker form-control" />
-        						</div>
-        					</div>
-        				</div>
-        				<div class="row clearfix">
-        					<div class="col-md-4">
-        						<label for="responsavel1NumeroDocumento" class="control-label">Número do documento:</label>
-        						<div class="form-group">
-        							<input type="text" name="responsavel1NumeroDocumento" value="<?php echo $responsavel['documento_numero']; ?>" class="form-control"/>
-        						</div>
-        					</div>
-        					<div class="col-md-4">
-        						<label for="responsavel1Documento" class="control-label">Documento:</label>
-        						<div class="form-group">
-        							<select name="responsavel1Documento" class="form-control">
-        								<option value="">selecione</option>
-        								<option value="CPF" <?php echo ($responsavel['documento_tipo'] == 'CPF') ? 'śelected' : ''; ?>>CPF</option>
-        								<option value="RG" <?php echo ($responsavel['documento_tipo'] == 'RG') ? 'śelected' : ''; ?>>RG</option>
-        								<option value="CNH" <?php echo ($responsavel['documento_tipo'] == 'CNH') ? 'śelected' : ''; ?>>CNH</option>
-        								<option value="OUTRO" <?php echo ($responsavel['documento_tipo'] == 'OUTRO') ? 'śelected' : ''; ?>>OUTRO</option>
-        							</select>
         						</div>
         					</div>
         				</div>
@@ -309,9 +296,7 @@
         							<input type="text" name="responsavel1Ocupacao" value="<?php echo $responsavel['ocupacao']; ?>" class="form-control"/>
         						</div>
         					</div>
-        				</div>
-        				<div class="row clearfix">
-        					<div class="col-md-8">
+        					<div class="col-md-4">
         						<label for="responsavel1Escolaridade" class="control-label">Escolaridade:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel1Escolaridade">
@@ -334,36 +319,22 @@
 					<div class="panel-heading">Pai/Mãe/Responsável 2</div>
 					<div class="panel-body">
         				<div class="row clearfix">
-        					<div class="col-md-4">
+        					<div class="col-md-3">
+        						<label for="responsavel2NumeroDocumento" class="control-label">CPF:</label>
+        						<div class="form-group">
+        							<input type="text" name="responsavel2NumeroDocumento" value="<?php echo $responsavel_adicional['documento_numero']; ?>" class="form-control"/>
+        						</div>
+        					</div>
+        					<div class="col-md-7">
         						<label for="responsavel2Nome" class="control-label">Nome:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2Nome" value="<?php echo $responsavel_adicional['nome']; ?>" class="form-control"/>
         						</div>
         					</div>
-        					<div class="col-md-4">
+        					<div class="col-md-2">
         						<label for="responsavel2DataNascimento" class="control-label">Data de Nascimento:</label>
         						<div class="form-group">
         							<input type="text" name="responsavel2DataNascimento" value="<?php echo $responsavel_adicional['data_nascimento']; ?>" class="has-datepicker form-control" />
-        						</div>
-        					</div>
-        				</div>
-        				<div class="row clearfix">
-        					<div class="col-md-4">
-        						<label for="responsavel2NumeroDocumento" class="control-label">Número do documento:</label>
-        						<div class="form-group">
-        							<input type="text" name="responsavel2NumeroDocumento" value="<?php echo $responsavel_adicional['documento_numero']; ?>" class="form-control"/>
-        						</div>
-        					</div>
-        					<div class="col-md-4">
-        						<label for="responsavel2Documento" class="control-label">Documento:</label>
-        						<div class="form-group">
-        							<select name="responsavel2Documento" class="form-control">
-        								<option value="">Selecione</option>
-        								<option value="CPF" <?php echo ($responsavel_adicional['documento_tipo'] == 'CPF') ? 'śelected' : ''; ?>>CPF</option>
-        								<option value="RG" <?php echo ($responsavel_adicional['documento_tipo'] == 'RG') ? 'śelected' : ''; ?>>RG</option>
-        								<option value="CNH" <?php echo ($responsavel_adicional['documento_tipo'] == 'CNH') ? 'śelected' : ''; ?>>CNH</option>
-        								<option value="OUTRO" <?php echo ($responsavel_adicional['documento_tipo'] == 'OUTRO') ? 'śelected' : ''; ?>>OUTRO</option>
-        							</select>
         						</div>
         					</div>
         				</div>
@@ -416,9 +387,7 @@
         							<input type="text" name="responsavel2Ocupacao" value="<?php echo $responsavel_adicional['ocupacao']; ?>" class="form-control"/>
         						</div>
         					</div>
-        				</div>
-        				<div class="row clearfix">
-        					<div class="col-md-8">
+        					<div class="col-md-4">
         						<label for="responsavel2Escolaridade" class="control-label">Escolaridade:</label>
         						<div class="form-group">
         							<select class="form-control" name="responsavel2Escolaridade">
@@ -479,6 +448,7 @@
             						<input type="radio" value="Própria" name="moradia" <?php echo ($carta_pedido['moradia'] == 'Própria') ? ' checked' : "";?> /><label class="distancia">Própria</label>
             					    <input type="radio" value="Alugada" name="moradia" <?php echo ($carta_pedido['moradia'] == 'Alugada') ? ' checked' : "";?>  /><label class="distancia">Alugada</label>
             					    <input type="radio" value="Cedida" name="moradia"  <?php echo ($carta_pedido['moradia'] == 'Cedida') ? ' checked' : "";?> /><label class="distancia">Cedida</label>
+            					    <input type="radio" value="Orfanato" name="moradia"  <?php echo ($carta_pedido['moradia'] == 'Orfanato') ? ' checked' : "";?> /><label class="distancia">Orfanato</label>
         						</div>
         					</div>
         				</div>
