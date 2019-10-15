@@ -15,7 +15,6 @@ class Sala_entrega_responsavel_model extends CI_Model
             JOIN responsavel r ON sala_entrega_responsavel.responsavel = r.id
             WHERE sala_entrega_presente = '. $idSalaEntrega .'
             ORDER BY r.nome';
-        //log_message('info',print_r('query: ' . $sql, TRUE));
         
         $query = $this->db->query($sql);
         return $query->result_array();

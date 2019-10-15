@@ -23,9 +23,6 @@ class Presente extends CI_Controller{
     }
     
     function carregarMenu($idAdotante = null, $token = null) {
-        log_message('info',print_r('idAdotante:' . $idAdotante, TRUE));
-        log_message('info',print_r('token:' . $token, TRUE));
-        
         $token_decoded = urldecode($token);
         
         $adotante = $this->Adotante_model->get_adotante_por_id($idAdotante);
@@ -61,9 +58,6 @@ class Presente extends CI_Controller{
     }
     
     function add($idCarta = null) {
-        
-        log_message('info',print_r('idCarta:' . $idCarta, TRUE));
-                
         $this->load->library('form_validation');
         
         $this->form_validation->set_rules('descricaoBrinquedo','Brinquedo','required');
@@ -90,15 +84,12 @@ class Presente extends CI_Controller{
             );
             
             if ($presente) {
-                log_message('info',print_r('UPDATE PRESENTE PARA CARTA: ' . $idCarta, TRUE));
                 $this->Presente_model->update($presente['id'], $params);
             } else {
-                log_message('info',print_r('INSERT PRESENTE PARA CARTA: ' . $idCarta, TRUE));
                 $params['data_cadastro'] = date('Y-m-d H:i:s');
                 $this->Presente_model->add($params);
             }
             
-            log_message('info',print_r('origem: ' . $this->session->userdata('origem'), TRUE));
             if($data['origem'] == 'recebimentoPresente'){
                 $carta = $this->Carta_model->get_carta_pedido($idCarta);
                 redirect('presente/receberPresente/'.$carta['numero']);
@@ -144,7 +135,6 @@ class Presente extends CI_Controller{
             $data['numeroSalaEntrega'] = $dadosPresente['numeroSalaEntrega'];
             
             $data['_view'] = 'presente/add';
-            log_message('info',print_r('origem: ' . $this->session->userdata('origem'), TRUE));
             if($data['origem'] == 'recebimentoPresente'){
                 $this->load->view('layouts/main',$data);
             } else {
@@ -192,16 +182,12 @@ class Presente extends CI_Controller{
             $numeroCarta = isset($numeroCarta) ? $numeroCarta : $this->input->post('numeroCarta');
 
             $usuario = $this->ion_auth->user()->row();
-
-            //log_message('info',print_r('numeroCarta: ' . $numeroCarta, TRUE));
             
             $dadosPresente = $this->Presente_model->get_dados_presente($numeroCarta);
             
             if(is_null($dadosPresente['idPresente'])) {
                 $this->session->set_flashdata('message', 'Não existe presente cadastrado para a carta número ' . $numeroCarta);
                 $this->session->set_flashdata('idCarta', $dadosPresente['idCarta']);
-                
-                //log_message('info',print_r('PRESENTE NAO CADASTRADO. ID CARTA: ' . $dadosPresente['idCarta'], TRUE));
             } else {
                 $this->session->set_flashdata('message', '');
             }
@@ -281,8 +267,6 @@ class Presente extends CI_Controller{
         
         $data['imagem_entrega'] = null;
         
-        //log_message('info',print_r('PRESENTE: ' . $idPresente, TRUE));
-        
         if($this->input->post('numeroCarta')) {
             $numeroCarta = $this->input->post('numeroCarta');
             $dadosPresente = $this->Presente_model->get_dados_presente($numeroCarta);
@@ -342,7 +326,6 @@ class Presente extends CI_Controller{
                 
                 if ($dadosPresente['adotante_email']) {
                     $params2['email_entrega_enviado'] = $this->send_mail($body, $dadosPresente['adotante_email']);
-                    //log_message('info',print_r('email_entrega_enviado: ' . $params2['email_entrega_enviado'], TRUE));
                     $this->Presente_model->update($idPresente, $params2);
                 }
             }
@@ -391,7 +374,6 @@ class Presente extends CI_Controller{
         $data['totalCartasRecebidasPorRegiao'] = array();
         $i = 0;
         foreach($totalCartasRecebidasPorRegiao as $regiao) {
-            log_message('info',print_r('REGIAO: ' . $regiao['nome'] . ' - total de cartas: ' . $regiao['total'], TRUE));
             $regiao['conferidosPorRegiao'] = array();
 
             foreach($locaisEntrega as $local) {
@@ -403,8 +385,6 @@ class Presente extends CI_Controller{
                     
                         if ($local['nomeLocalEntrega'] === $item['presente_nome_local_entrega']) {
                             $regiao['conferidosPorRegiao'][$item['presente_nome_local_entrega']] = $item['total'];
-                            
-                            //log_message('info',print_r('ITEM_REGIAO: ' . $item['presente_nome_local_entrega'] . ': ' . $item['total'], TRUE));
                             $encontrado = true;
                             break;
                         } 
@@ -412,12 +392,10 @@ class Presente extends CI_Controller{
                 }
                 if (!$encontrado) {
                     $regiao['conferidosPorRegiao'][$local['nomeLocalEntrega']] = 0;
-                    //log_message('info',print_r('ITEM_REGIAO: ' . $local['nomeLocalEntrega'] . ': ' . 0, TRUE));
                 }
             }
             $data['totalCartasRecebidasPorRegiao'][$i++] = $regiao;
         }
-        //$data['totalCartasRecebidasPorRegiao'] = $totalCartasRecebidasPorRegiao;
         $data['_view'] = 'presente/conferencia';
         $this->load->view('layouts/main',$data);
     }

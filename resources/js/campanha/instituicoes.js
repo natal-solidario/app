@@ -1,4 +1,3 @@
-var base_url = $('#base_url').val();
 $(function() {
     
     $("#select-instituicao").select2({

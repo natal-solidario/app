@@ -58,11 +58,6 @@ class Carta extends CI_Controller{
         $limit_per_page = 50;
         $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
-        // echo "<pre>";
-        // print_r($this->input->get());
-        // echo array_key_exists('campanha', $this->input->get()) ? 1 : 0;
-        // exit();
-
         $data['carteiro_selecionado']       = $this->input->get('carteiro');
         $data['mobilizador_selecionado']    = $this->input->get('mobilizador');
         $data['regiao_administrativa']      = $this->input->get('regiao_administrativa');
@@ -73,12 +68,6 @@ class Carta extends CI_Controller{
         $data['campanha']                   = $this->input->get('campanha');
         $data['instituicao']                = $this->input->get('instituicao');
         
-        //log_message('info',print_r('CARTEIRO_SELECIONADO:' . $data['carteiro_selecionado'], TRUE));
-        //log_message('info',print_r('MOBILIZADOR_SELECIONADO:' . $data['mobilizador_selecionado'], TRUE));
-        //log_message('info',print_r('REGIAO:' . $data['regiao_administrativa'], TRUE));
-        //log_message('info',print_r('NUMERO:' . $data['numero'], TRUE));
-        
-
         $data['isAdmin'] = (in_array('admin', $this->grupos, true) ? true : false);
         $data['isRepComu'] = (in_array("representante-comunidade", $this->grupos, true) ? true : false);
 
@@ -174,6 +163,7 @@ class Carta extends CI_Controller{
      */
     function add()
     {
+        redirect('carta/new');
         $this->load->library('form_validation');
 
 		$this->form_validation->set_rules('beneficiado','Beneficiado','required');
@@ -359,7 +349,6 @@ class Carta extends CI_Controller{
         if ($data['beneficiado']['data_nascimento'] != null) {
             $data['beneficiado']['data_nascimento'] = date("d-m-Y", strtotime($data['beneficiado']['data_nascimento']));
         }
-        //log_message('info',print_r('PAIS_SEPARADOS:' . $data['beneficiado']['pais_separados'], TRUE));
         
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
         if ($data['responsavel']['data_nascimento'] != null) {
@@ -393,9 +382,6 @@ class Carta extends CI_Controller{
         }
         
         if(isset($data['carta_pedido']['id'])) {
-            
-            //log_message('info',print_r('Validando', TRUE));
-            
             $this->load->library('form_validation');
             
             $this->form_validation->set_rules('regiao_administrativa','Beneficiado - Comunidade','required');
@@ -509,10 +495,6 @@ class Carta extends CI_Controller{
                 
                 $dataNascimentoBeneficiado = strtr($this->input->post('dataNascimento'), '/', '-');
                 
-                //log_message('info',print_r('==========================================', TRUE));
-                //log_message('info',print_r('pais separados:'.$this->input->post('paisSeparados'), TRUE));
-                //log_message('info',print_r('==========================================', TRUE));
-                
                 $params = array(
                     'nome' => $this->input->post('nome'),
                     'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoBeneficiado)),
@@ -525,7 +507,6 @@ class Carta extends CI_Controller{
                 $this->Beneficiado_familia_model->delete_por_beneficiado($data['beneficiado']['id']);
                 
                 if ($this->input->post('familia')) {
-                    //log_message('info',print_r($this->input->post('familia'), TRUE));
                     foreach($this->input->post('familia') as $familiar) {
                         $params = array(
                             'beneficiado' => $data['beneficiado']['id'],
@@ -533,25 +514,8 @@ class Carta extends CI_Controller{
                         );
                         $this->Beneficiado_familia_model->add_beneficiado_familia($params);
                     }
-                }                
-                
-                //auditoria
-                /*
-                $this->load->model('Registro_log_model');
-                
-                $paramsAudit = array(
-                    'data_cadastro' => date('Y-m-d H:i:s'),
-                    'usuario' => $this->ion_auth->user()->row()->id,
-                    'acao' => self::ACAO_ALTERACAO,
-                    'titulo' => "CARTA",
-                    'conteudo_anterior' => http_build_query(array_merge($data['carta_pedido'], $checklistAnterior)),
-                    'conteudo_posterior' => http_build_query(array_merge($params, $paramsChecklist))
-                    
-                );
-                $this->Registro_log_model->add_registro_log($paramsAudit);
-                */
-                
-                //log_message('info',print_r('Validando', TRUE));
+                }
+
                 $params = array(
                     'atendimento_preferencial' => $this->input->post('preferencial'),
                     'regiao_administrativa' => $this->input->post('regiao_administrativa'),
@@ -567,9 +531,7 @@ class Carta extends CI_Controller{
                     
                     if (!is_dir('uploads')) {
                         mkdir('./uploads', 0777, true);
-                        //log_message('info',print_r('Diretorio uploads criado', TRUE));
                     } else {
-                        //log_message('info',print_r('Diretorio uploads ja existe', TRUE));
                     }
                     $dir_exist = true; // flag for checking the directory exist or not
                     if (!is_dir('uploads/' . $curYear)) {
@@ -577,15 +539,7 @@ class Carta extends CI_Controller{
                         //$dir_exist = false; // dir not exist
                     }
                     
-                    
                     $path = $_FILES['imagem']['name'];
-                    //log_message('info',print_r($data['carta_pedido'].['numero'], TRUE));
-                    //log_message('info',print_r(pathinfo($path, PATHINFO_EXTENSION), TRUE));
-                    
-                    //$cartaNumero = $data['carta_pedido']['numero'];
-                    //$extensao = pathinfo($path, PATHINFO_EXTENSION);
-                    
-                    //log_message('info',print_r('CARTA_NUMERO_' . $cartaNumero . '.' . $extensao, TRUE));
                     
                     $newName = 'CARTA_NUMERO_' . $data['carta_pedido']['numero'] . '.' . pathinfo($path, PATHINFO_EXTENSION); 
                     
@@ -685,7 +639,6 @@ class Carta extends CI_Controller{
                     
                     $email = trim($this->input->post('email'));
                     $adotante = $this->Adotante_model->get_adotante_por_email($email);
-                    //log_message('info',print_r('ADOT ' . $adotante, TRUE));
                     
                     $params['nome'] = $this->input->post('nome');
                     $params['email'] = $this->input->post('email');
@@ -712,8 +665,6 @@ class Carta extends CI_Controller{
                         'adotante' => $adotante_id,
                     );
                     $this->Carta_model->update_carta_pedido($id,$params);
-                    
-                    //log_message('info',print_r('UPDATE CARTA', TRUE));
                     
                     redirect('carta/index');
                 }
@@ -743,13 +694,13 @@ class Carta extends CI_Controller{
     {
         $this->load->library('form_validation');
 
-		$this->form_validation->set_rules('documento_numero','CPF','required');
+		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
         $this->form_validation->set_rules('nome','Nome','required');
         $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
         $this->form_validation->set_rules('endereco','Logradouro','required');
         $this->form_validation->set_rules('bairro','Bairro','required');
         $this->form_validation->set_rules('cidade','Cidade','required');
-        $this->form_validation->set_rules('uf','UF','required');
+        $this->form_validation->set_rules('uf','UF','required|exact_length[2]|alpha');
         $this->form_validation->set_rules('select_beneficiado','Beneficiado','required');
         $this->form_validation->set_rules('nome_beneficiado','Nome do Beneficiado','required');
         $this->form_validation->set_rules('data_nascimento_beneficiado','Data de Nascimento do Beneficiado','required');
@@ -806,7 +757,6 @@ class Carta extends CI_Controller{
                 $params_responsavel['data_cadastro'] = date('Y-m-d H:i:s');
                 $responsavel_id = $this->Responsavel_model->add_responsavel($params_responsavel);
             }
-            // print_r($params_responsavel);
 
             // Adiciona ou atualiza a criança beneficiada
             $date2 = strtr($this->input->post('data_nascimento_beneficiado'), '/', '-');
@@ -825,8 +775,6 @@ class Carta extends CI_Controller{
             elseif ($beneficiado_id > 0) {
                 $beneficiado_id = $this->Beneficiado_model->update_beneficiado($beneficiado_id, $params_beneficiado);
             }
-            // print_r($params_beneficiado);
-
 
             // Adiciona a carta
             $ano = date('Y');
@@ -844,9 +792,6 @@ class Carta extends CI_Controller{
                 'NU_TBC02' => $instituicao['ABRANGENCIA_ID'],
             );
             $carta_pedido_id = $this->Carta_model->add_carta_pedido($params_carta);
-            // print_r($params_carta);
-
-            // exit();
 
             redirect('carta/index');
         }

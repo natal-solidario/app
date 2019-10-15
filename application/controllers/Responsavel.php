@@ -46,28 +46,23 @@ class Responsavel extends CI_Controller
      */
     function add()
     {   
-        
         $this->load->library('form_validation');
 
 		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
 		$this->form_validation->set_rules('nome','Nome','required');
 		$this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
-		$this->form_validation->set_rules('endereco','Endereço','required');
-		$this->form_validation->set_rules('cidade','Cidade','required');
+		$this->form_validation->set_rules('endereco','Logradouro','required');
 		$this->form_validation->set_rules('bairro','Bairro','required');
-		$this->form_validation->set_rules('uf','UF','required|max_length[2]|alpha');
-		$this->form_validation->set_rules('cep','CEP','exact_length[9]');
-		$this->form_validation->set_rules('numero','Número','numeric');
+		$this->form_validation->set_rules('cidade','Cidade','required');
+		$this->form_validation->set_rules('uf','UF','required|exact_length[2]|alpha');
 		
 		if($this->form_validation->run())     
         {
             $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
-            
-            $params = array(
-                'documento_numero' => $this->input->post('documento_numero'),
+
+            $params_responsavel = array(
 				'documento_tipo' => 'CPF',
-				'data_cadastro' => date('Y-m-d H:i:s'),
-				'nome' => mb_strtoupper($this->input->post('nome')),
+				'nome' => mb_strtoupper(trim($this->input->post('nome'))),
 				'data_nascimento' => date('Y-m-d', strtotime($date1)),
 				'endereco' => $this->input->post('endereco'),
 				'numero' => $this->input->post('numero'),
@@ -77,8 +72,22 @@ class Responsavel extends CI_Controller
 				'uf' => $this->input->post('uf'),
                 'cep' => str_replace('-', '', $this->input->post('cep'))
             );
+
+            if (in_array($this->input->post('metodo_busca'), array("0", "2"))) {
+                $params_responsavel['documento_numero'] = $this->input->post('documento_numero');
+            }
+
+            $responsavel_id = $this->input->post('responsavel_id');
+            if ($responsavel_id) {
+                $responsavel_id = $this->Responsavel_model->update_responsavel($responsavel_id, $params_responsavel);
+                $this->session->set_flashdata('message_ok', 'Responsável atualizado com sucesso.');
+            }
+            else {
+                $params_responsavel['data_cadastro'] = date('Y-m-d H:i:s');
+                $responsavel_id = $this->Responsavel_model->add_responsavel($params_responsavel);
+                $this->session->set_flashdata('message_ok', 'Responsável incluído com sucesso.');
+            }
             
-            $responsavel_id = $this->Responsavel_model->add_responsavel($params);
             redirect('responsavel/index');
         }
         else
@@ -104,21 +113,19 @@ class Responsavel extends CI_Controller
             $this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
             $this->form_validation->set_rules('nome','Nome','required');
             $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
-            $this->form_validation->set_rules('endereco','Endereço','required');
-            $this->form_validation->set_rules('cidade','Cidade','required');
+            $this->form_validation->set_rules('endereco','Logradouro','required');
             $this->form_validation->set_rules('bairro','Bairro','required');
-            $this->form_validation->set_rules('uf','UF','required|max_length[2]|alpha');
-            $this->form_validation->set_rules('cep','Cep','exact_length[9]');
-		
+            $this->form_validation->set_rules('cidade','Cidade','required');
+            $this->form_validation->set_rules('uf','UF','required|exact_length[2]|alpha');
+            
 			if($this->form_validation->run())     
             {
                 $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
 
-                $params = array(
-                    'documento_numero' => $this->input->post('documento_numero'),
+                $params_responsavel = array(
                     'documento_tipo' => 'CPF',
-                    'data_cadastro' => date('Y-m-d H:i:s'),
-                    'nome' => mb_strtoupper($this->input->post('nome')),
+                    'documento_numero' => $this->input->post('documento_numero'),
+                    'nome' => mb_strtoupper(trim($this->input->post('nome'))),
                     'data_nascimento' => date('Y-m-d', strtotime($date1)),
                     'endereco' => $this->input->post('endereco'),
                     'numero' => $this->input->post('numero'),
@@ -128,7 +135,7 @@ class Responsavel extends CI_Controller
                     'uf' => $this->input->post('uf'),
                     'cep' => str_replace('-', '', $this->input->post('cep'))
                 );
-                $this->Responsavel_model->update_responsavel($id, $params);            
+                $this->Responsavel_model->update_responsavel($id, $params_responsavel);            
                 redirect('responsavel/index');
             }
             else
@@ -176,13 +183,11 @@ class Responsavel extends CI_Controller
         
         echo json_encode($retorno);
     }
-
-
     
     function check_cpf_unique($cpf) {
         $cpf = preg_replace("/\D/", "", $cpf);
-        if($this->input->post('NU_TBP01'))
-            $id = $this->input->post('NU_TBP01');
+        if($this->input->post('responsavel_id'))
+            $id = $this->input->post('responsavel_id');
         else
             $id = '';
         $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);

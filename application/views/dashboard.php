@@ -6,7 +6,6 @@
             	   $grupos_usuario = $this->session->userdata('grupos_usuario');
             	
             	   if($this->session->userdata('grupos_usuario'))
-            	       //echo print_r($grupos_usuario);
             	       if (in_array("admin", $grupos_usuario, true)):
             	?>
                 <div  class="panel panel-primary">

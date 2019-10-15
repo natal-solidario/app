@@ -44,13 +44,13 @@
                             <select name="responsavel" id="responsavel" class="form-control">
                                 <option value=""></option>
                                 <?php 
-																foreach($all_responsaveis as $responsavel)
-																{
-																	$selected = ($responsavel['id'] == $this->input->post('responsavel')) ? ' selected="selected"' : "";
+                                foreach($all_responsaveis as $responsavel)
+                                {
+                                    $selected = ($responsavel['id'] == $this->input->post('responsavel')) ? ' selected="selected"' : "";
 
-																	echo '<option value="'.$responsavel['id'].'" '.$selected.'>'.$responsavel['nome'].'</option>';
-																} 
-																?>
+                                    echo '<option value="'.$responsavel['id'].'" '.$selected.'>'.$responsavel['nome'].'</option>';
+                                } 
+                                ?>
                             </select>
                             <span class="text-danger"><?php echo form_error('responsavel');?></span>
                         </div>
