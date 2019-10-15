@@ -20,7 +20,6 @@ class Beneficiado extends CI_Controller{
         } else {
             $user = $this->ion_auth->user()->row();
             $this->session->set_userdata('usuario_logado', $user->email);
-            
         }
     } 
 
@@ -30,7 +29,10 @@ class Beneficiado extends CI_Controller{
     function index()
     {
         $data['beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
+
+        // echo "<pre>"; print_r($data['beneficiados']); exit();
         
+        $data['js_scripts'] = array('beneficiado/index.js');
         $data['_view'] = 'beneficiado/index';
         $this->load->view('layouts/main',$data);
     }
@@ -45,6 +47,7 @@ class Beneficiado extends CI_Controller{
 		$this->form_validation->set_rules('responsavel','Responsavel','required');
 		$this->form_validation->set_rules('nome','Nome','required');
 		$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');
+		$this->form_validation->set_rules('sexo','Sexo','required');
 		
 		if($this->form_validation->run())     
         {   
@@ -57,6 +60,7 @@ class Beneficiado extends CI_Controller{
             );
             
             $beneficiado_id = $this->Beneficiado_model->add_beneficiado($params);
+            $this->session->set_flashdata('message', 'Beneficiado incluído com sucesso!');
             redirect('beneficiado/index');
         }
         else
@@ -64,6 +68,7 @@ class Beneficiado extends CI_Controller{
 			$this->load->model('Responsavel_model');
 			$data['all_responsaveis'] = $this->Responsavel_model->get_all_responsaveis();
             
+            $data['js_scripts'] = array('beneficiado/add.js');
             $data['_view'] = 'beneficiado/add';
             $this->load->view('layouts/main',$data);
         }
@@ -84,18 +89,21 @@ class Beneficiado extends CI_Controller{
 			$this->form_validation->set_rules('responsavel','Responsavel','required');
 			$this->form_validation->set_rules('nome','Nome','required');
 			$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');
+			$this->form_validation->set_rules('sexo','Sexo','required');
 		
 			if($this->form_validation->run())     
             {   
                 $params = array(
-					'removido' => $this->input->post('removido'),
+					// 'removido' => $this->input->post('removido'),
 					'responsavel' => $this->input->post('responsavel'),
-					'data_cadastro' => $this->input->post('data_cadastro'),
+					// 'data_cadastro' => $this->input->post('data_cadastro'),
 					'nome' => $this->input->post('nome'),
-					'data_nascimento' => $this->input->post('data_nascimento'),
+					'sexo' => $this->input->post('sexo'),
+					'data_nascimento' => date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post('data_nascimento')))),
                 );
+                // echo "<pre>"; print_r($params); exit();
 
-                $this->Beneficiado_model->update_beneficiado($id,$params);            
+                $this->Beneficiado_model->update_beneficiado($id, $params);
                 redirect('beneficiado/index');
             }
             else
@@ -110,4 +118,10 @@ class Beneficiado extends CI_Controller{
         else
             show_error('The beneficiado you are trying to edit does not exist.');
     }
+
+    function get_beneficiados()
+    {
+        $idResponsavel = $this->input->post('responsavel');
+        echo json_encode($this->Beneficiado_model->get_all_beneficiados_por_responsavel($idResponsavel));
+    } 
 }

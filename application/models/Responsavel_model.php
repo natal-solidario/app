@@ -16,7 +16,33 @@ class Responsavel_model extends CI_Model
      */
     function get_responsavel($id)
     {
-        return $this->db->get_where('responsavel',array('id'=>$id))->row_array();
+        return $this->db->get_where('responsavel',array('id' => $id))->row_array();
+    }
+    
+    /*
+     * Get responsavel by cpf
+     */
+    function get_responsavel_by_cpf($id)
+    {
+        // return $this->db->get_where('responsavel',array("REPLACE(REPLACE(documento_numero, '-', ''), '.', '') =" => $id))->row_array();
+
+        $sql = "REPLACE(REPLACE(`documento_numero`, '-', ''), '.', '') = " . preg_replace("/[^0-9A-Za-z]/", "", $id) . "";
+        $this->db->from('responsavel')->where($sql);
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        return $this->db->get()->row_array();
+    }
+    
+    /*
+     * Retorna responsável por nome e data de nascimento
+     */
+    function get_responsavel_by_nome_data_nascimento($nome, $data_nascimento)
+    {
+        // return $this->db->get_where('responsavel',array("REPLACE(REPLACE(documento_numero, '-', ''), '.', '') =" => $id))->row_array();
+
+        $sql = "TRIM(`nome`) = '" . mb_strtolower($nome) . "' AND `data_nascimento` = '" . $data_nascimento . "'";
+        $this->db->from('responsavel')->where($sql);
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        return $this->db->get()->row_array();
     }
         
     /*
@@ -40,10 +66,11 @@ class Responsavel_model extends CI_Model
     /*
      * function to update responsavel
      */
-    function update_responsavel($id,$params)
+    function update_responsavel($id, $params)
     {
-        $this->db->where('id',$id);
-        return $this->db->update('responsavel',$params);
+        $this->db->where('id', $id);
+        $update = $this->db->update('responsavel', $params);
+        return ($update ? $id : $update);
     }
     
     /*
@@ -52,5 +79,15 @@ class Responsavel_model extends CI_Model
     function delete_responsavel($id)
     {
         return $this->db->delete('responsavel',array('id'=>$id));
+    }
+
+    function check_unique_cpf($id = '', $cpf) {
+        $sql = "REPLACE(REPLACE(`documento_numero`, '-', ''), '.', '') = " . preg_replace("/[^0-9A-Za-z]/", "", $cpf) . "";
+        $this->db->where($sql);
+
+        if ($id) {
+            $this->db->where_not_in('id', $id);
+        }
+        return $this->db->get('responsavel')->num_rows();
     }
 }

@@ -18,7 +18,7 @@ class Beneficiado_model extends CI_Model
     {
         return $this->db->get_where('beneficiado',array('id'=>$id))->row_array();
     }
-        
+
     /*
      * Get all beneficiados
      */
@@ -29,7 +29,7 @@ class Beneficiado_model extends CI_Model
         $this->db->order_by('beneficiado.id', 'desc');
         return $this->db->get('beneficiado')->result_array();
     }
-        
+
     /*
      * function to add new beneficiado
      */
@@ -42,10 +42,11 @@ class Beneficiado_model extends CI_Model
     /*
      * function to update beneficiado
      */
-    function update_beneficiado($id,$params)
+    function update_beneficiado($id, $params)
     {
-        $this->db->where('id',$id);
-        return $this->db->update('beneficiado',$params);
+        $this->db->where('id', $id);
+        $update = $this->db->update('beneficiado', $params);
+        return ($update ? $id : $update);
     }
     
     /*
@@ -67,6 +68,17 @@ class Beneficiado_model extends CI_Model
         $this->db->join('adotante', 'carta.adotante = adotante.id');
         $this->db->where('adotante.id', $idAdotante);
         $this->db->group_by('beneficiado.nome');
+        $this->db->order_by('beneficiado.nome', 'asc');
+        return $this->db->get('beneficiado')->result_array();
+    }
+
+    /*
+     * Get all beneficiados
+     */
+    function get_all_beneficiados_por_responsavel($idResponsavel)
+    {
+        $this->db->select('beneficiado.*');
+        $this->db->where('responsavel', $idResponsavel);
         $this->db->order_by('beneficiado.nome', 'asc');
         return $this->db->get('beneficiado')->result_array();
     }
