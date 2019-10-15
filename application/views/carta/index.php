@@ -18,7 +18,7 @@
             <div class="box-header">
                 <h3 class="box-title">Cartas</h3>
             	<div class="box-tools">
-                    <a href="<?php echo site_url('carta/new'); ?>" class="btn btn-success btn-sm">Nova</a> 
+                    <a href="<?php echo site_url('carta/new'); ?>" class="btn btn-success">Incluir Carta</a> 
                 </div>
             </div>
             <div class="box-body">
