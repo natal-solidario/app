@@ -6,7 +6,8 @@
             </div>
             <?php echo form_open('instituicao/edit/'.$instituicao['NU_TBP01']); ?>
             <div class="box-body">
-                <input type="hidden" id="NU_TBC02" name="NU_TBC02" value="<?php echo $instituicao['ABRANGENCIA_ID'] ?>" />
+                <input type="hidden" id="NU_TBP01" name="NU_TBP01" value="<?php echo $instituicao['NU_TBP01']; ?>" />
+                <input type="hidden" id="NU_TBC02" name="NU_TBC02" value="<?php echo $instituicao['ABRANGENCIA_ID']; ?>" />
                 <div class="row clearfix">
                     <div class="col-md-3">
                         <label for="NU_CNPJ" class="control-label"><span class="text-danger">*</span>CNPJ</label>
@@ -30,7 +31,7 @@
                         <label for="DE_TELEFONE" class="control-label">Telefone</label>
                         <div class="form-group">
                             <input type="text" name="DE_TELEFONE"
-                                value="<?php echo ($this->input->post('DE_TELEFONE') ? $this->input->post('DE_TELEFONE') : ($instituicao["NU_DDD"] . $instituicao["NU_TELEFONE"])); ?>"
+                                value="<?php echo ($this->input->post('DE_TELEFONE') ? $this->input->post('DE_TELEFONE') : ($instituicao["NU_DDD"] . $instituicao["NU_TELEFONE"]) > 0 ? ($instituicao["NU_DDD"] . $instituicao["NU_TELEFONE"]) : ""); ?>"
                                 class="form-control" id="DE_TELEFONE" />
                             <span class="text-danger"><?php echo form_error('DE_TELEFONE');?></span>
                         </div>
@@ -41,7 +42,7 @@
                         <label for="NU_CEP" class="control-label">CEP</label>
                         <div class="form-group">
                             <input type="text" name="NU_CEP"
-                                value="<?php echo ($this->input->post('NU_CEP') ? $this->input->post('NU_CEP') : $instituicao["NU_CEP"]); ?>"
+                                value="<?php echo ($this->input->post('NU_CEP') ? $this->input->post('NU_CEP') : $instituicao["NU_CEP"] > 0 ? $instituicao["NU_CEP"] : ""); ?>"
                                 class="form-control" id="NU_CEP" />
                             <span class="text-danger"><?php echo form_error('NU_CEP');?></span>
                         </div>

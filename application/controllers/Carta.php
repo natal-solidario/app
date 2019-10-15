@@ -23,7 +23,7 @@ class Carta extends CI_Controller{
         $this->load->model('Instituicao_Model');
         $this->load->model('Campanha_model');
         $this->load->model('Responsavel_model');
-         $this->load->model('Beneficiado_model');
+        $this->load->model('Beneficiado_model');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
         $this->load->library('ion_auth');
@@ -58,6 +58,11 @@ class Carta extends CI_Controller{
         $limit_per_page = 50;
         $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
+        // echo "<pre>";
+        // print_r($this->input->get());
+        // echo array_key_exists('campanha', $this->input->get()) ? 1 : 0;
+        // exit();
+
         $data['carteiro_selecionado']       = $this->input->get('carteiro');
         $data['mobilizador_selecionado']    = $this->input->get('mobilizador');
         $data['regiao_administrativa']      = $this->input->get('regiao_administrativa');
@@ -65,12 +70,28 @@ class Carta extends CI_Controller{
         $data['nome_crianca']               = $this->input->get('nome_crianca');
         $data['nome_responsavel']           = $this->input->get('nome_responsavel');
         $data['situacao']                   = $this->input->get('situacao');
+        $data['campanha']                   = $this->input->get('campanha');
+        $data['instituicao']                = $this->input->get('instituicao');
         
         //log_message('info',print_r('CARTEIRO_SELECIONADO:' . $data['carteiro_selecionado'], TRUE));
         //log_message('info',print_r('MOBILIZADOR_SELECIONADO:' . $data['mobilizador_selecionado'], TRUE));
         //log_message('info',print_r('REGIAO:' . $data['regiao_administrativa'], TRUE));
         //log_message('info',print_r('NUMERO:' . $data['numero'], TRUE));
         
+
+        $data['isAdmin'] = (in_array('admin', $this->grupos, true) ? true : false);
+        $data['isRepComu'] = (in_array("representante-comunidade", $this->grupos, true) ? true : false);
+
+        if (!$data['isAdmin']) {
+            $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+            if ($data['isRepComu'])
+                $data['instituicao'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id)['NU_TBP01'];
+        }
+        else {
+            if (!array_key_exists('campanha', $this->input->get()))
+                $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+        }
+
         $data['cartas'] = null; 
         if ($data['carteiro_selecionado'] != null
             || strlen($data['numero']) > 0
@@ -78,20 +99,21 @@ class Carta extends CI_Controller{
             || strlen($data['nome_responsavel']) > 0
             || $data['regiao_administrativa'] != null
             || $data['mobilizador_selecionado'] != null
-            || $data['situacao'] != null) {
+            || $data['situacao'] != null
+            || $data['campanha'] != null
+            || $data['instituicao'] != null) {
             
             $total_records = $this->Carta_model->contar_cartas_por_parametros($data['numero']
                 , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
-                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao']);
+                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
             
             $data['cartas'] = null;
             if ($total_records > 0) {
                 $data['cartas'] = $this->Carta_model->get_cartas_por_parametros($limit_per_page, $start_index, $data['numero']
                     , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
-                    , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao']);
+                    , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
             }
         } else {
-            
             $total_records = $this->Carta_model->contar_todas_cartas();
             $data['cartas'] = null;
             if ($total_records > 0) {
@@ -106,6 +128,9 @@ class Carta extends CI_Controller{
         
         $this->load->model('NatalSolidario_model');
         $data['all_regioes'] = $this->NatalSolidario_model->get_all_regiao_administrativa();
+
+        $data['all_campanhas'] = $this->Campanha_model->get_all();
+        $data['all_instituicoes'] = $this->Instituicao_Model->get_all_instituicoes();
         
         $config['enable_query_strings'] = TRUE;
         $config['reuse_query_string'] = TRUE;
@@ -732,21 +757,20 @@ class Carta extends CI_Controller{
         $this->form_validation->set_rules('representante','Instituição','required');
         
         $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
-		
+
+        if (in_array('admin', $this->grupos, true)) {
+            $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+        }
+        elseif (in_array("representante-comunidade", $this->grupos, true)) {
+            $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+        }
+        else {
+            $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
+            redirect('carta/index');
+        }
+
 		if($this->form_validation->run())     
         {
-            $campanha_atual = $data['campanha_atual'];
-            if (in_array('admin', $this->grupos, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
-            }
-            elseif (in_array("representante-comunidade", $grupos_usuario, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
-            }
-            else {
-                $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
-                redirect('carta/index');
-            }
-
             /*
             O campo Método da Busca determina se o responsável foi localizado na base de dados
             0 = não localizado na base
@@ -754,13 +778,6 @@ class Carta extends CI_Controller{
             2 = pelo nome e data de nascimento
             */
             
-            // echo "<pre>";
-            // print_r($this->input->post());
-            // print_r($campanha_atual);
-            // print_r($instituicao);
-            // exit();
-
-
             // Adiciona ou atualiza o Responsável
             $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
 
@@ -795,7 +812,7 @@ class Carta extends CI_Controller{
             $date2 = strtr($this->input->post('data_nascimento_beneficiado'), '/', '-');
             $params_beneficiado = array(
 				'responsavel' => $responsavel_id,
-                'nome' => $this->input->post('nome_beneficiado'),
+                'nome' => mb_strtoupper($this->input->post('nome_beneficiado')),
                 'data_nascimento' => date('Y-m-d', strtotime($date2)),
                 'sexo' => $this->input->post('sexo_beneficiado'),
             );

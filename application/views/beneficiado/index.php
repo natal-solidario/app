@@ -15,6 +15,7 @@
                             <th>Nome</th>
                             <th>Data Nascimento</th>
                             <th>Responsável</th>
+                            <th>Sexo</th>
                             <th>Data Cadastro</th>
                             <th>Ações</th>
                         </tr>
@@ -26,6 +27,7 @@
                             <td><?php echo $b['nome']; ?></td>
                             <td><span class="hidden"><?php echo date("Ymd", strtotime($b['data_nascimento'])); ?></span><?php echo date("d/m/Y", strtotime($b['data_nascimento'])); ?></td>
                             <td><?php echo $b['responsavel_nome']; ?></td>
+                            <td><?php echo ($b['sexo'] == "M" ? "Masculino" : "Feminino"); ?></td>
                             <td><span
                                     class="hidden"><?php echo date("Ymd", strtotime($b['data_cadastro'])); ?></span><?php echo date("d/m/Y", strtotime($b['data_cadastro'])); ?>
                             </td>

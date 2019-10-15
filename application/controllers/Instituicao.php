@@ -10,6 +10,8 @@ class Instituicao extends CI_Controller
         $this->load->model('Regiao_administrativa_model');
         $this->load->model('Usuario_model');
         $this->load->model('Campanha_model');
+        $this->load->model('NatalSolidario_model');
+
         $this->load->library('form_validation');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
@@ -41,7 +43,6 @@ class Instituicao extends CI_Controller
      */
     function add()
     {
-        $this->load->library('form_validation');
         $this->form_validation->set_rules('NU_CNPJ','CNPJ','required|callback_check_cnpj_unique');
         $this->form_validation->set_rules('NO_INSTITUICAO','Nome','required');
         $this->form_validation->set_rules('NO_LOGRADOURO','Logradouro','required');
@@ -71,7 +72,8 @@ class Instituicao extends CI_Controller
                 'NU_DDD' => substr($telefone, 0, 2),
                 'NU_TELEFONE' => substr($telefone, 2),
             );
-            $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
+            if ($telefone > 0)
+                $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
 
             // Adicionar a Instituição
             $params_instituicao = array(
@@ -120,11 +122,15 @@ class Instituicao extends CI_Controller
     {   
         // verifica se a instituição já existe antes de atualizar
         $data['instituicao'] = $this->Instituicao_Model->get_instituicao($id);
-        
+
+        // echo "<pre>";
+        // print_r($data['instituicao']);
+        // print_r($this->input->post());
+        // exit();
+
        if(isset($data['instituicao']['NU_TBP01']))
         {
-            $this->load->library('form_validation');
-            $this->form_validation->set_rules('NU_CNPJ','CNPJ','required');
+            $this->form_validation->set_rules('NU_CNPJ','CNPJ','required|callback_check_cnpj_unique');
             $this->form_validation->set_rules('NO_INSTITUICAO','Nome','required');
             $this->form_validation->set_rules('NO_LOGRADOURO','Logradouro','required');
             $this->form_validation->set_rules('NO_BAIRRO','Bairro','required');
@@ -156,7 +162,7 @@ class Instituicao extends CI_Controller
                     'NU_TELEFONE' => substr($telefone, 2),
                 );
 
-                if ($data['instituicao']['NU_TBH02'] == 0) {
+                if ($data['instituicao']['NU_TBH02'] == 0 && $telefone > 0) {
                     $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
                 }
                 else {
@@ -180,13 +186,16 @@ class Instituicao extends CI_Controller
                 $vinculo_responsavel_id = $this->Instituicao_Model->update_vinculo_instituicao_usuario($data['instituicao']['NU_TBP01'], $params_vinculo_instituicao_usuario);
 
                 // Vincular instituição com a campanha atual
-                if ($this->input->post('vinculo-campanha-atual') == 1) {
-                    $campanha_atual = $this->Campanha_model->get_campanha_atual();
-                    $params_vinculo_instituicao_campanha = array(
-                        'NU_TBC01' => $campanha_atual['NU_TBC01'],
-                        'NU_TBP01' => $instituicao_id,
-                    );
-                    $vinculo_campanha_id = $this->Instituicao_Model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
+                if ($this->input->post('vinculo-campanha-atual') == 1) 
+                {
+                    if ($this->input->post('NU_TBC02') == "" || $this->input->post('NU_TBC02') == 0) {
+                        $campanha_atual = $this->Campanha_model->get_campanha_atual();
+                        $params_vinculo_instituicao_campanha = array(
+                            'NU_TBC01' => $campanha_atual['NU_TBC01'],
+                            'NU_TBP01' => $instituicao_id,
+                        );
+                        $vinculo_campanha_id = $this->Instituicao_Model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
+                    }
                 }
                 else {
                     $vinculo_campanha_id = $this->Instituicao_Model->delete_abrangencia_instituicao($instituicao_id);
@@ -212,14 +221,22 @@ class Instituicao extends CI_Controller
     }
 
     function check_cnpj_unique($cnpj) {
-        $cnpj = preg_replace("/\D/", "", $this->input->post('NU_CNPJ'));
-        if($this->input->post('id'))
-            $id = $this->input->post('id');
+        $cnpj = preg_replace("/\D/", "", $cnpj);
+        if($this->input->post('NU_TBP01'))
+            $id = $this->input->post('NU_TBP01');
         else
             $id = '';
         $result = $this->Instituicao_Model->check_unique_cnpj($id, $cnpj);
-        if($result == 0)
+        if($result == 0) {
             $response = true;
+            $result = $this->NatalSolidario_model->validar_cnpj($cnpj);
+            if ($result == 1)
+                $response = true;
+            else {
+                $this->form_validation->set_message('check_cnpj_unique', 'CNPJ inválido.');
+                $response = false;
+            }
+        }
         else {
             $this->form_validation->set_message('check_cnpj_unique', 'CNPJ já existe na base de dados.');
             $response = false;

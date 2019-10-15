@@ -5,7 +5,7 @@
                 <h3 class="box-title">Pré-Cadastro da Carta</h3>
             </div>
             <div class="box-body">
-            <?php echo form_open('carta/new', array('id'=>'form-carta')); ?>
+                <?php echo form_open('carta/new', array('id'=>'form-carta')); ?>
                 <h4>Responsável</h4>
                 <input type="hidden" id="responsavel_id" name="responsavel_id" value="" />
                 <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
@@ -197,7 +197,8 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <label for="sexo_beneficiado" class="control-label"><span class="text-danger">*</span>Sexo</label>
+                        <label for="sexo_beneficiado" class="control-label"><span
+                                class="text-danger">*</span>Sexo</label>
                         <div class="form-group">
                             <select name="sexo_beneficiado" id="sexo_beneficiado" class="form-control">
                                 <option value=""></option>
@@ -221,12 +222,17 @@
                         <label for="representante" class="control-label"><span
                                 class="text-danger">*</span>Instituição</label>
                         <div class="form-group">
-                            <select name="representante" class="form-control<?php echo ($isRepresentanteComunidade && !$isAdmin ? "" : " demais-campos"); ?>" id="representante" required<?php echo ($isRepresentanteComunidade && !$isAdmin ? " disabled" : ""); ?>>
+                            <select name="representante"
+                                class="form-control<?php echo ($isRepresentanteComunidade && !$isAdmin ? "" : " demais-campos"); ?>"
+                                id="representante"
+                                required<?php echo ($isRepresentanteComunidade && !$isAdmin ? " readonly" : ""); ?>>
 
-                            <?php if (sizeof($instituicoes) > 0) { ?>
+                                <?php if (sizeof($instituicoes) > 0) { ?>
                                 <option value="">Selecione</option>
                                 <?php foreach ($instituicoes as $i) { ?>
-                                    <option value="<?php echo $i["NU_TBP01"]; ?>"<?php echo ($i["NU_TBP01"] == $instituicao_usuario["NU_TBP01"] ? " selected" : ""); ?>><?php echo $i["NO_INSTITUICAO"]; ?></option>
+                                <option value="<?php echo $i["NU_TBP01"]; ?>"
+                                    <?php echo ($i["NU_TBP01"] == $instituicao_usuario["NU_TBP01"] ? " selected" : ""); ?>>
+                                    <?php echo $i["NO_INSTITUICAO"]; ?></option>
                                 <?php
                                 }
                             }
@@ -242,7 +248,7 @@
                 <?php
                 }
                 ?>
-            <?php echo form_close(); ?>
+                <?php echo form_close(); ?>
             </div>
             <div class="box-footer">
                 <button type="submit" class="btn btn-success" id="salvar-carta">

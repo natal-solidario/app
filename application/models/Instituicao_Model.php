@@ -76,6 +76,7 @@ class Instituicao_Model extends CI_Model
     
     function add_vinculo_instituicao_usuario($params)
     {
+        $this->delete_vinculo_instituicao_usuario($params);
         $this->db->insert('TBP02_RESPONSAVEL_INSTITUICAO', $params);
         return $this->db->insert_id();
     }
@@ -112,9 +113,7 @@ class Instituicao_Model extends CI_Model
 
     function update_vinculo_instituicao_usuario($id, $params)
     {
-        $this->db->where('NU_TBP01', $id);
-        $update = $this->db->update('TBP02_RESPONSAVEL_INSTITUICAO', $params);
-        return ($update ? $id : $update);
+        $this->add_vinculo_instituicao_usuario($params);
     }
     
     /*
@@ -123,6 +122,11 @@ class Instituicao_Model extends CI_Model
     function delete_instituicao($id)
     {
         return $this->db->delete('TBP01_INSTITUICAO',array('NU_TBP01' => $id));
+    }
+
+    function delete_vinculo_instituicao_usuario($params)
+    {
+        return $this->db->delete('TBP02_RESPONSAVEL_INSTITUICAO', $params);
     }
 
     function delete_abrangencia_instituicao($id)
@@ -138,16 +142,6 @@ class Instituicao_Model extends CI_Model
         return ($delete ? $id : $delete);
     }
 
-    function check_unique_cnpj($id = '', $cnpj) {
-        $this->db->where('NU_CNPJ', $cnpj);
-        // $this->db->where('status', "A");
-
-        if($id) {
-            $this->db->where_not_in('id', $id);
-        }
-        return $this->db->get('TBP01_INSTITUICAO')->num_rows();
-    }
-
     function checar_instituicao_vinculo_campanha_atual($id) {
         // Pega a campanha atual
         $this->db->select_max('AA_CAMPANHA');
@@ -157,5 +151,14 @@ class Instituicao_Model extends CI_Model
         // TBP01 = instituição / TBC01 = campanha
         $this->db->where(array('NU_TBP01' => $id, 'NU_TBC01' => $campanha_atual['NU_TBC01']));
         return $this->db->get('TBC02_ABRANGENCIA_INSTITUICAO')->num_rows();
+    }
+
+    function check_unique_cnpj($id = '', $cnpj) {
+        $this->db->where('NU_CNPJ', $cnpj);
+
+        if ($id) {
+            $this->db->where_not_in('NU_TBP01', $id);
+        }
+        return $this->db->get('TBP01_INSTITUICAO')->num_rows();
     }
 }

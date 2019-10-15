@@ -89,6 +89,7 @@ class Beneficiado extends CI_Controller{
 			$this->form_validation->set_rules('responsavel','Responsavel','required');
 			$this->form_validation->set_rules('nome','Nome','required');
 			$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');
+			$this->form_validation->set_rules('sexo','Sexo','required');
 		
 			if($this->form_validation->run())     
             {   
@@ -97,6 +98,7 @@ class Beneficiado extends CI_Controller{
 					'responsavel' => $this->input->post('responsavel'),
 					// 'data_cadastro' => $this->input->post('data_cadastro'),
 					'nome' => $this->input->post('nome'),
+					'sexo' => $this->input->post('sexo'),
 					'data_nascimento' => date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post('data_nascimento')))),
                 );
                 // echo "<pre>"; print_r($params); exit();

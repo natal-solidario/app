@@ -12,6 +12,7 @@ class Responsavel extends CI_Controller
         parent::__construct();
         $this->load->model('Responsavel_model');
         $this->load->model('Beneficiado_model');
+        $this->load->model('NatalSolidario_model');
 
         $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
         $this->load->library('ion_auth');
@@ -48,7 +49,7 @@ class Responsavel extends CI_Controller
         
         $this->load->library('form_validation');
 
-		$this->form_validation->set_rules('documento_numero','CPF','required');
+		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
 		$this->form_validation->set_rules('nome','Nome','required');
 		$this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
 		$this->form_validation->set_rules('endereco','Endereço','required');
@@ -100,7 +101,7 @@ class Responsavel extends CI_Controller
         {
             $this->load->library('form_validation');
 
-            $this->form_validation->set_rules('documento_numero','CPF','required');
+            $this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
             $this->form_validation->set_rules('nome','Nome','required');
             $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
             $this->form_validation->set_rules('endereco','Endereço','required');
@@ -145,6 +146,7 @@ class Responsavel extends CI_Controller
     {
         $etapa = $this->input->post('etapa');
         $cpf = $this->input->post('cpf');
+
         $nome = trim($this->input->post('nome'));
         $data_nascimento = $this->input->post('data_nascimento');
 
@@ -154,7 +156,14 @@ class Responsavel extends CI_Controller
         
         if ($etapa == 1)
         {
-            $retorno = $this->Responsavel_model->get_responsavel_by_cpf($cpf);
+            $teste = $this->NatalSolidario_model->validar_cpf($cpf);
+
+            if ($teste) {
+                $retorno = $this->Responsavel_model->get_responsavel_by_cpf($cpf);
+            }
+            else {
+                $retorno = array('status' => 'error', 'message' => 'CPF inválido.');
+            }
         }
         elseif ($etapa == 2)
         {
@@ -166,5 +175,31 @@ class Responsavel extends CI_Controller
         }
         
         echo json_encode($retorno);
+    }
+
+
+    
+    function check_cpf_unique($cpf) {
+        $cpf = preg_replace("/\D/", "", $cpf);
+        if($this->input->post('NU_TBP01'))
+            $id = $this->input->post('NU_TBP01');
+        else
+            $id = '';
+        $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
+        if($result == 0) {
+            $response = true;
+            $result = $this->NatalSolidario_model->validar_cpf($cpf);
+            if ($result == 1)
+                $response = true;
+            else {
+                $this->form_validation->set_message('check_cpf_unique', 'CPF inválido.');
+                $response = false;
+            }
+        }
+        else {
+            $this->form_validation->set_message('check_cpf_unique', 'CPF já existe na base de dados.');
+            $response = false;
+        }
+        return $response;
     }
 }

@@ -8,6 +8,9 @@
     </div>
 <?php endif; ?>
 
+<?php
+    $grupos_usuario = $this->session->userdata('grupos_usuario');
+?>
 <div class="row">
 	<?php echo form_open('carta/index', array('method'=>'get','id'=>'myform')); ?>
     <div class="col-md-12">
@@ -37,7 +40,7 @@
                 			</div>
                 		</div>
                 		<div class="row clearfix">
-                           <div class="col-md-6">
+                           <div class="col-md-4">
                                 <label>Carteiro</label>
                                 <select name="carteiro" class="form-control" onchange="myform.submit();">
                                     <option value="">Todos</option>
@@ -50,7 +53,7 @@
                                     ?>
                                 </select>
                             </div>
-                           <div class="col-md-6">
+                           <div class="col-md-4">
                                 <label>Mobilizador</label>
                                 <select name="mobilizador" class="form-control" onchange="myform.submit();">
                                     <option value="">Todos</option>
@@ -63,9 +66,7 @@
                                     ?>
                                 </select>
                             </div>
-                		</div>
-                		<div class="row clearfix">
-                			<div class="col-md-6">
+                			<div class="col-md-4">
                             	<label>Região administrativa </label>
                                 <select name="regiao_administrativa" class="form-control" onchange="myform.submit();">
                     				<option value="">Todas</option>
@@ -78,15 +79,44 @@
                     				?>
                     			</select>
                 			</div>
-                			<div class="col-md-6">
+                			<div class="col-md-4">
                             	<label>Situação </label>
                                 <select name="situacao" class="form-control" onchange="myform.submit();">
                     				<option value="">Todas</option>
                     				<option value="SEM_CARTEIRO_VINCULADO" <?php echo ($situacao == 'SEM_CARTEIRO_VINCULADO') ? 'selected' : '' ?>>Sem carteiro vinculado</option>
                     				<option value="SEM_MOBILIZADOR_VINCULADO" <?php echo ($situacao == 'SEM_MOBILIZADOR_VINCULADO') ? 'selected' : '' ?>>Sem mobilizador vinculado</option>
-                    				<option value="AGUARDANDO_ADOCAO" <?php echo ($situacao == '3') ? 'selected' : 'AGUARDANDO_ADOCAO' ?>>Aguardando adoção</option>
+                    				<option value="AGUARDANDO_ADOCAO" <?php echo ($situacao == 'AGUARDANDO_ADOCAO') ? 'selected' : '' ?>>Aguardando adoção</option>
                     			</select>
                 			</div>
+                            <?php $isEditable = (($isRepComu && !$isAdmin) ? false : true); ?>
+                			<div class="col-md-4">
+                            	<label>Campanha</label>
+                                <select name="campanha" class="form-control" onchange="myform.submit();"<?php echo !$isEditable ? " readonly" : ""; ?>>
+                    				<option value="">Todas</option>
+                    				<?php 
+                    				foreach($all_campanhas as $c) {
+                    				    $selected = ($c->AA_CAMPANHA == ''.$campanha) ? ' selected' : '';
+                    				    
+                    				    echo '<option value="'.$c->AA_CAMPANHA.'" '.$selected.'>'.$c->NO_CAMPANHA.'</option>';
+                    				}
+                    				?>
+                    			</select>
+                			</div>
+                            <?php // if (in_array("admin", $grupos_usuario, true)) { ?>
+                			<div class="col-md-4">
+                            	<label>Instituição</label>
+                                <select name="instituicao" class="form-control" onchange="myform.submit();"<?php echo !$isEditable ? " readonly" : ""; ?>>
+                    				<option value="">Todas</option>
+                    				<?php 
+                    				foreach($all_instituicoes as $i) {
+                    				    $selected = ($i['NU_TBP01'] == ''.$instituicao) ? ' selected' : '';
+                    				    
+                    				    echo '<option value="'.$i['NU_TBP01'].'" '.$selected.'>'.$i['NO_INSTITUICAO'].'</option>';
+                    				}
+                    				?>
+                    			</select>
+                			</div>
+                            <?php // } ?>
                 		</div>
                 	</div>
                 </div>
@@ -122,36 +152,36 @@
                         <td><?php echo date("d/m/Y", strtotime($c['data_cadastro'])); ?></td>
                         <td><?php echo ($c['credenciado']) ? 'Sim' : 'Não'; ?></td>
 						<td>
+                        <div class="button-group">
 							<?php                            
-                            $grupos_usuario = $this->session->userdata('grupos_usuario');
-                            
-                            if($this->session->userdata('grupos_usuario'))
+                            if($grupos_usuario)
                                 //echo print_r($grupos_usuario);
                                 if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)):
                             ?>
-                                <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>" class="btn btn-info btn-xs" style="margin-right:10px;"><span class="fa fa-pencil"></span> Editar</a>
+                                <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>" class="btn btn-info btn-xs" style="margin-right:2px;"><span class="fa fa-pencil"></span> Editar</a>
                             <?php 
                                 
                              endif;
                              
                              if (in_array("admin", $grupos_usuario, true) || $this->session->userdata('usuario_logado_id') == $c['carteiro_associado']):
                             ?>
-                            	<a href="<?php echo site_url('carta/formulario/'.$c['id']); ?>" class="btn btn-success btn-xs" style="margin-right:10px;"><span class="fa fa-pencil"></span> Formulário</a>
+                            	<a href="<?php echo site_url('carta/formulario/'.$c['id']); ?>" class="btn btn-success btn-xs" style="margin-right:2px;"><span class="fa fa-pencil"></span> Formulário</a>
                             <?php 
                                 
                              endif;
                              
                              if (in_array("admin", $grupos_usuario, true) || $this->session->userdata('usuario_logado_id') == $c['mobilizador']):
                              ?>
-                            	<a href="<?php echo site_url('carta/adotante/'.$c['id']); ?>" class="btn btn-warning btn-xs" style="margin-right:10px;"><span class="fa fa-pencil"></span> Adotante</a>
+                            	<a href="<?php echo site_url('carta/adotante/'.$c['id']); ?>" class="btn btn-warning btn-xs" style="margin-right:2px;"><span class="fa fa-pencil"></span> Adotante</a>
                             <?php
                              endif;
                              if ((in_array("admin", $grupos_usuario, true) || in_array("representante-comunidade", $grupos_usuario, true)) && !$c['credenciado']) {
                                  ?>
-							<a href="<?php echo site_url('carta/credenciar/'.$c['id']); ?>" class="btn btn-danger btn-xs" style="margin-right:10px;" onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span class="fa fa-pencil"></span> Credenciar</a>
+							<a href="<?php echo site_url('carta/credenciar/'.$c['id']); ?>" class="btn btn-danger btn-xs" style="margin-right:2px;" onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span class="fa fa-pencil"></span> Credenciar</a>
                             <?php
 							}
                              ?>
+                             </div>
                         </td>
                     </tr>
                     <?php }

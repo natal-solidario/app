@@ -117,7 +117,7 @@ class Carta_model extends CI_Model
         return $this->db->delete('carta',array('id'=>$id));
     }
     
-    function get_cartas_por_parametros($limit, $start, $numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao)
+    function get_cartas_por_parametros($limit, $start, $numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao, $campanha, $instituicao)
     {
         $this->db->limit($limit, $start);
         $this->db->select('carta.*, beneficiado.nome as beneficiado_nome, r.nome as responsavel_nome, a.nome as adotante_nome');
@@ -152,13 +152,21 @@ class Carta_model extends CI_Model
         if ($situacao == 'AGUARDANDO_ADOCAO') {
             $this->db->where('adotante IS NULL');
         }
+        if ($campanha) {
+            $this->db->where("LEFT(carta.numero, 4) = " . $campanha);
+        }
+        if ($instituicao) {
+            $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'carta.NU_TBC02 = TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02', 'INNER');
+            $this->db->where('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01', $instituicao);
+        }
         $this->db->order_by('id', 'desc');
         return $this->db->get('carta')->result_array();
     }
     
-    function contar_cartas_por_parametros($numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao) 
+    function contar_cartas_por_parametros($numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao, $campanha, $instituicao) 
     {
         $this->db->select('*');
+        $this->db->from('carta');
         $this->db->join('beneficiado', 'carta.beneficiado = beneficiado.id');
         $this->db->join('responsavel r', 'beneficiado.responsavel = r.id');
         $this->db->where('carta.removida', false);
@@ -189,7 +197,15 @@ class Carta_model extends CI_Model
         if ($situacao == 'AGUARDANDO_ADOCAO') {
             $this->db->where('adotante IS NULL');
         }
-        $query = $this->db->get('carta');
+        if ($campanha) {
+            $this->db->where("LEFT(carta.numero, 4) = " . $campanha);
+        }
+        if ($instituicao) {
+            $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'carta.NU_TBC02 = TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02', 'INNER');
+            $this->db->where('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01', $instituicao);
+        }
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        $query = $this->db->get();
         return $query->num_rows();
     }
     

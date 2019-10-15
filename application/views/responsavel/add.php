@@ -4,8 +4,10 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Novo Responsável</h3>
             </div>
-            <?php echo form_open('responsavel/add'); ?>
             <div class="box-body">
+                <?php echo form_open('responsavel/add', array('id'=>'form-responsavel')); ?>
+                <input type="hidden" id="responsavel_id" name="responsavel_id" value="" />
+                <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
                 <div class="row clearfix">
                     <div class="col-md-3">
                         <label for="documento_numero" class="control-label"><span
@@ -15,6 +17,7 @@
                                 value="<?php echo $this->input->post('documento_numero'); ?>" class="form-control"
                                 id="documento_numero" />
                             <span class="text-danger"><?php echo form_error('documento_numero');?></span>
+                            <small id="enter-cpf">Após digitar o CPF aperte a tecla ENTER</small>
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -33,6 +36,7 @@
                                 value="<?php echo $this->input->post('data_nascimento'); ?>"
                                 class="form-control segunda-validacao" id="data_nascimento" />
                             <span class="text-danger"><?php echo form_error('data_nascimento');?></span>
+                            <small id="enter-data" style="display:none;">Após digitar os dados aperte ENTER</small>
                         </div>
                     </div>
                 </div>
@@ -152,15 +156,14 @@
                             <span class="text-danger"><?php echo form_error('uf');?></span>
                         </div>
                     </div>
-
                 </div>
+                <?php echo form_close(); ?>
             </div>
             <div class="box-footer">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success" id="salvar-responsavel">
                     <i class="fa fa-check"></i> Salvar
                 </button>
             </div>
-            <?php echo form_close(); ?>
         </div>
     </div>
 </div>
