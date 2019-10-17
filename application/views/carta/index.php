@@ -155,7 +155,7 @@
                         <div class="button-group">
 							<?php                            
                             if($grupos_usuario)
-                                if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)):
+                                if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true) || in_array("representante-comunidade", $grupos_usuario, true)):
                             ?>
                                 <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>" class="btn btn-info btn-xs" style="margin-right:2px;"><span class="fa fa-pencil"></span> Editar</a>
                             <?php 
