@@ -18,7 +18,7 @@
             <div class="box-header">
                 <h3 class="box-title">Cartas</h3>
             	<div class="box-tools">
-                    <a href="<?php echo site_url('carta/add'); ?>" class="btn btn-success btn-sm">Nova</a> 
+                    <a href="<?php echo site_url('carta/new'); ?>" class="btn btn-success">Incluir Carta</a> 
                 </div>
             </div>
             <div class="box-body">
@@ -155,7 +155,6 @@
                         <div class="button-group">
 							<?php                            
                             if($grupos_usuario)
-                                //echo print_r($grupos_usuario);
                                 if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)):
                             ?>
                                 <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>" class="btn btn-info btn-xs" style="margin-right:2px;"><span class="fa fa-pencil"></span> Editar</a>

@@ -123,11 +123,6 @@ class Instituicao extends CI_Controller
         // verifica se a instituição já existe antes de atualizar
         $data['instituicao'] = $this->Instituicao_Model->get_instituicao($id);
 
-        // echo "<pre>";
-        // print_r($data['instituicao']);
-        // print_r($this->input->post());
-        // exit();
-
        if(isset($data['instituicao']['NU_TBP01']))
         {
             $this->form_validation->set_rules('NU_CNPJ','CNPJ','required|callback_check_cnpj_unique');

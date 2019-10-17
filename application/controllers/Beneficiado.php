@@ -29,8 +29,6 @@ class Beneficiado extends CI_Controller{
     function index()
     {
         $data['beneficiados'] = $this->Beneficiado_model->get_all_beneficiados();
-
-        // echo "<pre>"; print_r($data['beneficiados']); exit();
         
         $data['js_scripts'] = array('beneficiado/index.js');
         $data['_view'] = 'beneficiado/index';
@@ -55,12 +53,13 @@ class Beneficiado extends CI_Controller{
             $params = array(
 				'responsavel' => $this->input->post('responsavel'),
                 'nome' => $this->input->post('nome'),
+                'sexo' => $this->input->post('sexo'),
                 'data_nascimento' => date('Y-m-d', strtotime($date1)),
 				'data_cadastro' => date('Y-m-d H:i:s'),
             );
             
             $beneficiado_id = $this->Beneficiado_model->add_beneficiado($params);
-            $this->session->set_flashdata('message', 'Beneficiado incluído com sucesso!');
+            $this->session->set_flashdata('message_ok', 'Beneficiado incluído com sucesso!');
             redirect('beneficiado/index');
         }
         else
@@ -94,14 +93,11 @@ class Beneficiado extends CI_Controller{
 			if($this->form_validation->run())     
             {   
                 $params = array(
-					// 'removido' => $this->input->post('removido'),
 					'responsavel' => $this->input->post('responsavel'),
-					// 'data_cadastro' => $this->input->post('data_cadastro'),
 					'nome' => $this->input->post('nome'),
 					'sexo' => $this->input->post('sexo'),
 					'data_nascimento' => date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post('data_nascimento')))),
                 );
-                // echo "<pre>"; print_r($params); exit();
 
                 $this->Beneficiado_model->update_beneficiado($id, $params);
                 redirect('beneficiado/index');

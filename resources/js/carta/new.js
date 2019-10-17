@@ -1,4 +1,3 @@
-var base_url = $('#base_url').val();
 var responsavel_id;
 $(function() {
     $('#documento_numero').mask('000.000.000-00', {reverse: true});
@@ -10,7 +9,6 @@ $(function() {
         $(".segunda-validacao").prop("disabled", true);
     }
 
-    
     $('#documento_numero').keydown(function(e) {
         var valor = $(this).val();
         if (e.which == 9 && valor.length == 14) {

@@ -5,6 +5,8 @@
                 <h3 class="box-title">Editar Responsável</h3>
             </div>
             <?php echo form_open('responsavel/edit/' . $responsavel['id']); ?>
+                <input type="hidden" id="responsavel_id" name="responsavel_id" value="<?php echo $responsavel['id']; ?>" />
+                <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
             <div class="box-body">
                 <div class="row clearfix">
                     <div class="col-md-3">

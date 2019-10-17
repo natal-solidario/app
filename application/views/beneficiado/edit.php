@@ -26,7 +26,7 @@
 						<div class="form-group">
 							<select name="responsavel" class="form-control">
 								<option value=""></option>
-								<?php 
+								<?php
 								foreach($all_responsaveis as $responsavel)
 								{
 									$selected = ($responsavel['id'] == $beneficiado['responsavel']) ? ' selected="selected"' : "";
@@ -43,8 +43,8 @@
                         <div class="form-group">
                             <select name="sexo" class="form-control">
                                 <option value=""></option>
-                                <option value="F">Feminino</option>
-                                <option value="M">Masculino</option>
+                                <option value="F"<?php echo ($beneficiado['sexo'] == 'F' ? " selected" : ""); ?>>Feminino</option>
+                                <option value="M"<?php echo ($beneficiado['sexo'] == 'M' ? " selected" : ""); ?>>Masculino</option>
                             </select>
                             <span class="text-danger"><?php echo form_error('sexo'); ?></span>
                         </div>

@@ -21,6 +21,10 @@
 
 <body class="hold-transition skin-blue sidebar-mini">
     <input type="hidden" id="base_url" value="<?php echo base_url(); ?>" />
+    <script type="text/javascript">
+        var base_url = "<?php echo base_url(); ?>";
+    </script>
+
     <div class="wrapper">
         <header class="main-header">
             <!-- Logo -->
@@ -151,7 +155,6 @@
 
                     <?php
                         if($grupos_usuario)
-                            //echo print_r($grupos_usuario);
                             if (in_array("admin", $grupos_usuario, true) ||
                                 in_array("representante-comunidade", $grupos_usuario, true) ||
                                 in_array("representante-ong", $grupos_usuario, true) ||

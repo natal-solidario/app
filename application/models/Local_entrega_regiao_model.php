@@ -22,8 +22,6 @@ class Local_entrega_regiao_model extends CI_Model
         
         $retorno = $this->db->get('local_entrega_regiao')->result_array();
         
-        //print_r($this->db->last_query());
-        
         return $retorno;
     }
     
@@ -37,8 +35,6 @@ class Local_entrega_regiao_model extends CI_Model
         $this->db->order_by('inicio', 'desc');
         
         $retorno = $this->db->get('local_entrega_regiao')->row_array();
-        
-        //print_r($this->db->last_query());
         
         return $retorno;
     }
@@ -56,8 +52,6 @@ class Local_entrega_regiao_model extends CI_Model
         $this->db->order_by('l.nome', 'asc');
         
         $retorno = $this->db->get('local_entrega_regiao')->result_array();
-        
-        //print_r($this->db->last_query());
         
         return $retorno;
     }
