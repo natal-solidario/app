@@ -26,10 +26,6 @@ class Carta extends CI_Controller{
         $this->load->model('Beneficiado_model');
         $this->load->model('NatalSolidario_model');
 
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-        $this->load->library('pagination');
-
         if (!$this->ion_auth->logged_in())
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');
@@ -174,8 +170,6 @@ class Carta extends CI_Controller{
         
         if(isset($data['carta_pedido']['id']))
         {
-            $this->load->library('form_validation');
-
             $this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
             $this->form_validation->set_rules('nome','Nome','required');
             $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
@@ -256,23 +250,24 @@ class Carta extends CI_Controller{
         // check if the carta_pedido exists before trying to edit it
         $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
         
+        $data['instituicao'] = $this->Instituicao_Model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
         $data['beneficiado']  = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
         
         if ($data['beneficiado']['data_nascimento'] != null) {
-            $data['beneficiado']['data_nascimento'] = date("d-m-Y", strtotime($data['beneficiado']['data_nascimento']));
+            $data['beneficiado']['data_nascimento'] = date("d/m/Y", strtotime($data['beneficiado']['data_nascimento']));
         }
         
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
         if ($data['responsavel']['data_nascimento'] != null) {
-            $data['responsavel']['data_nascimento'] = date("d-m-Y", strtotime($data['responsavel']['data_nascimento']));
+            $data['responsavel']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel']['data_nascimento']));
         }
         
-        $data['responsavel_adicional']  = null; 
+        $data['responsavel_adicional']  = null;
         if ($data['beneficiado']['responsavel_adicional'] != null) {
             $data['responsavel_adicional']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel_adicional']);
         }
         if ($data['responsavel_adicional']['data_nascimento'] != null) {
-            $data['responsavel_adicional']['data_nascimento'] = date("d-m-Y", strtotime($data['responsavel_adicional']['data_nascimento']));
+            $data['responsavel_adicional']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel_adicional']['data_nascimento']));
         }
         
         $this->load->model('Beneficiado_familia_model');
@@ -293,9 +288,8 @@ class Carta extends CI_Controller{
             $data['programacoes'] = array_column($programacoes, 'programacao');
         }
         
-        if(isset($data['carta_pedido']['id'])) {
-            $this->load->library('form_validation');
-            
+        if(isset($data['carta_pedido']['id']))
+        {
             $this->form_validation->set_rules('regiao_administrativa','Beneficiado - Comunidade','required');
             $this->form_validation->set_rules('nome','Beneficiado - Nome','required');
             $this->form_validation->set_rules('dataNascimento','Beneficiado - Data de nascimento','required');
@@ -518,6 +512,7 @@ class Carta extends CI_Controller{
                 $this->load->model('Carta_checklist_model');
                 $data['checklist'] = $this->Carta_checklist_model->get_carta_checklist($id);
                 
+                $data['js_scripts'] = array('carta/formulario.js');
                 $data['_view'] = 'carta/formulario';
                 $this->load->view('layouts/main',$data);
             }
@@ -539,10 +534,8 @@ class Carta extends CI_Controller{
                 $data['adotante'] = $this->Adotante_model->get_adotante_por_id($data['carta_pedido']['adotante']);
             }
             
-            if($this->input->post('acao') === 'save') {
-                 
-                $this->load->library('form_validation');
-                
+            if($this->input->post('acao') === 'save')
+            {
                 $this->form_validation->set_rules('nome','Nome','required|max_length[300]');
                 $this->form_validation->set_rules('celular','Celular','required');
                 $this->form_validation->set_rules('email','E-mail pessoal','required|max_length[300]');
@@ -604,8 +597,6 @@ class Carta extends CI_Controller{
 
     function new()
     {
-        $this->load->library('form_validation');
-
 		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
         $this->form_validation->set_rules('nome','Nome','required');
         $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');

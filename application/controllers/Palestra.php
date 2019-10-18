@@ -6,10 +6,7 @@ class Palestra extends CI_Controller{
         parent::__construct();
         $this->load->model('Sala_palestra_model');
         $this->load->model('Sala_palestra_turma_model');
-        
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-        
+
         if (!$this->ion_auth->logged_in())
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');

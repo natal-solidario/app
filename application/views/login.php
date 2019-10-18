@@ -12,7 +12,7 @@
     <title>Natal Solidário</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
     
     <!-- Custom styles for this template -->
     <link href="<?php echo base_url('assets/css/signin.css'); ?>" rel="stylesheet">

@@ -10,10 +10,7 @@ class Entrega extends CI_Controller{
         $this->load->model('Local_entrega_regiao_model');
         $this->load->model('Carta_model');
         $this->load->model('Regiao_administrativa_model');
-        
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-        
+
         if (!$this->ion_auth->logged_in())
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');

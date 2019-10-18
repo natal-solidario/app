@@ -6,10 +6,6 @@ class Campanha extends CI_Controller{
         parent::__construct();
         $this->load->model('Campanha_model');
         $this->load->model('Instituicao_Model');
-        $this->load->library('form_validation');
-
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
 
         if (!$this->ion_auth->in_group('admin'))
         {
@@ -74,7 +70,6 @@ class Campanha extends CI_Controller{
 
     function add()
     {
-        $this->load->library('form_validation');
         $this->form_validation->set_rules('NO_CAMPANHA','Nome da Campanha','required|is_unique[TBC01_CAMPANHA.NO_CAMPANHA]');
         $this->form_validation->set_rules('AA_CAMPANHA','Ano da Campanha','required|integer|exact_length[4]|is_unique[TBC01_CAMPANHA.AA_CAMPANHA]');
 
@@ -102,7 +97,6 @@ class Campanha extends CI_Controller{
 
         if(isset($data['campanha']->NU_TBC01))
         {
-            $this->load->library('form_validation');
             $this->form_validation->set_rules('NO_CAMPANHA','Nome da Campanha','required|is_unique[TBC01_CAMPANHA.NO_CAMPANHA]');
             $this->form_validation->set_rules('AA_CAMPANHA','Ano da Campanha','required|integer|exact_length[4]|is_unique[TBC01_CAMPANHA.AA_CAMPANHA]');
             

@@ -6,8 +6,6 @@ class Presente extends CI_Controller{
     {
         parent::__construct();
 
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
         $this->load->library('email');
         
         $this->load->model('Carta_model');
@@ -57,9 +55,8 @@ class Presente extends CI_Controller{
         $this->load->view('layouts/main_presente',$data);
     }
     
-    function add($idCarta = null) {
-        $this->load->library('form_validation');
-        
+    function add($idCarta = null)
+    {
         $this->form_validation->set_rules('descricaoBrinquedo','Brinquedo','required');
         $this->form_validation->set_rules('classificacaoBrinquedo','Classificação do brinquedo','required');
 
