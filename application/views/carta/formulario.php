@@ -469,7 +469,7 @@
                                     <input type="radio" name="responsavel1TelefoneWhatsapp" value="0"
                                         <?php echo (($this->input->post('responsavel1TelefoneWhatsapp') ? $this->input->post('responsavel1TelefoneWhatsapp') : $responsavel['telefone_whatsapp']) == 0 ? 'checked' : ''); ?> /><label
                                         style="margin-left:5px;">Não</label>
-                                        <span class="text-danger"><?php echo form_error('responsavel1TelefoneWhatsapp');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel1TelefoneWhatsapp');?></span>
                                 </div>
                             </div>
                         </div>
@@ -487,6 +487,7 @@
                                     <input type="text" name="responsavel2Nome"
                                         value="<?php echo ($this->input->post('responsavel2Nome') ? $this->input->post('responsavel2Nome') : $responsavel_adicional['nome']); ?>"
                                         class="form-control" />
+                                        <span class="text-danger"><?php echo form_error('responsavel2Nome');?></span>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -496,6 +497,7 @@
                                     <input type="text" name="responsavel2DataNascimento"
                                         value="<?php echo ($this->input->post('responsavel2DataNascimento') ? $this->input->post('responsavel2DataNascimento') : $responsavel_adicional['data_nascimento']); ?>"
                                         class="form-control" id="responsavel2DataNascimento" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2DataNascimento');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -505,6 +507,7 @@
                                         id="responsavel2NumeroDocumento"
                                         value="<?php echo ($this->input->post('responsavel2NumeroDocumento') ? $this->input->post('responsavel2NumeroDocumento') : $responsavel_adicional['documento_numero']); ?>"
                                         class="form-control" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2NumeroDocumento');?></span>
                                 </div>
                             </div>
                         </div>
@@ -531,6 +534,7 @@
                                     <input type="text" name="responsavel2Endereco" id="responsavel2Endereco"
                                         value="<?php echo ($this->input->post('responsavel2Endereco') ? $this->input->post('responsavel2Endereco') : $responsavel_adicional['endereco']); ?>"
                                         class="form-control" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2Endereco');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3 mesmo-endereco">
@@ -549,6 +553,7 @@
                                     <input type="text" name="responsavel2Bairro" id="responsavel2Bairro"
                                         value="<?php echo ($this->input->post('responsavel2Bairro') ? $this->input->post('responsavel2Bairro') : $responsavel_adicional['bairro']); ?>"
                                         class="form-control" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2Bairro');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -557,6 +562,7 @@
                                     <input type="text" name="responsavel2Cidade" id="responsavel2Cidade"
                                         value="<?php echo ($this->input->post('responsavel2Cidade') ? $this->input->post('responsavel2Cidade') : $responsavel_adicional['cidade']); ?>"
                                         class="form-control" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2Cidade');?></span>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -571,6 +577,7 @@
         									}
         								?>
                                     </select>
+                                    <span class="text-danger"><?php echo form_error('responsavel2UF');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -589,6 +596,7 @@
                                     <input type="text" name="responsavel2Telefone"
                                         value="<?php echo ($this->input->post('responsavel2Telefone') ? $this->input->post('responsavel2Telefone') : $responsavel_adicional['telefone']); ?>"
                                         class="form-control phones" />
+                                    <span class="text-danger"><?php echo form_error('responsavel2Telefone');?></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -612,6 +620,7 @@
                                             <?php echo (($this->input->post('responsavel2TelefoneOperadora') ? $this->input->post('responsavel2TelefoneOperadora') : $responsavel_adicional['telefone_operadora']) == 'Vivo') ? 'selected' : ''; ?>>
                                             Vivo</option>
                                     </select>
+                                    <span class="text-danger"><?php echo form_error('responsavel2TelefoneOperadora');?></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -623,6 +632,7 @@
                                     <input type="radio" name="responsavel2TelefoneWhatsapp" value="0"
                                         <?php echo (($this->input->post('responsavel2TelefoneWhatsapp') ? $this->input->post('responsavel2TelefoneWhatsapp') : $responsavel_adicional['telefone_whatsapp']) == 0 ? 'checked' : ''); ?> /><label
                                         style="margin-left:5px;">Não</label>
+                                    <span class="text-danger"><?php echo form_error('responsavel2TelefoneWhatsapp');?></span>
                                 </div>
                             </div>
                         </div>
