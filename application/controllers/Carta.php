@@ -112,7 +112,6 @@ class Carta extends CI_Controller{
 
         $data['mobilizadores'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_MOBILIZADORES);
         
-        $this->load->model('NatalSolidario_model');
         $data['all_regioes'] = $this->NatalSolidario_model->get_all_regiao_administrativa();
 
         $data['all_campanhas'] = $this->Campanha_model->get_all();
@@ -287,18 +286,57 @@ class Carta extends CI_Controller{
         if (!empty($programacoes)) {
             $data['programacoes'] = array_column($programacoes, 'programacao');
         }
-        
+        $data['all_ufs'] = $this->NatalSolidario_model->get_all_uf();
+
         if(isset($data['carta_pedido']['id']))
         {
-            $this->form_validation->set_rules('regiao_administrativa','Beneficiado - Comunidade','required');
+            // $this->form_validation->set_rules('regiao_administrativa','Beneficiado - Comunidade','required');
             $this->form_validation->set_rules('nome','Beneficiado - Nome','required');
             $this->form_validation->set_rules('dataNascimento','Beneficiado - Data de nascimento','required');
             $this->form_validation->set_rules('sexo','Beneficiado - Sexo','required');
+            $this->form_validation->set_rules('escola','Beneficiado - Escola','required');
+            $this->form_validation->set_rules('ano','Beneficiado - Escola','required');
+            $this->form_validation->set_rules('cidade_escola','Beneficiado - Cidade Escola','required');
+            $this->form_validation->set_rules('uf_escola','Beneficiado - UF Escola','required');
+            
             $this->form_validation->set_rules('brinquedo1','1ª opção de brinquedo','required');
             $this->form_validation->set_rules('brinquedo1Tipo','Classificação da 1ª opção de brinquedo','required');
             
-            if($this->form_validation->run()){
-                
+            $this->form_validation->set_rules('responsavel1Nome','Responsável 1 Nome','required');
+            $this->form_validation->set_rules('responsavel1DataNascimento','Responsável 1 Data de Nascimento','required');
+            $this->form_validation->set_rules('responsavel1NumeroDocumento','Responsável 1 CPF','required|callback_check_cpf_unique');
+            $this->form_validation->set_rules('responsavel1Endereco','Responsável 1 Logradouro','required');
+            $this->form_validation->set_rules('responsavel1Bairro','Responsável 1 Bairro','required');
+            $this->form_validation->set_rules('responsavel1Cidade','Responsável 1 Cidade','required');
+            $this->form_validation->set_rules('responsavel1UF','Responsável 1 UF','required|exact_length[2]|alpha');
+            $this->form_validation->set_rules('responsavel1Telefone','Responsável 1 Telefone','required');
+            $this->form_validation->set_rules('responsavel1TelefoneOperadora','Responsável 1 Operadora','required');
+            $this->form_validation->set_rules('responsavel1TelefoneWhatsapp','Responsável 1 Whatsapp','required');
+
+            if ($this->input->post('responsavel2_id') || $this->input->post('responsavel2NumeroDocumento') || ($this->input->post('responsavel2Nome') && $this->input->post('responsavel2DataNascimento')))
+            {
+                $this->form_validation->set_rules('responsavel2Nome','Responsável 2 Nome','required');
+                $this->form_validation->set_rules('responsavel2DataNascimento','Responsável 2 Data de Nascimento','required');
+                $this->form_validation->set_rules('responsavel2NumeroDocumento','Responsável 2 CPF','required|callback_check_cpf_unique');
+                $this->form_validation->set_rules('responsavel2Endereco','Responsável 2 Logradouro','required');
+                $this->form_validation->set_rules('responsavel2Bairro','Responsável 2 Bairro','required');
+                $this->form_validation->set_rules('responsavel2Cidade','Responsável 2 Cidade','required');
+                $this->form_validation->set_rules('responsavel2UF','Responsável 2 UF','required|exact_length[2]|alpha');
+                $this->form_validation->set_rules('responsavel2Telefone','Responsável 2 Telefone','required');
+                $this->form_validation->set_rules('responsavel2TelefoneOperadora','Responsável 2 Operadora','required');
+                $this->form_validation->set_rules('responsavel2TelefoneWhatsapp','Responsável 2 Whatsapp','required');
+            }
+
+            $this->form_validation->set_rules('programacao[]', 'Programação', 'required');
+
+            if($this->form_validation->run())
+            {
+
+                // echo "<pre>";
+                // print_r($this->input->post());
+                // exit();
+    
+                    
                 $this->db->trans_start();
                 //$this->db->trans_strict(FALSE);
                 
@@ -355,33 +393,42 @@ class Carta extends CI_Controller{
                     'nome' => $this->input->post('responsavel1Nome'),
                     'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoResponsavel)),
                     'documento_numero' => $this->input->post('responsavel1NumeroDocumento'),
-                    'documento_tipo' => $this->input->post('responsavel1Documento'),
+                    'documento_tipo' => 'CPF',
                     'email' => $this->input->post('responsavel1Email'),
                     'endereco' => $this->input->post('responsavel1Endereco'),
-                    'telefone' => preg_replace("/[^0-9,.]/", "", $this->input->post('responsavel1Telefone') ),
+                    'complemento' => $this->input->post('responsavel1Complemento'),
+                    'bairro' => $this->input->post('responsavel1Bairro'),
+                    'cidade' => $this->input->post('responsavel1Cidade'),
+                    'uf' => $this->input->post('responsavel1UF'),
+                    'cep' => preg_replace("/[^0-9]/", "", $this->input->post('responsavel1Cep')),
+                    'telefone' => preg_replace("/[^0-9]/", "", $this->input->post('responsavel1Telefone')),
                     'telefone_operadora' => $this->input->post('responsavel1TelefoneOperadora'),
-                    'telefone_whatsapp' => ($this->input->post('responsavel1TelefoneWhatsapp')) ? true : false,
+                    'telefone_whatsapp' => $this->input->post('responsavel1TelefoneWhatsapp'),
                     'ocupacao' => $this->input->post('responsavel1Ocupacao'),
                     'escolaridade' => $this->input->post('responsavel1Escolaridade'),
                 );
-                
-                $this->Responsavel_model->update_responsavel($data['responsavel']['id'],$params);
+
+                $this->Responsavel_model->update_responsavel($data['responsavel']['id'], $params);
                 
                 //ATUALIZACAO DO RESPONSAVEL ADICIONAL =========================
                 
                 $idResponsavelAdicional = null;
-                if ($this->input->post('responsavel2DataNascimento')
-                    && $this->input->post('responsavel2Nome')) {
-                
+                if ($this->input->post('responsavel2NumeroDocumento') && $this->input->post('responsavel2Nome') && $this->input->post('responsavel2DataNascimento'))
+                {
                     $dataNascimentoResponsavel = strtr($this->input->post('responsavel2DataNascimento'), '/', '-');
                     
                     $params = array(
-                        'nome' => $this->input->post('responsavel2Nome'),
+                        'nome' => trim($this->input->post('responsavel2Nome')),
                         'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoResponsavel)),
                         'documento_numero' => $this->input->post('responsavel2NumeroDocumento'),
-                        'documento_tipo' => $this->input->post('responsavel2Documento'),
+                        'documento_tipo' => 'CPF',
                         'email' => $this->input->post('responsavel2Email'),
                         'endereco' => $this->input->post('responsavel2Endereco'),
+                        'complemento' => $this->input->post('responsavel2Complemento'),
+                        'bairro' => $this->input->post('responsavel2Bairro'),
+                        'cidade' => $this->input->post('responsavel2Cidade'),
+                        'uf' => $this->input->post('responsavel2UF'),
+                        'cep' => preg_replace("/[^0-9]/", "", $this->input->post('responsavel2Cep')),
                         'telefone' => preg_replace("/[^0-9,.]/", "", $this->input->post('responsavel2Telefone') ),
                         'telefone_operadora' => $this->input->post('responsavel2TelefoneOperadora'),
                         'telefone_whatsapp' => ($this->input->post('responsavel2TelefoneWhatsapp')) ? true : false,
@@ -389,15 +436,36 @@ class Carta extends CI_Controller{
                         'escolaridade' => $this->input->post('responsavel2Escolaridade'),
                     );
                     
-                    if ($data['responsavel_adicional']['id']) {
+                    if ($data['responsavel_adicional']['id'])
+                    {
                         $idResponsavelAdicional = $data['responsavel_adicional']['id'];
-                        $this->Responsavel_model->update_responsavel($data['responsavel_adicional']['id'],$params);
-                    } else {
-                        $idResponsavelAdicional = $this->Responsavel_model->add_responsavel($params);
+                        $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
+                    }
+                    else
+                    {
+                        // Checar se o responsável já existe na base de dados
+                        // Buscar pelo CPF
+                        $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_cpf($params['documento_numero']);
+
+                        if ($responsavel_adicional) {
+                            $idResponsavelAdicional = $responsavel_adicional['id'];
+                            $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
+                        }
+                        else {
+                            // Buscar por nome e data de nascimento
+                            $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_nome_data_nascimento($params['nome'], $params['data_nascimento']);
+                            if ($responsavel_adicional) {
+                                $idResponsavelAdicional = $responsavel_adicional['id'];
+                                $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
+                            }
+                            else {
+                                $idResponsavelAdicional = $this->Responsavel_model->add_responsavel($params);
+                            }
+                        }
                     }
                 }
                 
-                //ATUALIZACAO DO BENEFICIADO ===================================
+                // ATUALIZACAO DO BENEFICIADO ===================================
                 
                 $dataNascimentoBeneficiado = strtr($this->input->post('dataNascimento'), '/', '-');
                 
@@ -406,9 +474,9 @@ class Carta extends CI_Controller{
                     'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoBeneficiado)),
                     'sexo' => $this->input->post('sexo'),
                     'responsavel_adicional' => $idResponsavelAdicional,
-                    'pais_separados' => ($this->input->post('paisSeparados')) ? true : false,
+                    'pais_separados' => $this->input->post('paisSeparados')
                 );
-                $this->Beneficiado_model->update_beneficiado($data['beneficiado']['id'],$params);
+                $this->Beneficiado_model->update_beneficiado($data['beneficiado']['id'], $params);
                 
                 $this->Beneficiado_familia_model->delete_por_beneficiado($data['beneficiado']['id']);
                 
@@ -424,9 +492,11 @@ class Carta extends CI_Controller{
 
                 $params = array(
                     'atendimento_preferencial' => $this->input->post('preferencial'),
-                    'regiao_administrativa' => $this->input->post('regiao_administrativa'),
+                    // 'regiao_administrativa' => $this->input->post('regiao_administrativa'),
                     'escola' => $this->input->post('escola'),
                     'ano' => $this->input->post('ano'),
+                    'cidade_escola' => $this->input->post('cidade_escola'),
+                    'uf_escola' => $this->input->post('uf_escola'),
                     'renda_familiar' => $this->input->post('renda'),
                     'moradia' => $this->input->post('moradia'),
                 );
@@ -492,7 +562,6 @@ class Carta extends CI_Controller{
                     $this->db->trans_commit();
                 }
                 
-                
                 redirect('carta/index');
             }
             else
@@ -505,7 +574,6 @@ class Carta extends CI_Controller{
                 //$data['all_usuarios'] = $this->Usuario_model->get_all_usuarios();
                 
                 //carrega as regioes administrativas
-                $this->load->model('NatalSolidario_model');
                 $data['all_regioes'] = $this->NatalSolidario_model->get_all_regiao_administrativa();
                 
                 //carrega o checklist
@@ -718,11 +786,14 @@ class Carta extends CI_Controller{
     }
     
     function check_cpf_unique($cpf) {
-        $cpf = preg_replace("/\D/", "", $cpf);
-        if($this->input->post('responsavel_id'))
+        if ($this->input->post('responsavel_id') && ($this->input->post('documento_numero') == $cpf || $this->input->post('responsavel1NumeroDocumento') == $cpf))
             $id = $this->input->post('responsavel_id');
+        elseif ($this->input->post('responsavel2_id') && $this->input->post('responsavel2NumeroDocumento') == $cpf)
+            $id = $this->input->post('responsavel2_id');
         else
             $id = '';
+        
+        $cpf = preg_replace("/\D/", "", $cpf);
         $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
         if($result == 0) {
             $response = true;

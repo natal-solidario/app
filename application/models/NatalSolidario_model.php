@@ -20,6 +20,12 @@ class NatalSolidario_model extends CI_Model
         return $this->db->get('regiao_administrativa')->result_array();
     }
 
+    function get_all_uf()
+    {
+        $this->db->order_by('nome', 'asc');
+        return $this->db->get('uf')->result_array();
+    }
+
     function validar_cpf($cpf) {
         $cpf = preg_replace('/[^0-9]/', '', (string) $cpf);
 
