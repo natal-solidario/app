@@ -362,7 +362,7 @@
                                 <label for="responsavel1Endereco" class="control-label"><span
                                         class="text-danger">*</span>Logradouro:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Endereco"
+                                    <input type="text" name="responsavel1Endereco" id="responsavel1Endereco"
                                         value="<?php echo ($this->input->post('responsavel1Endereco') ? $this->input->post('responsavel1Endereco') : $responsavel['endereco']); ?>"
                                         class="form-control" required />
                                         <span class="text-danger"><?php echo form_error('responsavel1Endereco');?></span>
@@ -371,7 +371,7 @@
                             <div class="col-md-3">
                                 <label for="responsavel1Complemento" class="control-label">Complemento:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Complemento"
+                                    <input type="text" name="responsavel1Complemento" id="responsavel1Complemento"
                                         value="<?php echo ($this->input->post('responsavel1Complemento') ? $this->input->post('responsavel1Complemento') : $responsavel['complemento']); ?>"
                                         class="form-control" />
                                 </div>
@@ -382,7 +382,7 @@
                                 <label for="responsavel1Bairro" class="control-label"><span
                                         class="text-danger">*</span>Bairro:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Bairro"
+                                    <input type="text" name="responsavel1Bairro" id="responsavel1Bairro"
                                         value="<?php echo ($this->input->post('responsavel1Bairro') ? $this->input->post('responsavel1Bairro') : $responsavel['bairro']); ?>"
                                         class="form-control" required />
                                         <span class="text-danger"><?php echo form_error('responsavel1Bairro');?></span>
@@ -392,7 +392,7 @@
                                 <label for="responsavel1Cidade" class="control-label"><span
                                         class="text-danger">*</span>Cidade:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Cidade"
+                                    <input type="text" name="responsavel1Cidade" id="responsavel1Cidade"
                                         value="<?php echo ($this->input->post('responsavel1Cidade') ? $this->input->post('responsavel1Cidade') : $responsavel['cidade']); ?>"
                                         class="form-control" required />
                                         <span class="text-danger"><?php echo form_error('responsavel1Cidade');?></span>
@@ -511,7 +511,7 @@
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <input type="checkbox" value="1" name="mesmoEndereco" />
+                                    <input type="checkbox" value="1" name="mesmoEndereco" id="mesmoEndereco" />
                                     <label class="distancia">Mesmo endereço do responsável 1</label>
                                 </div>
                             </div>
@@ -528,7 +528,7 @@
                             <div class="col-md-5 mesmo-endereco">
                                 <label for="responsavel2Endereco" class="control-label">Logradouro:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Endereco"
+                                    <input type="text" name="responsavel2Endereco" id="responsavel2Endereco"
                                         value="<?php echo ($this->input->post('responsavel2Endereco') ? $this->input->post('responsavel2Endereco') : $responsavel_adicional['endereco']); ?>"
                                         class="form-control" />
                                 </div>
@@ -546,7 +546,7 @@
                             <div class="col-md-4">
                                 <label for="responsavel2Bairro" class="control-label">Bairro:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Bairro"
+                                    <input type="text" name="responsavel2Bairro" id="responsavel2Bairro"
                                         value="<?php echo ($this->input->post('responsavel2Bairro') ? $this->input->post('responsavel2Bairro') : $responsavel_adicional['bairro']); ?>"
                                         class="form-control" />
                                 </div>
@@ -554,7 +554,7 @@
                             <div class="col-md-3">
                                 <label for="responsavel2Cidade" class="control-label">Cidade:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Cidade"
+                                    <input type="text" name="responsavel2Cidade" id="responsavel2Cidade"
                                         value="<?php echo ($this->input->post('responsavel2Cidade') ? $this->input->post('responsavel2Cidade') : $responsavel_adicional['cidade']); ?>"
                                         class="form-control" />
                                 </div>
