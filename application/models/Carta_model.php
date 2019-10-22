@@ -103,10 +103,10 @@ class Carta_model extends CI_Model
     /*
      * function to update carta_pedido
      */
-    function update_carta_pedido($id,$params)
+    function update_carta_pedido($id, $params)
     {
-        $this->db->where('id',$id);
-        return $this->db->update('carta',$params);
+        $this->db->where('id', $id);
+        return $this->db->update('carta', $params);
     }
     
     /*
@@ -224,11 +224,6 @@ class Carta_model extends CI_Model
         $this->db->where('carta.removida', false);
         $this->db->order_by('id', 'asc');
         return $this->db->get('carta')->result_array();
-    }
-    
-    function atualizar_carta_credenciamento($id,$params) {
-        $this->db->where('id',$id);
-        return $this->db->update('carta',$params);
     }
 
     function get_carta_by_numeroCarta($numeroCarta) {

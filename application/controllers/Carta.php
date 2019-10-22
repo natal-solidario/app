@@ -150,6 +150,7 @@ class Carta extends CI_Controller{
         
         $data["links"] = $this->pagination->create_links();
                 
+        $data['js_scripts'] = array('carta/index.js');
         $data['_view'] = 'carta/index';
         $this->load->view('layouts/main',$data);
     }
@@ -660,9 +661,37 @@ class Carta extends CI_Controller{
                 'data_credenciamento' => date('Y-m-d H:i:s'),
                 'usuario_credenciamento' => $this->ion_auth->user()->row()->id,
             );
-            $this->Carta_model->atualizar_carta_credenciamento($id,$params);
+            $this->Carta_model->update_carta_pedido($id,$params);
         } 
         redirect('carta/index');
+    }
+    
+    function atribuir_carteiro_mobilizador()
+    {
+        $cartas = $this->input->post('cartas');
+        if (sizeof($cartas) > 0) 
+        {
+            foreach ($cartas as $carta) {
+                $id = $carta['carta'];
+                $carteiro = $carta['carteiro'];
+                $mobilizador = $carta['mobilizador'];
+                $carta_pedido = $this->Carta_model->get_carta_pedido($id);
+                if ($carta_pedido['id'])
+                {
+                    $params = array();
+
+                    if ($carteiro)
+                        $params['carteiro_associado'] = $carteiro;
+                    if ($mobilizador)
+                        $params['mobilizador'] = $mobilizador;
+
+                    $this->Carta_model->update_carta_pedido($id, $params);
+                }
+            }
+            $this->session->set_flashdata('message_ok', 'Cartas atribuídas com sucesso.');
+            return "ok";
+        }
+        return "erro";
     }
 
     function new()

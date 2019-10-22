@@ -87,7 +87,7 @@ $(function() {
                 });
                 return;
             }
-            else { 
+            else {
                 $.ajax({
                     method: "POST",
                     url: base_url + "responsavel/get_responsavel/",

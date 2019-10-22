@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/datatables/css/jquery.dataTables.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/select2/css/select2.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/sweetalert2/css/sweetalert2.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo site_url('resources/css/custom.css'); ?>">
 
 </head>
 
