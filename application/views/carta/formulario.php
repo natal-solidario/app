@@ -11,8 +11,8 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Formulário de inscrição</h3>
             </div>
-            <?php echo form_open_multipart('carta/formulario/'.$carta_pedido['id']); ?>
             <div class="box-body">
+                <?php echo form_open_multipart('carta/formulario/'.$carta_pedido['id'], array('id' => 'form-formulario')); ?>
                 <div class="row clearfix">
                     <div class="col-md-2">
                         <label for="numero" class="control-label">Número da Carta</label>
@@ -75,7 +75,8 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="dataNascimento" class="control-label"><span class="text-danger">*</span>Data de nascimento</label>
+                                <label for="dataNascimento" class="control-label"><span class="text-danger">*</span>Data
+                                    de nascimento</label>
                                 <div class="form-group">
                                     <input type="text" name="dataNascimento"
                                         value="<?php echo ($this->input->post('dataNascimento') ? $this->input->post('dataNascimento') : $beneficiado['data_nascimento']); ?>"
@@ -87,8 +88,8 @@
                                 <label for="sexo" class="control-label"><span class="text-danger">*</span>Sexo</label>
                                 <div class="form-group">
                                     <input type="radio" name="sexo" value="M"
-                                        <?php echo (($this->input->post('sexo') ? $this->input->post('sexo') : $beneficiado['sexo']) == 'M') ? 'checked' : ''; ?> required /><label
-                                        class="distancia">Masculino</label>
+                                        <?php echo (($this->input->post('sexo') ? $this->input->post('sexo') : $beneficiado['sexo']) == 'M') ? 'checked' : ''; ?>
+                                        required /><label class="distancia">Masculino</label>
                                     <input type="radio" name="sexo" value="F"
                                         <?php echo (($this->input->post('sexo') ? $this->input->post('sexo') : $beneficiado['sexo']) == 'F') ? 'checked' : ''; ?> /><label
                                         class="distancia">Feminino</label>
@@ -108,11 +109,12 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="ano" class="control-label"><span class="text-danger">*</span>Qual ano?</label>
+                                <label for="ano" class="control-label"><span class="text-danger">*</span>Qual
+                                    ano?</label>
                                 <div class="form-group">
                                     <input type="radio" name="ano" value="0"
-                                        <?php echo (($this->input->post('ano') ? $this->input->post('ano') : $carta_pedido['ano']) == 0) ? 'checked' : ''; ?> required /><label
-                                        class="distancia">Pré</label>
+                                        <?php echo (($this->input->post('ano') ? $this->input->post('ano') : $carta_pedido['ano']) == 0) ? 'checked' : ''; ?>
+                                        required /><label class="distancia">Pré</label>
                                     <input type="radio" name="ano" value="1"
                                         <?php echo (($this->input->post('ano') ? $this->input->post('ano') : $carta_pedido['ano']) == 1) ? 'checked' : ''; ?> /><label
                                         class="distancia">1º</label>
@@ -320,10 +322,10 @@
                                 <label for="responsavel1Nome" class="control-label"><span
                                         class="text-danger">*</span>Nome:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Nome"
+                                    <input type="text" name="responsavel1Nome"  id="responsavel1Nome"
                                         value="<?php echo ($this->input->post('responsavel1Nome') ? $this->input->post('responsavel1Nome') : $responsavel['nome']); ?>"
                                         class="form-control" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1Nome');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel1Nome');?></span>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -331,10 +333,11 @@
                                         class="text-danger">*</span>Data de
                                     Nascimento:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1DataNascimento"
+                                    <input type="text" name="responsavel1DataNascimento" id="responsavel1DataNascimento"
                                         value="<?php echo ($this->input->post('responsavel1DataNascimento') ? $this->input->post('responsavel1DataNascimento') : $responsavel['data_nascimento']); ?>"
                                         class="form-control" id="responsavel1DataNascimento" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1DataNascimento');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel1DataNascimento');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -345,27 +348,35 @@
                                         id="responsavel1NumeroDocumento"
                                         value="<?php echo ($this->input->post('responsavel1NumeroDocumento') ? $this->input->post('responsavel1NumeroDocumento') : $responsavel['documento_numero']); ?>"
                                         class="form-control" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1NumeroDocumento');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel1NumeroDocumento');?></span>
                                 </div>
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-4">
-                                <label for="responsavel1Email" class="control-label">E-mail:</label>
+                            <div class="col-md-2">
+                                <label for="responsavel1Cep" class="control-label">CEP:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Email"
-                                        value="<?php echo ($this->input->post('responsavel1Email') ? $this->input->post('responsavel1Email') : $responsavel['email']); ?>"
+                                    <input type="text" name="responsavel1Cep" id="responsavel1Cep"
+                                        value="<?php echo ($this->input->post('responsavel1Cep') ? $this->input->post('responsavel1Cep') : $responsavel['cep']); ?>"
                                         class="form-control" />
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <label for="responsavel1Endereco" class="control-label"><span
-                                        class="text-danger">*</span>Logradouro:</label>
+                                <label for="responsavel1Endereco" class="control-label"><span class="text-danger">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel1Endereco" id="responsavel1Endereco"
                                         value="<?php echo ($this->input->post('responsavel1Endereco') ? $this->input->post('responsavel1Endereco') : $responsavel['endereco']); ?>"
                                         class="form-control" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1Endereco');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel1Endereco');?></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="responsavel1Numero" class="control-label">Número:</label>
+                                <div class="form-group">
+                                    <input type="text" name="responsavel1Numero" id="responsavel1Numero"
+                                        value="<?php echo ($this->input->post('responsavel1Numero') ? $this->input->post('responsavel1Numero') : $responsavel['numero']); ?>"
+                                        class="form-control" />
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -385,20 +396,20 @@
                                     <input type="text" name="responsavel1Bairro" id="responsavel1Bairro"
                                         value="<?php echo ($this->input->post('responsavel1Bairro') ? $this->input->post('responsavel1Bairro') : $responsavel['bairro']); ?>"
                                         class="form-control" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1Bairro');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel1Bairro');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="responsavel1Cidade" class="control-label"><span
                                         class="text-danger">*</span>Cidade:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel1Cidade" id="responsavel1Cidade"
                                         value="<?php echo ($this->input->post('responsavel1Cidade') ? $this->input->post('responsavel1Cidade') : $responsavel['cidade']); ?>"
                                         class="form-control" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1Cidade');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel1Cidade');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <label for="responsavel1UF" class="control-label"><span
                                         class="text-danger">*</span>UF:</label>
                                 <div class="form-group">
@@ -414,31 +425,31 @@
                                     <span class="text-danger"><?php echo form_error('responsavel1UF');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label for="responsavel1Cep" class="control-label">CEP:</label>
-                                <div class="form-group">
-                                    <input type="text" name="responsavel1Cep"
-                                        value="<?php echo ($this->input->post('responsavel1Cep') ? $this->input->post('responsavel1Cep') : $responsavel['cep']); ?>"
-                                        class="form-control" id="responsavel1Cep" />
-                                </div>
-                            </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4">
+                                <label for="responsavel1Email" class="control-label">E-mail:</label>
+                                <div class="form-group">
+                                    <input type="text" name="responsavel1Email" id="responsavel1Email"
+                                        value="<?php echo ($this->input->post('responsavel1Email') ? $this->input->post('responsavel1Email') : $responsavel['email']); ?>"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="responsavel1Telefone" class="control-label"><span
                                         class="text-danger">*</span>Telefone:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Telefone"
+                                    <input type="text" name="responsavel1Telefone" id="responsavel1Telefone"
                                         value="<?php echo ($this->input->post('responsavel1Telefone') ? $this->input->post('responsavel1Telefone') : $responsavel['telefone']); ?>"
-                                        class="form-control phones" required />
-                                        <span class="text-danger"><?php echo form_error('responsavel1Telefone');?></span>
+                                        class="form-control telefone" required />
+                                    <span class="text-danger"><?php echo form_error('responsavel1Telefone');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="responsavel1TelefoneOperadora" class="control-label"><span
                                         class="text-danger">*</span>Operadora:</label>
                                 <div class="form-group">
-                                    <select class="form-control" name="responsavel1TelefoneOperadora" required>
+                                    <select class="form-control" name="responsavel1TelefoneOperadora" id="responsavel1TelefoneOperadora" required>
                                         <option value="">Selecione</option>
                                         <option value="Claro"
                                             <?php echo (($this->input->post('responsavel1TelefoneOperadora') ? $this->input->post('responsavel1TelefoneOperadora') : $responsavel['telefone_operadora']) == 'Claro') ? 'selected' : ''; ?>>
@@ -459,17 +470,18 @@
                                     <span class="text-danger"><?php echo form_error('responsavel1TelefoneOperadora');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-2">
                                 <label for="responsavel1TelefoneWhatsapp" class="control-label"><span
                                         class="text-danger">*</span>Whatsapp:</label>
                                 <div class="form-group">
                                     <input type="radio" name="responsavel1TelefoneWhatsapp" value="1"
-                                        <?php echo (($this->input->post('responsavel1TelefoneWhatsapp') ? $this->input->post('responsavel1TelefoneWhatsapp') : $responsavel['telefone_whatsapp']) == 1 ? 'checked' : ''); ?> required /><label
-                                        style="margin-left:5px;">Sim</label>
+                                        <?php echo (($this->input->post('responsavel1TelefoneWhatsapp') ? $this->input->post('responsavel1TelefoneWhatsapp') : $responsavel['telefone_whatsapp']) == 1 ? 'checked' : ''); ?>
+                                        required /><label style="margin-left:5px;">Sim</label>
                                     <input type="radio" name="responsavel1TelefoneWhatsapp" value="0"
                                         <?php echo (($this->input->post('responsavel1TelefoneWhatsapp') ? $this->input->post('responsavel1TelefoneWhatsapp') : $responsavel['telefone_whatsapp']) == 0 ? 'checked' : ''); ?> /><label
                                         style="margin-left:5px;">Não</label>
-                                    <span class="text-danger"><?php echo form_error('responsavel1TelefoneWhatsapp');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel1TelefoneWhatsapp');?></span>
                                 </div>
                             </div>
                         </div>
@@ -478,36 +490,38 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Pai/Mãe/Responsável 2</div>
                     <div class="panel-body">
-                        <input type="hidden" name="responsavel2_id" value="<?php echo $responsavel_adicional['id']; ?>"
-                            class="form-control" />
+                        <input type="hidden" name="responsavel2_id" id="responsavel2_id"
+                            value="<?php echo $responsavel_adicional['id']; ?>" class="form-control" />
                         <div class="row clearfix">
                             <div class="col-md-7">
-                                <label for="responsavel2Nome" class="control-label">Nome:</label>
+                                <label for="responsavel2Nome" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Nome:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Nome"
+                                    <input type="text" name="responsavel2Nome" id="responsavel2Nome"
                                         value="<?php echo ($this->input->post('responsavel2Nome') ? $this->input->post('responsavel2Nome') : $responsavel_adicional['nome']); ?>"
                                         class="form-control" />
-                                        <span class="text-danger"><?php echo form_error('responsavel2Nome');?></span>
+                                    <span class="text-danger"><?php echo form_error('responsavel2Nome');?></span>
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="responsavel2DataNascimento" class="control-label">Data de
+                                <label for="responsavel2DataNascimento" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Data de
                                     Nascimento:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2DataNascimento"
+                                    <input type="text" name="responsavel2DataNascimento" id="responsavel2DataNascimento"
                                         value="<?php echo ($this->input->post('responsavel2DataNascimento') ? $this->input->post('responsavel2DataNascimento') : $responsavel_adicional['data_nascimento']); ?>"
-                                        class="form-control" id="responsavel2DataNascimento" />
-                                    <span class="text-danger"><?php echo form_error('responsavel2DataNascimento');?></span>
+                                        class="form-control" />
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel2DataNascimento');?></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label for="responsavel2NumeroDocumento" class="control-label">CPF:</label>
+                                <label for="responsavel2NumeroDocumento" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>CPF:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2NumeroDocumento"
                                         id="responsavel2NumeroDocumento"
                                         value="<?php echo ($this->input->post('responsavel2NumeroDocumento') ? $this->input->post('responsavel2NumeroDocumento') : $responsavel_adicional['documento_numero']); ?>"
                                         class="form-control" />
-                                    <span class="text-danger"><?php echo form_error('responsavel2NumeroDocumento');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel2NumeroDocumento');?></span>
                                 </div>
                             </div>
                         </div>
@@ -520,16 +534,16 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-4">
-                                <label for="responsavel2Email" class="control-label">E-mail:</label>
+                            <div class="col-md-2">
+                                <label for="responsavel2Cep" class="control-label">CEP:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Email"
-                                        value="<?php echo ($this->input->post('responsavel2Email') ? $this->input->post('responsavel2Email') : $responsavel_adicional['email']); ?>"
+                                    <input type="text" name="responsavel2Cep" id="responsavel2Cep"
+                                        value="<?php echo ($this->input->post('responsavel2Cep') ? $this->input->post('responsavel2Cep') : $responsavel_adicional['cep']); ?>"
                                         class="form-control" />
                                 </div>
                             </div>
                             <div class="col-md-5 mesmo-endereco">
-                                <label for="responsavel2Endereco" class="control-label">Logradouro:</label>
+                                <label for="responsavel2Endereco" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Endereco" id="responsavel2Endereco"
                                         value="<?php echo ($this->input->post('responsavel2Endereco') ? $this->input->post('responsavel2Endereco') : $responsavel_adicional['endereco']); ?>"
@@ -537,10 +551,18 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2Endereco');?></span>
                                 </div>
                             </div>
+                            <div class="col-md-2">
+                                <label for="responsavel2Numero" class="control-label">Número:</label>
+                                <div class="form-group">
+                                    <input type="text" name="responsavel2Numero" id="responsavel2Numero"
+                                        value="<?php echo ($this->input->post('responsavel2Numero') ? $this->input->post('responsavel2Numero') : $responsavel_adicional['numero']); ?>"
+                                        class="form-control" />
+                                </div>
+                            </div>
                             <div class="col-md-3 mesmo-endereco">
                                 <label for="responsavel2Complemento" class="control-label">Complemento:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Complemento"
+                                    <input type="text" name="responsavel2Complemento" id="responsavel2Complemento"
                                         value="<?php echo ($this->input->post('responsavel2Complemento') ? $this->input->post('responsavel2Complemento') : $responsavel_adicional['complemento']); ?>"
                                         class="form-control" />
                                 </div>
@@ -548,7 +570,7 @@
                         </div>
                         <div class="row clearfix mesmo-endereco">
                             <div class="col-md-4">
-                                <label for="responsavel2Bairro" class="control-label">Bairro:</label>
+                                <label for="responsavel2Bairro" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Bairro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Bairro" id="responsavel2Bairro"
                                         value="<?php echo ($this->input->post('responsavel2Bairro') ? $this->input->post('responsavel2Bairro') : $responsavel_adicional['bairro']); ?>"
@@ -556,8 +578,8 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2Bairro');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label for="responsavel2Cidade" class="control-label">Cidade:</label>
+                            <div class="col-md-4">
+                                <label for="responsavel2Cidade" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Cidade:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Cidade" id="responsavel2Cidade"
                                         value="<?php echo ($this->input->post('responsavel2Cidade') ? $this->input->post('responsavel2Cidade') : $responsavel_adicional['cidade']); ?>"
@@ -565,8 +587,8 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2Cidade');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <label for="responsavel2UF" class="control-label">UF:</label>
+                            <div class="col-md-4">
+                                <label for="responsavel2UF" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>UF:</label>
                                 <div class="form-group">
                                     <select name="responsavel2UF" class="form-control" id="responsavel2UF">
                                         <option value="">Selecione</option>
@@ -580,29 +602,29 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2UF');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <label for="responsavel2Cep" class="control-label">CEP:</label>
-                                <div class="form-group">
-                                    <input type="text" name="responsavel2Cep" id="responsavel2Cep"
-                                        value="<?php echo ($this->input->post('responsavel2Cep') ? $this->input->post('responsavel2Cep') : $responsavel_adicional['cep']); ?>"
-                                        class="form-control" />
-                                </div>
-                            </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4">
-                                <label for="responsavel2Telefone" class="control-label">Telefone:</label>
+                                <label for="responsavel2Email" class="control-label">E-mail:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Telefone"
+                                    <input type="text" name="responsavel2Email" id="responsavel2Email"
+                                        value="<?php echo ($this->input->post('responsavel2Email') ? $this->input->post('responsavel2Email') : $responsavel_adicional['email']); ?>"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="responsavel2Telefone" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Telefone:</label>
+                                <div class="form-group">
+                                    <input type="text" name="responsavel2Telefone" id="responsavel2Telefone"
                                         value="<?php echo ($this->input->post('responsavel2Telefone') ? $this->input->post('responsavel2Telefone') : $responsavel_adicional['telefone']); ?>"
-                                        class="form-control phones" />
+                                        class="form-control telefone" />
                                     <span class="text-danger"><?php echo form_error('responsavel2Telefone');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label for="responsavel2TelefoneOperadora" class="control-label">Operadora:</label>
+                            <div class="col-md-3">
+                                <label for="responsavel2TelefoneOperadora" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Operadora:</label>
                                 <div class="form-group">
-                                    <select class="form-control" name="responsavel2TelefoneOperadora">
+                                    <select class="form-control" name="responsavel2TelefoneOperadora" id="responsavel2TelefoneOperadora">
                                         <option value="">Selecione</option>
                                         <option value="Claro"
                                             <?php echo (($this->input->post('responsavel2TelefoneOperadora') ? $this->input->post('responsavel2TelefoneOperadora') : $responsavel_adicional['telefone_operadora']) == 'Claro') ? 'selected' : ''; ?>>
@@ -620,11 +642,12 @@
                                             <?php echo (($this->input->post('responsavel2TelefoneOperadora') ? $this->input->post('responsavel2TelefoneOperadora') : $responsavel_adicional['telefone_operadora']) == 'Vivo') ? 'selected' : ''; ?>>
                                             Vivo</option>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('responsavel2TelefoneOperadora');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel2TelefoneOperadora');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <label for="responsavel2TelefoneWhatsapp" class="control-label">Whatsapp:</label>
+                            <div class="col-md-2">
+                                <label for="responsavel2TelefoneWhatsapp" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Whatsapp:</label>
                                 <div class="form-group">
                                     <input type="radio" name="responsavel2TelefoneWhatsapp" value="1"
                                         <?php echo (($this->input->post('responsavel2TelefoneWhatsapp') ? $this->input->post('responsavel2TelefoneWhatsapp') : $responsavel_adicional['telefone_whatsapp']) == 1 ? 'checked' : ''); ?> /><label
@@ -632,7 +655,8 @@
                                     <input type="radio" name="responsavel2TelefoneWhatsapp" value="0"
                                         <?php echo (($this->input->post('responsavel2TelefoneWhatsapp') ? $this->input->post('responsavel2TelefoneWhatsapp') : $responsavel_adicional['telefone_whatsapp']) == 0 ? 'checked' : ''); ?> /><label
                                         style="margin-left:5px;">Não</label>
-                                    <span class="text-danger"><?php echo form_error('responsavel2TelefoneWhatsapp');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel2TelefoneWhatsapp');?></span>
                                 </div>
                             </div>
                         </div>
@@ -813,14 +837,14 @@
                                     obrigatoriamente)</label>
                                 <div class="form-group">
 
-                                <?php foreach($all_programacoes as $key => $prog) {
+                                    <?php foreach($all_programacoes as $key => $prog) {
                                     ?>
                                     <div>
                                         <input type="checkbox" value="<?php echo $prog; ?>" name="programacao[]"
                                             <?php echo ($this->input->post('programacao') ? in_array($prog, $this->input->post('programacao'), true) : (!empty($programacoes) && in_array($prog, $programacoes, true)) ? ' checked' : '');?> /><label
                                             class="distancia"><?php echo $prog; ?></label>
                                     </div>
-                                <?php } ?>
+                                    <?php } ?>
 
                                     <span class="text-danger"><?php echo form_error('programacao[]');?></span>
                                 </div>
@@ -828,13 +852,13 @@
                         </div>
                     </div>
                 </div>
+                <?php echo form_close(); ?>
             </div>
             <div class="box-footer">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success" id="salvar-formulario">
                     <i class="fa fa-check"></i> Salvar
                 </button>
             </div>
-            <?php echo form_close(); ?>
         </div>
     </div>
 </div>
