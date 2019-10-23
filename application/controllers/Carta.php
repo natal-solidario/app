@@ -258,13 +258,15 @@ class Carta extends CI_Controller{
         }
         
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
+        $data['responsavel']['telefone_whatsapp'] = ($data['responsavel']['telefone_whatsapp'] == "0" ? 0 : 1);
         if ($data['responsavel']['data_nascimento'] != null) {
             $data['responsavel']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel']['data_nascimento']));
         }
-        
+
         $data['responsavel_adicional']  = null;
         if ($data['beneficiado']['responsavel_adicional'] != null) {
             $data['responsavel_adicional']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel_adicional']);
+            $data['responsavel_adicional']['telefone_whatsapp'] = ($data['responsavel_adicional']['telefone_whatsapp'] == "0" ? 0 : 1);
         }
         if ($data['responsavel_adicional']['data_nascimento'] != null) {
             $data['responsavel_adicional']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel_adicional']['data_nascimento']));
@@ -282,11 +284,6 @@ class Carta extends CI_Controller{
         $this->load->model('Carta_brinquedo_model');
         $data['brinquedos'] = $this->Carta_brinquedo_model->get_brinquedos_por_carta($id);
         
-        $this->load->model('Carta_programacao_model');
-        $programacoes = $this->Carta_programacao_model->get_programacoes_por_carta($id);
-        if (!empty($programacoes)) {
-            $data['programacoes'] = array_column($programacoes, 'programacao');
-        }
         $data['all_ufs'] = $this->NatalSolidario_model->get_all_uf();
 
         if(isset($data['carta_pedido']['id']))
@@ -328,16 +325,12 @@ class Carta extends CI_Controller{
                 $this->form_validation->set_rules('responsavel2TelefoneWhatsapp','Responsável 2 Whatsapp','required');
             }
 
-            $this->form_validation->set_rules('programacao[]', 'Programação', 'required');
+            // echo "<pre>";
+            // print_r($this->input->post());
+            // exit();
 
             if($this->form_validation->run())
-            {
-
-                // echo "<pre>";
-                // print_r($this->input->post());
-                // exit();
-    
-                    
+            {                    
                 $this->db->trans_start();
                 //$this->db->trans_strict(FALSE);
                 
@@ -537,20 +530,7 @@ class Carta extends CI_Controller{
                 //ATUALIZACAO DA CARTA =========================================
 
                 $this->Carta_model->update_carta_pedido($id,$params);
-                
-                $this->Carta_programacao_model->delete_por_carta($id);
-                
-                if ($this->input->post('programacao')) {
-                    foreach($this->input->post('programacao') as $programacao) {
-                        $params = array(
-                            'carta' => $id,
-                            'programacao' => $programacao,
-                        );
-                        $this->Carta_programacao_model->add_carta_programacao($params);
-                    }
-                }
-                
-                
+                                
                 $this->db->trans_complete(); # Completing transaction
                 
                 //Optional
@@ -814,6 +794,96 @@ class Carta extends CI_Controller{
             $data['_view'] = 'carta/new';
             $this->load->view('layouts/main',$data);
         }
+    }
+
+    function upload()
+    {
+        if(!empty($_FILES['imagens']['name']))
+        {
+            $campanha_atual = $this->Campanha_model->get_campanha_atual();
+            $curYear = $campanha_atual['AA_CAMPANHA'];
+
+            /*if (!is_dir('uploads')) {
+                mkdir('./uploads', 0777, true);
+            }*/
+            if (!is_dir('galeria/' . $curYear . '/' . $this->user->id)) {
+                mkdir('./galeria/' . $curYear . '/' . $this->user->id, 0777, true);
+            }
+
+
+            // echo "<pre>";
+            // print_r($_FILES);
+            // exit();
+
+            $qtdFiles = sizeof($_FILES['imagens']['name']);
+
+            for ($i=0; $i < $qtdFiles; $i++)
+            {
+                $_FILES['imagem']['name'] = $_FILES['imagens']['name'][$i];
+                $_FILES['imagem']['type'] = $_FILES['imagens']['type'][$i];
+                $_FILES['imagem']['tmp_name'] = $_FILES['imagens']['tmp_name'][$i];
+                $_FILES['imagem']['error'] = $_FILES['imagens']['error'][$i];
+                $_FILES['imagem']['size'] = $_FILES['imagens']['size'][$i];
+
+                // CONFIGURACAO UPLOAD
+                $config['upload_path']      = './galeria/' . $curYear . '/' . $this->user->id;
+                $config['allowed_types']    = 'gif|jpg|jpeg|png';
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);
+                
+                // Upload file to server
+                if ($this->upload->do_upload('imagem'))
+                {
+                    // Uploaded file data
+                    $fileData = $this->upload->data();
+                    $uploadData[$i]['nome_arquivo'] = $fileData['file_name'];
+                    $uploadData[$i]['nome'] = $fileData['raw_name'];
+                    $uploadData[$i]['caminho'] = './galeria/' . $curYear . '/' . $this->user->id;
+                    $uploadData[$i]['enviado_em'] = date("Y-m-d H:i:s");
+                    $uploadData[$i]['extensao'] = $fileData['file_ext'];
+                    $uploadData[$i]['tipo'] = $fileData['file_type'];
+                    $uploadData[$i]['tamanho'] = $fileData['file_size'];
+                    $uploadData[$i]['enviado_por'] = $this->user->id;
+                    $uploadData[$i]['status'] = '0';
+
+                    $carta = $this->Carta_model->get_carta_by_numeroCarta(trim($fileData['raw_name']));
+                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || in_array('admin', $this->grupos, true))) {
+                        if (!is_dir('uploads/' . $curYear)) {
+                            mkdir('./uploads/' . $curYear, 0777, true);
+                        }
+                        
+                        $newName = 'CARTA_NUMERO_' . trim($fileData['raw_name']) . $fileData['file_ext'];
+                        
+                        if (rename($uploadData[$i]['caminho'] . '/' . $fileData['file_name'], './uploads/'.$curYear .'/'. $newName)) {
+                            // Atualizar a carta com o arquivo enviado
+                            $params = array(
+                                'arquivo' => ($curYear .'/'. $newName)
+                            );
+                            $this->Carta_model->update_carta_pedido($carta['id'], $params);
+                            // Remover o arquivo do array da galeria
+                            unset($uploadData[$i]);
+                        }
+                    }
+                }
+            }
+
+            if (!empty($uploadData))
+            {
+                $insert = $this->Carta_model->inserir_galeria($uploadData);
+                
+                $statusMsg = $insert ? 'Arquivos enviados com sucesso.' : 'Algum problema ocorreu, por favor tente novamente.';
+                $this->session->set_flashdata('message_ok', $statusMsg);
+            }
+
+            // exit();
+        }
+
+        $retorno = $this->Carta_model->get_galeria($this->user->id);
+        $data['galeria'] = $retorno ? $retorno : array();
+
+        $data['js_scripts'] = array('carta/upload.js');
+        $data['_view'] = 'carta/upload';
+        $this->load->view('layouts/main', $data);
     }
     
     function check_cpf_unique($cpf) {
