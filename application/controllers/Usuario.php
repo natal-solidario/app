@@ -16,10 +16,6 @@ class Usuario extends CI_Controller{
         parent::__construct();
         $this->load->model('Usuario_model');
         $this->load->model('Usuario_perfil_model');
-        $this->load->library('form_validation');
-
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
 
         if (!$this->ion_auth->in_group('admin'))
         {
@@ -48,8 +44,7 @@ class Usuario extends CI_Controller{
      * Adding a new usuario
      */
     function add()
-    {   
-        $this->load->library('form_validation');
+    {
         $this->form_validation->set_rules('nome','Nome','required');
         $this->form_validation->set_rules('email','E-mail','required|valid_email');
         $this->form_validation->set_rules('senha','Senha','required|min_length[6]|max_length[18]');
@@ -127,7 +122,6 @@ class Usuario extends CI_Controller{
         
         if(isset($data['usuario']['id']))
         {
-            $this->load->library('form_validation');
             $this->form_validation->set_rules('nome','Nome','required');
             $this->form_validation->set_rules('email','E-mail','required|valid_email');
             
@@ -211,45 +205,43 @@ class Usuario extends CI_Controller{
         
         if(isset($data['usuario']['id']))
         {
-                   
-                    $this->load->library('form_validation');
-                    $this->form_validation->set_rules('senha','Senha','required|min_length[6]|max_length[18]');
-                    
-                    if($this->form_validation->run())     
-                    {
+            $this->form_validation->set_rules('senha','Senha','required|min_length[6]|max_length[18]');
+            
+            if($this->form_validation->run())     
+            {
 
-                        $params = array(
-                            'password' => $this->input->post('senha'),
-                        );
+                $params = array(
+                    'password' => $this->input->post('senha'),
+                );
 
-                        if($this->ion_auth->update($id, $params)) {
-                            $this->session->set_flashdata('message_ok', 'Senha alterada com sucesso.');
+                if($this->ion_auth->update($id, $params)) {
+                    $this->session->set_flashdata('message_ok', 'Senha alterada com sucesso.');
 
-                            //inicio auditoria
-                            $this->load->model('Registro_log_model');
+                    //inicio auditoria
+                    $this->load->model('Registro_log_model');
 
-                            $paramsAudit = array(
-                                'data_cadastro' => date('Y-m-d H:i:s'),
-                                'usuario' => $this->ion_auth->user()->row()->id,
-                                'acao' => self::ACAO_ALTERACAO,
-                                'titulo' => "SENHA",
+                    $paramsAudit = array(
+                        'data_cadastro' => date('Y-m-d H:i:s'),
+                        'usuario' => $this->ion_auth->user()->row()->id,
+                        'acao' => self::ACAO_ALTERACAO,
+                        'titulo' => "SENHA",
 
-                            );
+                    );
 
-                            $this->Registro_log_model->add_registro_log($paramsAudit);
-                            //fim auditoria
+                    $this->Registro_log_model->add_registro_log($paramsAudit);
+                    //fim auditoria
 
-                            redirect('usuario/index');
-                        } else {
-                            show_error('Erro ao alterar senha do usuário.');
-                        }       
-                    }
-                
-                else
-                {
-                    $data['_view'] = 'usuario/changepass';
-                    $this->load->view('layouts/main',$data);
-                }
+                    redirect('usuario/index');
+                } else {
+                    show_error('Erro ao alterar senha do usuário.');
+                }       
+            }
+        
+            else
+            {
+                $data['_view'] = 'usuario/changepass';
+                $this->load->view('layouts/main',$data);
+            }
         }
         else
             show_error('The usuario you are trying to edit does not exist.');

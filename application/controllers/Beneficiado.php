@@ -4,20 +4,20 @@
  * jpaulocs@gmail.com
  */
  
-class Beneficiado extends CI_Controller{
+class Beneficiado extends CI_Controller
+{
     function __construct()
     {
         parent::__construct();
         $this->load->model('Beneficiado_model');
 
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-
         if (!$this->ion_auth->logged_in())
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');
             redirect('login');
-        } else {
+        }
+        else
+        {
             $user = $this->ion_auth->user()->row();
             $this->session->set_userdata('usuario_logado', $user->email);
         }
@@ -39,9 +39,7 @@ class Beneficiado extends CI_Controller{
      * Adding a new beneficiado
      */
     function add()
-    {   
-        $this->load->library('form_validation');
-
+    {
 		$this->form_validation->set_rules('responsavel','Responsavel','required');
 		$this->form_validation->set_rules('nome','Nome','required');
 		$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');
@@ -83,8 +81,6 @@ class Beneficiado extends CI_Controller{
         
         if(isset($data['beneficiado']['id']))
         {
-            $this->load->library('form_validation');
-
 			$this->form_validation->set_rules('responsavel','Responsavel','required');
 			$this->form_validation->set_rules('nome','Nome','required');
 			$this->form_validation->set_rules('data_nascimento','Data Nascimento','required');

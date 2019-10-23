@@ -9,8 +9,6 @@ class Envio_Email extends CI_Controller{
     {
         parent::__construct();
 
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
         //Load email library
         $this->load->library('email');
         //$this->load->library('encrypt');

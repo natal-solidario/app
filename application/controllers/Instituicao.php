@@ -11,12 +11,7 @@ class Instituicao extends CI_Controller
         $this->load->model('Usuario_model');
         $this->load->model('Campanha_model');
         $this->load->model('NatalSolidario_model');
-
-        $this->load->library('form_validation');
-
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-
+        
         if (!$this->ion_auth->in_group('admin'))
         {
             $this->session->set_flashdata('message', 'Você deve ser um administrador para acessar esta funcionalidade!');

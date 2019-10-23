@@ -11,8 +11,7 @@
                 <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
                 <div class="row clearfix">
                     <div class="col-md-3">
-                        <label for="documento_numero" class="control-label"><span
-                                class="text-danger">*</span>CPF</label>
+                        <label for="documento_numero" class="control-label"><span class="text-danger">*</span>CPF</label>
                         <div class="form-group">
                             <input type="text" name="documento_numero"
                                 value="<?php echo $this->input->post('documento_numero'); ?>" class="form-control"

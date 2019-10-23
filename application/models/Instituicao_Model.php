@@ -153,6 +153,20 @@ class Instituicao_Model extends CI_Model
         return $this->db->get('TBC02_ABRANGENCIA_INSTITUICAO')->num_rows();
     }
 
+    function get_instituicao_vinculo_campanha($id) {
+        $this->db->select('TBP01_INSTITUICAO.*, TBH01_ENDERECO.NU_CEP, TBH01_ENDERECO.NO_LOGRADOURO, TBH01_ENDERECO.NU_ENDERECO, TBH01_ENDERECO.DE_COMPLEMENTO, TBH01_ENDERECO.NO_BAIRRO, TBH01_ENDERECO.NO_CIDADE, TBH01_ENDERECO.SG_UF, usuario.id as ID_USUARIO, TBH02_TELEFONE.NU_DDD, TBH02_TELEFONE.NU_TELEFONE, TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02 as ABRANGENCIA_ID');
+        $this->db->from('TBP01_INSTITUICAO');
+        $this->db->join('TBH01_ENDERECO', 'TBH01_ENDERECO.NU_TBH01 = TBP01_INSTITUICAO.NU_TBH01', 'LEFT');
+        $this->db->join('TBH02_TELEFONE', 'TBH02_TELEFONE.NU_TBH02 = TBP01_INSTITUICAO.NU_TBH02', 'LEFT');
+        $this->db->join('TBP02_RESPONSAVEL_INSTITUICAO', 'TBP02_RESPONSAVEL_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
+        $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
+        $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'LEFT');
+        $this->db->where(array('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02' => $id));
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        return $this->db->get()->row_array();
+
+    }
+
     function check_unique_cnpj($id = '', $cnpj) {
         $this->db->where('NU_CNPJ', $cnpj);
 

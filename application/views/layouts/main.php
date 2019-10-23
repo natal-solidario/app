@@ -9,13 +9,13 @@
     <link rel="icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" />
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css'); ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/AdminLTE.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/_all-skins.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/datatables/css/jquery.dataTables.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/select2/css/select2.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/libs/sweetalert2/css/sweetalert2.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo site_url('resources/css/custom.css'); ?>">
 
 </head>
 

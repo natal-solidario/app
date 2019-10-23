@@ -14,9 +14,6 @@ class Responsavel extends CI_Controller
         $this->load->model('Beneficiado_model');
         $this->load->model('NatalSolidario_model');
 
-        $this->load->add_package_path(APPPATH.'third_party/ion_auth/');
-        $this->load->library('ion_auth');
-
         if (!$this->ion_auth->logged_in())
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');
@@ -45,9 +42,7 @@ class Responsavel extends CI_Controller
      * Adding a new responsavel
      */
     function add()
-    {   
-        $this->load->library('form_validation');
-
+    {
 		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
 		$this->form_validation->set_rules('nome','Nome','required');
 		$this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
@@ -108,8 +103,6 @@ class Responsavel extends CI_Controller
         
         if(isset($data['responsavel']['id']))
         {
-            $this->load->library('form_validation');
-
             $this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
             $this->form_validation->set_rules('nome','Nome','required');
             $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
