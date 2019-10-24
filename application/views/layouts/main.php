@@ -143,7 +143,7 @@
                                 <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i>Listar</a>
                             </li>
                             <?php 
-                                if (in_array("admin", $grupos_usuario, true) || in_array("carteiro", $grupos_usuario, true)):
+                                if (in_array("admin", $grupos_usuario, true) /*|| in_array("carteiro", $grupos_usuario, true)*/):
                             ?>
                             <li>
                                 <a href="<?php echo site_url('carta/upload'); ?>"><i class="fa fa-upload"></i>Upload em Lote</a>
