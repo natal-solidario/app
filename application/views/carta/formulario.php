@@ -164,7 +164,6 @@
                                         <?php 
         								    foreach($all_ufs as $uf) {
         								        $selected = (($this->input->post('uf_escola') ? $this->input->post('uf_escola') : $carta_pedido['uf_escola']) == $uf['sigla'] ? ' selected' : '');
-        
         										echo '<option value="'.$uf['sigla'].'" '.$selected.'>'.$uf['nome'].'</option>';
         									}
         								?>
@@ -240,7 +239,6 @@
                                         <?php 
         								    foreach($brinquedo_classificacoes as $classificacao) {
         								        $selected = ((($this->input->post('brinquedo1Tipo') ? $this->input->post('brinquedo1Tipo') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
-        
         										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
         									} 
         								?>
@@ -270,9 +268,8 @@
                                         <?php 
         								    foreach($brinquedo_classificacoes as $classificacao)
         									{
-        								        $selected = ($this->input->post('brinquedo2Tipo') ? $this->input->post('brinquedo2Tipo') : ((array_key_exists(1, $brinquedos) && $classificacao['id'] == $brinquedos[1]['classificacao']) ? ' selected' : ''));
-        
-        										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
+                                                $selected = ((($this->input->post('brinquedo2Tipo') ? $this->input->post('brinquedo2Tipo') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
+           										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
         									} 
         								?>
                                     </select>
@@ -300,8 +297,7 @@
                                         <?php 
         								    foreach($brinquedo_classificacoes as $classificacao)
         									{
-        									    $selected = ($this->input->post('brinquedo3Tipo') ? $this->input->post('brinquedo3Tipo') : ((array_key_exists(2, $brinquedos) && $classificacao['id'] == $brinquedos[2]['classificacao']) ? ' selected' : ''));
-        
+                                                $selected = ((($this->input->post('brinquedo3Tipo') ? $this->input->post('brinquedo3Tipo') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
         										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
         									} 
         								?>
@@ -318,7 +314,7 @@
                         <input type="hidden" name="responsavel_id" value="<?php echo $responsavel['id']; ?>"
                             class="form-control" />
                         <div class="row clearfix">
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <label for="responsavel1Nome" class="control-label"><span
                                         class="text-danger">*</span>Nome:</label>
                                 <div class="form-group">
@@ -340,7 +336,7 @@
                                         class="text-danger"><?php echo form_error('responsavel1DataNascimento');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="responsavel1NumeroDocumento" class="control-label"><span
                                         class="text-danger">*</span>CPF:</label>
                                 <div class="form-group">
@@ -352,17 +348,17 @@
                                         class="text-danger"><?php echo form_error('responsavel1NumeroDocumento');?></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-2">
-                                <label for="responsavel1Cep" class="control-label">CEP:</label>
+                            <div class="col-md-3">
+                                <label for="responsavel1Email" class="control-label">E-mail:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Cep" id="responsavel1Cep"
-                                        value="<?php echo ($this->input->post('responsavel1Cep') ? $this->input->post('responsavel1Cep') : $responsavel['cep']); ?>"
+                                    <input type="text" name="responsavel1Email" id="responsavel1Email"
+                                        value="<?php echo ($this->input->post('responsavel1Email') ? $this->input->post('responsavel1Email') : $responsavel['email']); ?>"
                                         class="form-control" />
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-4">
                                 <label for="responsavel1Endereco" class="control-label"><span class="text-danger">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel1Endereco" id="responsavel1Endereco"
@@ -387,9 +383,7 @@
                                         class="form-control" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="responsavel1Bairro" class="control-label"><span
                                         class="text-danger">*</span>Bairro:</label>
                                 <div class="form-group">
@@ -399,6 +393,8 @@
                                     <span class="text-danger"><?php echo form_error('responsavel1Bairro');?></span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row clearfix">
                             <div class="col-md-4">
                                 <label for="responsavel1Cidade" class="control-label"><span
                                         class="text-danger">*</span>Cidade:</label>
@@ -425,16 +421,16 @@
                                     <span class="text-danger"><?php echo form_error('responsavel1UF');?></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-4">
-                                <label for="responsavel1Email" class="control-label">E-mail:</label>
+                            <div class="col-md-2">
+                                <label for="responsavel1Cep" class="control-label">CEP:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Email" id="responsavel1Email"
-                                        value="<?php echo ($this->input->post('responsavel1Email') ? $this->input->post('responsavel1Email') : $responsavel['email']); ?>"
+                                    <input type="text" name="responsavel1Cep" id="responsavel1Cep"
+                                        value="<?php echo ($this->input->post('responsavel1Cep') ? $this->input->post('responsavel1Cep') : $responsavel['cep']); ?>"
                                         class="form-control" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="row clearfix">
                             <div class="col-md-3">
                                 <label for="responsavel1Telefone" class="control-label"><span
                                         class="text-danger">*</span>Telefone:</label>
@@ -493,7 +489,7 @@
                         <input type="hidden" name="responsavel2_id" id="responsavel2_id"
                             value="<?php echo $responsavel_adicional['id']; ?>" class="form-control" />
                         <div class="row clearfix">
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <label for="responsavel2Nome" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Nome:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Nome" id="responsavel2Nome"
@@ -513,7 +509,7 @@
                                         class="text-danger"><?php echo form_error('responsavel2DataNascimento');?></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="responsavel2NumeroDocumento" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>CPF:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2NumeroDocumento"
@@ -522,6 +518,14 @@
                                         class="form-control" />
                                     <span
                                         class="text-danger"><?php echo form_error('responsavel2NumeroDocumento');?></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="responsavel2Email" class="control-label">E-mail:</label>
+                                <div class="form-group">
+                                    <input type="text" name="responsavel2Email" id="responsavel2Email"
+                                        value="<?php echo ($this->input->post('responsavel2Email') ? $this->input->post('responsavel2Email') : $responsavel_adicional['email']); ?>"
+                                        class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -534,15 +538,7 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-2">
-                                <label for="responsavel2Cep" class="control-label">CEP:</label>
-                                <div class="form-group">
-                                    <input type="text" name="responsavel2Cep" id="responsavel2Cep"
-                                        value="<?php echo ($this->input->post('responsavel2Cep') ? $this->input->post('responsavel2Cep') : $responsavel_adicional['cep']); ?>"
-                                        class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-5 mesmo-endereco">
+                            <div class="col-md-4 mesmo-endereco">
                                 <label for="responsavel2Endereco" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Endereco" id="responsavel2Endereco"
@@ -567,9 +563,7 @@
                                         class="form-control" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="row clearfix mesmo-endereco">
-                            <div class="col-md-4">
+                            <div class="col-md-3 mesmo-endereco">
                                 <label for="responsavel2Bairro" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Bairro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Bairro" id="responsavel2Bairro"
@@ -578,6 +572,8 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2Bairro');?></span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row clearfix mesmo-endereco">
                             <div class="col-md-4">
                                 <label for="responsavel2Cidade" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Cidade:</label>
                                 <div class="form-group">
@@ -602,16 +598,16 @@
                                     <span class="text-danger"><?php echo form_error('responsavel2UF');?></span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-4">
-                                <label for="responsavel2Email" class="control-label">E-mail:</label>
+                            <div class="col-md-2">
+                                <label for="responsavel2Cep" class="control-label">CEP:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel2Email" id="responsavel2Email"
-                                        value="<?php echo ($this->input->post('responsavel2Email') ? $this->input->post('responsavel2Email') : $responsavel_adicional['email']); ?>"
+                                    <input type="text" name="responsavel2Cep" id="responsavel2Cep"
+                                        value="<?php echo ($this->input->post('responsavel2Cep') ? $this->input->post('responsavel2Cep') : $responsavel_adicional['cep']); ?>"
                                         class="form-control" />
                                 </div>
                             </div>
+                        </div>
+                        <div class="row clearfix">
                             <div class="col-md-3">
                                 <label for="responsavel2Telefone" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Telefone:</label>
                                 <div class="form-group">
@@ -739,36 +735,19 @@
                                         class="form-control" />
                                 </div>
                             </div>
+
+                            <?php $all_escolaridade = array('Analfabeto', 'Alfabetizado', '1ª à 4ª serie', '5ª à 9ª série', 'Ensino médio completo', 'Ensino médio incompleto', 'Ensino superior incompleto', 'Ensino superior completo'); ?>
                             <div class="col-md-4">
                                 <label for="responsavel1Escolaridade" class="control-label">Escolaridade do responsável
                                     1:</label>
                                 <div class="form-group">
                                     <select class="form-control" name="responsavel1Escolaridade">
                                         <option value="">Selecione</option>
-                                        <option value="Analfabeto"
-                                            <?php echo ($responsavel['escolaridade'] == 'Analfabeto') ? 'selected' : ''; ?>>
-                                            Analfabeto</option>
-                                        <option value="Alfabetizado"
-                                            <?php echo ($responsavel['escolaridade'] == 'Alfabetizado') ? 'selected' : ''; ?>>
-                                            Alfabetizado</option>
-                                        <option value="1ª à 4ª serie"
-                                            <?php echo ($responsavel['escolaridade'] == '1ª à 4ª serie') ? 'selected' : ''; ?>>
-                                            1ª à 4ª serie</option>
-                                        <option value="5ª à 9ª série"
-                                            <?php echo ($responsavel['escolaridade'] == '5ª à 9ª série') ? 'selected' : ''; ?>>
-                                            5ª à 9ª série</option>
-                                        <option value="Ensino médio completo"
-                                            <?php echo ($responsavel['escolaridade'] == 'Ensino médio completo') ? 'selected' : ''; ?>>
-                                            Ensino médio completo</option>
-                                        <option value="Ensino médio incompleto"
-                                            <?php echo ($responsavel['escolaridade'] == 'Ensino médio incompleto') ? 'selected' : ''; ?>>
-                                            Ensino médio incompleto</option>
-                                        <option value="Ensino superior incompleto"
-                                            <?php echo ($responsavel['escolaridade'] == 'Ensino superior incompleto') ? 'selected' : ''; ?>>
-                                            Ensino superior incompleto</option>
-                                        <option value="Ensino superior completo"
-                                            <?php echo ($responsavel['escolaridade'] == 'Ensino superior completo') ? 'selected' : ''; ?>>
-                                            Ensino superior completo</option>
+                                        <?php
+                                        foreach ($all_escolaridade as $key => $escolaridade) {
+                                            echo "<option value='" . $escolaridade . "'" . ((($this->input->post('responsavel1Escolaridade') ? $this->input->post('responsavel1Escolaridade') : $responsavel['escolaridade']) == $escolaridade) ? 'selected' : '') . '>'.$escolaridade.'</option>';
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -789,64 +768,12 @@
                                 <div class="form-group">
                                     <select class="form-control" name="responsavel2Escolaridade">
                                         <option value="">Selecione</option>
-                                        <option value="Analfabeto"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Analfabeto') ? 'selected' : ''; ?>>
-                                            Analfabeto</option>
-                                        <option value="Alfabetizado"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Alfabetizado') ? 'selected' : ''; ?>>
-                                            Alfabetizado</option>
-                                        <option value="1ª à 4ª serie"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == '1ª à 4ª serie') ? 'selected' : ''; ?>>
-                                            1ª à 4ª serie</option>
-                                        <option value="5ª à 9ª série"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == '5ª à 9ª série') ? 'selected' : ''; ?>>
-                                            5ª à 9ª série</option>
-                                        <option value="Ensino médio completo"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino médio completo') ? 'selected' : ''; ?>>
-                                            Ensino médio completo</option>
-                                        <option value="Ensino médio incompleto"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino médio incompleto') ? 'selected' : ''; ?>>
-                                            Ensino médio incompleto</option>
-                                        <option value="Ensino superior incompleto"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino superior incompleto') ? 'selected' : ''; ?>>
-                                            Ensino superior incompleto</option>
-                                        <option value="Ensino superior completo"
-                                            <?php echo ($responsavel_adicional['escolaridade'] == 'Ensino superior completo') ? 'selected' : ''; ?>>
-                                            Ensino superior completo</option>
+                                        <?php
+                                        foreach ($all_escolaridade as $key => $escolaridade) {
+                                            echo "<option value='" . $escolaridade . "'" . ((($this->input->post('responsavel2Escolaridade') ? $this->input->post('responsavel2Escolaridade') : $responsavel_adicional['escolaridade']) == $escolaridade) ? 'selected' : '') . '>'.$escolaridade.'</option>';
+                                        }
+                                        ?>
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <?php
-
-                $all_programacoes = array('Valorização da Educação', 'Financiamento de Imóveis', 'Educação Financeira', 'Saúde Mental', 'Saúde Bucal', 'Saúde e bem-estar', 'Alcoólicos Anônimos', 'Narcóticos Anônimos', 'Outros');
-
-                ?>
-
-                <div class="panel panel-primary">
-                    <div class="panel-heading">Programação</div>
-                    <div class="panel-body">
-                        <div class="row clearfix">
-                            <div class="col-md-8">
-                                <label for="programacao[]" class="control-label"><span
-                                        class="text-danger">*</span>Selecione até 3 programações (mínimo 1
-                                    obrigatoriamente)</label>
-                                <div class="form-group">
-
-                                    <?php foreach($all_programacoes as $key => $prog) {
-                                    ?>
-                                    <div>
-                                        <input type="checkbox" value="<?php echo $prog; ?>" name="programacao[]"
-                                            <?php echo ($this->input->post('programacao') ? in_array($prog, $this->input->post('programacao'), true) : (!empty($programacoes) && in_array($prog, $programacoes, true)) ? ' checked' : '');?> /><label
-                                            class="distancia"><?php echo $prog; ?></label>
-                                    </div>
-                                    <?php } ?>
-
-                                    <span class="text-danger"><?php echo form_error('programacao[]');?></span>
                                 </div>
                             </div>
                         </div>

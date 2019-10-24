@@ -143,9 +143,15 @@
                                 <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i>Listar</a>
                             </li>
                             <?php 
-                                if($grupos_usuario)
-                                    if (in_array("admin", $grupos_usuario, true)):
-                                ?>
+                                if (in_array("admin", $grupos_usuario, true) /*|| in_array("carteiro", $grupos_usuario, true)*/):
+                            ?>
+                            <li>
+                                <a href="<?php echo site_url('carta/upload'); ?>"><i class="fa fa-upload"></i>Upload em Lote</a>
+                            </li>
+                            <?php endif; ?>
+                            <?php 
+                                if (in_array("admin", $grupos_usuario, true)):
+                            ?>
                             <li>
                                 <a href="<?php echo site_url('entrega/listagem_local_entrega'); ?>"><i class="fa fa-list-ul"></i> Acompanhamento</a>
                             </li>

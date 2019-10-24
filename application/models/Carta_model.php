@@ -267,4 +267,27 @@ class Carta_model extends CI_Model
         $this->db->where('carta.NU_TBC02', $id);
         return $this->db->get('carta')->row_array();
     }
+
+    function get_galeria($id='')
+    {
+        $this->db->select('*');
+        $this->db->from('galeria');
+        if ($id) {
+            $this->db->where('enviado_por', $id);
+            $query = $this->db->get();
+            $result = $query->result_array();
+        }
+        else
+        {
+            $this->db->order_by('enviado_em','desc');
+            $query = $this->db->get();
+            $result = $query->result_array();
+        }
+        return !empty($result) ? $result : false;
+    }
+    public function inserir_galeria($data = array())
+    {
+        $insert = $this->db->insert_batch('galeria', $data);
+        return $insert ? true : false;
+    }
 }

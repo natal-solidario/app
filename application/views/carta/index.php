@@ -50,7 +50,6 @@
                                     <?php 
                                     foreach($carteiros as $carteiro) {
                                         $selected = ($carteiro['id'] == ''.$carteiro_selecionado) ? ' selected="selected"' : '';
-                    
                                         echo '<option value="'.$carteiro['id'].'" '.$selected.'>'.$carteiro['first_name'].'</option>';
                                     } 
                                     ?>
@@ -63,7 +62,6 @@
                                     <?php 
                                     foreach($mobilizadores as $mobilizador) {
                                         $selected = ($mobilizador['id'] == ''.$mobilizador_selecionado) ? ' selected="selected"' : '';
-                    
                                         echo '<option value="'.$mobilizador['id'].'" '.$selected.'>'.$mobilizador['first_name'].'</option>';
                                     } 
                                     ?>
@@ -76,7 +74,6 @@
                                     <?php 
                     				foreach($all_regioes as $ra) {
                     				    $selected = ($ra['id'] == ''.$regiao_administrativa) ? ' selected' : '';
-                    				    
                     				    echo '<option value="'.$ra['id'].'" '.$selected.'>'.$ra['nome'].'</option>';
                     				}
                     				?>
@@ -106,7 +103,6 @@
                                     <?php 
                     				foreach($all_campanhas as $c) {
                     				    $selected = ($c->AA_CAMPANHA == ''.$campanha) ? ' selected' : '';
-                    				    
                     				    echo '<option value="'.$c->AA_CAMPANHA.'" '.$selected.'>'.$c->NO_CAMPANHA.'</option>';
                     				}
                     				?>
@@ -121,7 +117,6 @@
                                     <?php 
                     				foreach($all_instituicoes as $i) {
                     				    $selected = ($i['NU_TBP01'] == ''.$instituicao) ? ' selected' : '';
-                    				    
                     				    echo '<option value="'.$i['NU_TBP01'].'" '.$selected.'>'.$i['NO_INSTITUICAO'].'</option>';
                     				}
                     				?>
@@ -134,38 +129,42 @@
                 </div>
                 <?php                            
                 if($grupos_usuario)
-                    if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)):
+                    if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true) || in_array("carteiro", $grupos_usuario, true)):
                 ?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">Ação</div>
                     <div class="panel-body">
                         <div class="row clearfix">
+                            <?php
+                            if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)) {
+                            ?>
                             <div class="col-md-5">
                                 <label>Carteiro</label>
                                 <select id="carteiro" class="form-control acoes" disabled>
                                     <option value="">Selecione</option>
                                     <?php 
                                     foreach($carteiros as $carteiro) {
-                                        $selected = ($carteiro['id'] == ''.$carteiro_selecionado) ? ' selected="selected"' : '';
-                    
-                                        echo '<option value="'.$carteiro['id'].'" '.$selected.'>'.$carteiro['first_name'].'</option>';
+                                        echo '<option value="'.$carteiro['id'].'">'.$carteiro['first_name'].'</option>';
                                     } 
                                     ?>
                                 </select>
                             </div>
+                            <?php } ?>
+                            <?php
+                            if (in_array("admin", $grupos_usuario, true) || in_array("carteiro", $grupos_usuario, true)) {
+                            ?>
                             <div class="col-md-5">
                                 <label>Mobilizador</label>
                                 <select id="mobilizador" class="form-control acoes" disabled>
                                     <option value="">Selecione</option>
                                     <?php 
                                     foreach($mobilizadores as $mobilizador) {
-                                        $selected = ($mobilizador['id'] == ''.$mobilizador_selecionado) ? ' selected="selected"' : '';
-                    
-                                        echo '<option value="'.$mobilizador['id'].'" '.$selected.'>'.$mobilizador['first_name'].'</option>';
+                                        echo '<option value="'.$mobilizador['id'].'">'.$mobilizador['first_name'].'</option>';
                                     } 
                                     ?>
                                 </select>
                             </div>
+                            <?php } ?>
                             <div class="col-md-2">
                                 <button class="btn btn-primary acoes" style="margin-top:25px;" id="aplicar-acao" disabled>Aplicar</button>
                             </div>
