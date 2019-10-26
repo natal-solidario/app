@@ -16,7 +16,7 @@ class Carta extends MY_Controller
         parent::__construct();
         $this->load->model('Carta_model');
         $this->load->model('Usuario_model');
-        $this->load->model('Instituicao_Model');
+        $this->load->model('Instituicao_model');
         $this->load->model('Campanha_model');
         $this->load->model('Responsavel_model');
         $this->load->model('Beneficiado_model');
@@ -26,12 +26,15 @@ class Carta extends MY_Controller
         {
             $this->session->set_flashdata('message', 'You must be an admin to view this page');
             redirect('login');
-        } else {
+        }
+        else
+        {
             $this->user = $this->ion_auth->user()->row();
             $user_groups = $this->ion_auth->get_users_groups()->result();
 
             $this->grupos = array();
-            foreach ($user_groups as $grupo) {
+            foreach ($user_groups as $grupo)
+            {
                 array_push($this->grupos, $grupo->name);
             }
 
@@ -66,12 +69,14 @@ class Carta extends MY_Controller
         $data['isAdmin'] = (in_array('admin', $this->grupos, true) ? true : false);
         $data['isRepComu'] = (in_array("representante-comunidade", $this->grupos, true) ? true : false);
 
-        if (!$data['isAdmin']) {
+        if (!$data['isAdmin'])
+        {
             $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
             if ($data['isRepComu'])
-                $data['instituicao'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id)['NU_TBP01'];
+                $data['instituicao'] = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id)['NU_TBP01'];
         }
-        else {
+        else
+        {
             if (!array_key_exists('campanha', $this->input->get()))
                 $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
         }
@@ -119,7 +124,7 @@ class Carta extends MY_Controller
         $data['all_regioes'] = $this->NatalSolidario_model->get_all_regiao_administrativa();
 
         $data['all_campanhas'] = $this->Campanha_model->get_all();
-        $data['all_instituicoes'] = $this->Instituicao_Model->get_all_instituicoes();
+        $data['all_instituicoes'] = $this->Instituicao_model->get_all_instituicoes();
         
         $config['enable_query_strings'] = TRUE;
         $config['reuse_query_string'] = TRUE;
@@ -190,13 +195,16 @@ class Carta extends MY_Controller
 
             $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
 
-            if (in_array('admin', $this->grupos, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+            if (in_array('admin', $this->grupos, true))
+            {
+                $instituicao = $this->Instituicao_model->get_instituicao($this->input->post('representante'));
             }
-            elseif (in_array("representante-comunidade", $this->grupos, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            elseif (in_array("representante-comunidade", $this->grupos, true))
+            {
+                $instituicao = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
             }
-            else {
+            else
+            {
                 $this->session->set_flashdata('message', 'Você não tem permissão para editar cartas no sistema.');
                 redirect('carta/index');
             }
@@ -239,7 +247,7 @@ class Carta extends MY_Controller
                 $data['responsavel'] = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
 
                 $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
-                $data['instituicao'] = $this->Instituicao_Model->get_instituicao_by_usuario($data['carta_pedido']['representante_comunidade']);
+                $data['instituicao'] = $this->Instituicao_model->get_instituicao_by_usuario($data['carta_pedido']['representante_comunidade']);
 
                 $data['js_scripts'] = array('carta/edit.js');
                 $data['_view'] = 'carta/edit';
@@ -250,35 +258,41 @@ class Carta extends MY_Controller
             show_error('The carta_pedido you are trying to edit does not exist.');
     }
     
-    function formulario($id) {
+    function formulario($id)
+    {
         // check if the carta_pedido exists before trying to edit it
         $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
         
-        $data['instituicao'] = $this->Instituicao_Model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
+        $data['instituicao'] = $this->Instituicao_model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
         $data['beneficiado']  = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
         
-        if ($data['beneficiado']['data_nascimento'] != null) {
+        if ($data['beneficiado']['data_nascimento'] != null)
+        {
             $data['beneficiado']['data_nascimento'] = date("d/m/Y", strtotime($data['beneficiado']['data_nascimento']));
         }
         
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
         $data['responsavel']['telefone_whatsapp'] = ($data['responsavel']['telefone_whatsapp'] == "0" ? 0 : 1);
-        if ($data['responsavel']['data_nascimento'] != null) {
+        if ($data['responsavel']['data_nascimento'] != null)
+        {
             $data['responsavel']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel']['data_nascimento']));
         }
 
         $data['responsavel_adicional']  = null;
-        if ($data['beneficiado']['responsavel_adicional'] != null) {
+        if ($data['beneficiado']['responsavel_adicional'] != null)
+        {
             $data['responsavel_adicional']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel_adicional']);
             $data['responsavel_adicional']['telefone_whatsapp'] = ($data['responsavel_adicional']['telefone_whatsapp'] == "0" ? 0 : 1);
         }
-        if ($data['responsavel_adicional']['data_nascimento'] != null) {
+        if ($data['responsavel_adicional']['data_nascimento'] != null)
+        {
             $data['responsavel_adicional']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel_adicional']['data_nascimento']));
         }
         
         $this->load->model('Beneficiado_familia_model');
         $familiares = $this->Beneficiado_familia_model->get_familia_beneficiado($data['beneficiado']['id']);
-        if (!empty($familiares)) {
+        if (!empty($familiares))
+        {
             $data['familiares'] = array_column($familiares, 'familiar');
         }
         
@@ -347,13 +361,17 @@ class Carta extends MY_Controller
                     'prioridade' => 1,
                 );
                 
-                if ($this->input->post('brinquedo1Id')) {
+                if ($this->input->post('brinquedo1Id'))
+                {
                     $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo1Id'), $params);
-                } else {
+                }
+                else
+                {
                     $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                 }
                 
-                if ($this->input->post('brinquedo2') && $this->input->post('brinquedo2Tipo')) {
+                if ($this->input->post('brinquedo2') && $this->input->post('brinquedo2Tipo'))
+                {
                     $params = array(
                         'carta' => $id,
                         'classificacao' => $this->input->post('brinquedo2Tipo'),
@@ -361,14 +379,18 @@ class Carta extends MY_Controller
                         'prioridade' => 2,
                     );
                     
-                    if ($this->input->post('brinquedo2Id')) {
+                    if ($this->input->post('brinquedo2Id'))
+                    {
                         $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo2Id'), $params);
-                    } else {
+                    }
+                    else
+                    {
                         $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                     }
                 }
                 
-                if ($this->input->post('brinquedo3') && $this->input->post('brinquedo3Tipo')) {
+                if ($this->input->post('brinquedo3') && $this->input->post('brinquedo3Tipo'))
+                {
                     $params = array(
                         'carta' => $id,
                         'classificacao' => $this->input->post('brinquedo3Tipo'),
@@ -376,9 +398,12 @@ class Carta extends MY_Controller
                         'prioridade' => 3,
                     );
                     
-                    if ($this->input->post('brinquedo3Id')) {
+                    if ($this->input->post('brinquedo3Id'))
+                    {
                         $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo3Id'), $params);
-                    } else {
+                    }
+                    else
+                    {
                         $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                     }
                 }
@@ -447,18 +472,22 @@ class Carta extends MY_Controller
                         // Buscar pelo CPF
                         $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_cpf($params['documento_numero']);
 
-                        if ($responsavel_adicional) {
+                        if ($responsavel_adicional)
+                        {
                             $idResponsavelAdicional = $responsavel_adicional['id'];
                             $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
                         }
-                        else {
+                        else
+                        {
                             // Buscar por nome e data de nascimento
                             $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_nome_data_nascimento($params['nome'], $params['data_nascimento']);
-                            if ($responsavel_adicional) {
+                            if ($responsavel_adicional)
+                            {
                                 $idResponsavelAdicional = $responsavel_adicional['id'];
                                 $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
                             }
-                            else {
+                            else
+                            {
                                 $idResponsavelAdicional = $this->Responsavel_model->add_responsavel($params);
                             }
                         }
@@ -480,8 +509,10 @@ class Carta extends MY_Controller
                 
                 $this->Beneficiado_familia_model->delete_por_beneficiado($data['beneficiado']['id']);
                 
-                if ($this->input->post('familia')) {
-                    foreach($this->input->post('familia') as $familiar) {
+                if ($this->input->post('familia'))
+                {
+                    foreach($this->input->post('familia') as $familiar)
+                    {
                         $params = array(
                             'beneficiado' => $data['beneficiado']['id'],
                             'familiar' => $familiar,
@@ -501,18 +532,17 @@ class Carta extends MY_Controller
                     'moradia' => $this->input->post('moradia'),
                 );
                 
-                if(is_uploaded_file($_FILES['imagem']['tmp_name'])) {
-                    
+                if (is_uploaded_file($_FILES['imagem']['tmp_name']))
+                {
                     $curYear = date('Y'); 
                     
-                    if (!is_dir('uploads')) {
+                    if (!is_dir('uploads'))
+                    {
                         mkdir('./uploads', 0777, true);
-                    } else {
                     }
-                    $dir_exist = true; // flag for checking the directory exist or not
-                    if (!is_dir('uploads/' . $curYear)) {
+                    if (!is_dir('uploads/' . $curYear))
+                    {
                         mkdir('./uploads/' . $curYear, 0777, true);
-                        //$dir_exist = false; // dir not exist
                     }
                     
                     $path = $_FILES['imagem']['name'];
@@ -539,11 +569,13 @@ class Carta extends MY_Controller
                 
                 //Optional
                 
-                if ($this->db->trans_status() === FALSE) {
+                if ($this->db->trans_status() === FALSE)
+                {
                     # Something went wrong.
                     $this->db->trans_rollback();
                 }
-                else {
+                else
+                {
                     # Everything is Perfect.
                     # Committing data to the database.
                     $this->db->trans_commit();
@@ -572,20 +604,24 @@ class Carta extends MY_Controller
                 $this->load->view('layouts/main',$data);
             }
         }
-        else {
+        else
+        {
             show_error('The carta_pedido you are trying to edit does not exist.');
         }
     }
     
-    function adotante($id) {
-        if(isset($id)) {
+    function adotante($id)
+    {
+        if(isset($id))
+        {
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             
             $data['beneficiado'] = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
             
             $this->load->model('Adotante_model');
             $data['adotante'] = null;
-            if ($data['carta_pedido']['adotante']) {
+            if ($data['carta_pedido']['adotante'])
+            {
                 $data['adotante'] = $this->Adotante_model->get_adotante_por_id($data['carta_pedido']['adotante']);
             }
             
@@ -595,7 +631,8 @@ class Carta extends MY_Controller
                 $this->form_validation->set_rules('celular','Celular','required');
                 $this->form_validation->set_rules('email','E-mail pessoal','required|max_length[300]');
                 
-                if($this->form_validation->run()) {
+                if($this->form_validation->run())
+                {
                     
                     $email = trim($this->input->post('email'));
                     $adotante = $this->Adotante_model->get_adotante_por_email($email);
@@ -608,10 +645,13 @@ class Carta extends MY_Controller
                     
                     $token = $data['carta_pedido']['token_acesso'];
                     
-                    if ($adotante) {
+                    if ($adotante)
+                    {
                         $this->Adotante_model->update_adotante($adotante['id'], $params);
                         $adotante_id = $adotante['id'];
-                    } else {
+                    }
+                    else
+                    {
                         $params['data_cadastro'] = date('Y-m-d H:i:s');
                         $params['mobilizador'] = $this->session->userdata('usuario_logado_id');
                         
@@ -631,14 +671,17 @@ class Carta extends MY_Controller
             }
             $data['_view'] = 'carta/adotante';
             $this->load->view('layouts/main',$data);
-        } else {
+        }
+        else
+        {
             redirect('carta/index');
         }
     }
     
     function credenciar($id)
     {
-        if(isset($id)) {
+        if(isset($id))
+        {
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             $params = array(
                 'credenciado' => true,
@@ -655,7 +698,8 @@ class Carta extends MY_Controller
         $cartas = $this->input->post('cartas');
         if (sizeof($cartas) > 0) 
         {
-            foreach ($cartas as $carta) {
+            foreach ($cartas as $carta)
+            {
                 $id = $carta['carta'];
                 $carteiro = $carta['carteiro'];
                 $mobilizador = $carta['mobilizador'];
@@ -695,13 +739,16 @@ class Carta extends MY_Controller
         
         $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
 
-        if (in_array('admin', $this->grupos, true)) {
-            $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+        if (in_array('admin', $this->grupos, true))
+        {
+            $instituicao = $this->Instituicao_model->get_instituicao($this->input->post('representante'));
         }
-        elseif (in_array("representante-comunidade", $this->grupos, true)) {
-            $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+        elseif (in_array("representante-comunidade", $this->grupos, true))
+        {
+            $instituicao = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
         }
-        else {
+        else
+        {
             $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
             redirect('carta/index');
         }
@@ -731,15 +778,18 @@ class Carta extends MY_Controller
                 'cep' => str_replace('-', '', $this->input->post('cep'))
             );
 
-            if (in_array($this->input->post('metodo_busca'), array("0", "2"))) {
+            if (in_array($this->input->post('metodo_busca'), array("0", "2")))
+            {
                 $params_responsavel['documento_numero'] = $this->input->post('documento_numero');
             }
 
             $responsavel_id = $this->input->post('responsavel_id');
-            if ($responsavel_id) {
+            if ($responsavel_id)
+            {
                 $responsavel_id = $this->Responsavel_model->update_responsavel($responsavel_id, $params_responsavel);
             }
-            else {
+            else
+            {
                 $params_responsavel['data_cadastro'] = date('Y-m-d H:i:s');
                 $responsavel_id = $this->Responsavel_model->add_responsavel($params_responsavel);
             }
@@ -754,11 +804,13 @@ class Carta extends MY_Controller
             );
 
             $beneficiado_id = $this->input->post('select_beneficiado');
-            if ($beneficiado_id == 'outro') {
+            if ($beneficiado_id == 'outro')
+            {
                 $params_beneficiado['data_cadastro'] = date('Y-m-d H:i:s');
                 $beneficiado_id = $this->Beneficiado_model->add_beneficiado($params_beneficiado);
             }
-            elseif ($beneficiado_id > 0) {
+            elseif ($beneficiado_id > 0)
+            {
                 $beneficiado_id = $this->Beneficiado_model->update_beneficiado($beneficiado_id, $params_beneficiado);
             }
 
@@ -785,11 +837,12 @@ class Carta extends MY_Controller
         else
         {
             $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
-            $data['instituicao_usuario'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            $data['instituicao_usuario'] = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
 
             $isAdmin = in_array("admin", $this->grupos, true);
             $isRepresentanteComunidade = in_array("representante-comunidade", $this->grupos, true);
-            if (($isRepresentanteComunidade && !$isAdmin) && !$this->Instituicao_Model->checar_instituicao_vinculo_campanha_atual($data['instituicao_usuario']['NU_TBP01'])) {
+            if (($isRepresentanteComunidade && !$isAdmin) && !$this->Instituicao_model->checar_instituicao_vinculo_campanha_atual($data['instituicao_usuario']['NU_TBP01']))
+            {
                 $this->session->set_flashdata('message', 'A sua instituição não está habilitada à participar da campanha atual "' . $data['campanha_atual']['NO_CAMPANHA'] . '".');
                 redirect('');
             }
@@ -807,17 +860,10 @@ class Carta extends MY_Controller
             $campanha_atual = $this->Campanha_model->get_campanha_atual();
             $curYear = $campanha_atual['AA_CAMPANHA'];
 
-            /*if (!is_dir('uploads')) {
-                mkdir('./uploads', 0777, true);
-            }*/
-            if (!is_dir('galeria/' . $curYear . '/' . $this->user->id)) {
+            if (!is_dir('galeria/' . $curYear . '/' . $this->user->id))
+            {
                 mkdir('./galeria/' . $curYear . '/' . $this->user->id, 0777, true);
             }
-
-
-            // echo "<pre>";
-            // print_r($_FILES);
-            // exit();
 
             $qtdFiles = sizeof($_FILES['imagens']['name']);
 
@@ -851,14 +897,17 @@ class Carta extends MY_Controller
                     $uploadData[$i]['status'] = '0';
 
                     $carta = $this->Carta_model->get_carta_by_numeroCarta(trim($fileData['raw_name']));
-                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || in_array('admin', $this->grupos, true))) {
-                        if (!is_dir('uploads/' . $curYear)) {
+                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || in_array('admin', $this->grupos, true)))
+                    {
+                        if (!is_dir('uploads/' . $curYear))
+                        {
                             mkdir('./uploads/' . $curYear, 0777, true);
                         }
                         
                         $newName = 'CARTA_NUMERO_' . trim($fileData['raw_name']) . $fileData['file_ext'];
                         
-                        if (rename($uploadData[$i]['caminho'] . '/' . $fileData['file_name'], './uploads/'.$curYear .'/'. $newName)) {
+                        if (rename($uploadData[$i]['caminho'] . '/' . $fileData['file_name'], './uploads/'.$curYear .'/'. $newName))
+                        {
                             // Atualizar a carta com o arquivo enviado
                             $params = array(
                                 'arquivo' => ($curYear .'/'. $newName)
@@ -890,7 +939,8 @@ class Carta extends MY_Controller
         $this->load->view('layouts/main', $data);
     }
     
-    function check_cpf_unique($cpf) {
+    function check_cpf_unique($cpf)
+    {
         if ($this->input->post('responsavel_id') && ($this->input->post('documento_numero') == $cpf || $this->input->post('responsavel1NumeroDocumento') == $cpf))
             $id = $this->input->post('responsavel_id');
         elseif ($this->input->post('responsavel2_id') && $this->input->post('responsavel2NumeroDocumento') == $cpf)
@@ -900,17 +950,20 @@ class Carta extends MY_Controller
         
         $cpf = preg_replace("/\D/", "", $cpf);
         $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
-        if($result == 0) {
+        if($result == 0)
+        {
             $response = true;
             $result = $this->NatalSolidario_model->validar_cpf($cpf);
             if ($result == 1)
                 $response = true;
-            else {
+            else
+            {
                 $this->form_validation->set_message('check_cpf_unique', 'CPF inválido.');
                 $response = false;
             }
         }
-        else {
+        else
+        {
             $this->form_validation->set_message('check_cpf_unique', 'CPF já existe na base de dados.');
             $response = false;
         }

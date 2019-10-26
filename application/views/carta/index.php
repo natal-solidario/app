@@ -189,12 +189,12 @@
                 <table class="table table-striped">
                     <tr>
                         <th width="1%"><input type="checkbox" class="selecionar-todas" /></th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.numero" data-direcao="<?php echo $ordem == "carta.numero" && $direcao == "asc" ? "desc" : "asc"; ?>">Número</th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="beneficiado.nome" data-direcao="<?php echo $ordem == "beneficiado.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Beneficiado</th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="responsavel.nome" data-direcao="<?php echo $ordem == "responsavel.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Responsável</th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="adotante.nome" data-direcao="<?php echo $ordem == "adotante.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Adotante</th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.data_cadastro" data-direcao="<?php echo $ordem == "carta.data_cadastro" && $direcao == "asc" ? "desc" : "asc"; ?>">Data Cadastro</th>
-                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.credenciado" data-direcao="<?php echo $ordem == "carta.credenciado" && $direcao == "asc" ? "desc" : "asc"; ?>">Credenciado</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.numero" data-direcao="<?php echo $ordem == "carta.numero" && $direcao == "asc" ? "desc" : "asc"; ?>">Número <?php echo (($ordem == "carta.numero" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.numero" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="beneficiado.nome" data-direcao="<?php echo $ordem == "beneficiado.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Beneficiado <?php echo (($ordem == "beneficiado.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "beneficiado.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="responsavel.nome" data-direcao="<?php echo $ordem == "responsavel.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Responsável <?php echo (($ordem == "responsavel.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "responsavel.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="adotante.nome" data-direcao="<?php echo $ordem == "adotante.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Adotante <?php echo (($ordem == "adotante.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "adotante.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.data_cadastro" data-direcao="<?php echo $ordem == "carta.data_cadastro" && $direcao == "asc" ? "desc" : "asc"; ?>">Data Cadastro <?php echo (($ordem == "carta.data_cadastro" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.data_cadastro" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.credenciado" data-direcao="<?php echo $ordem == "carta.credenciado" && $direcao == "asc" ? "desc" : "asc"; ?>">Credenciado <?php echo (($ordem == "carta.credenciado" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.credenciado" && $direcao == "desc") ? "&downarrow;" : "")); ?></th>
                         <th>Ação</th>
                     </tr>
                     <?php

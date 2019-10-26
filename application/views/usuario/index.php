@@ -20,10 +20,10 @@
                     </tr>
                     <?php foreach($usuarios as $u){ ?>
                     <tr>
-						<td><?php echo $u['first_name']; ?></td>
-						<td><?php echo $u['email']; ?></td>
-						<td><?php echo $u['area_abrangencia']; ?></td>
-						<td><?php echo $u['referencia']; ?></td>
+						<td><?php echo mb_strtoupper($u['first_name']); ?></td>
+						<td><?php echo mb_strtolower($u['email']); ?></td>
+						<td><?php echo mb_strtoupper($u['area_abrangencia']); ?></td>
+						<td><?php echo mb_strtoupper($u['referencia']); ?></td>
 						<td><?php echo $u['phone']; ?></td>
 						<td>
                             <a href="<?php echo site_url('usuario/edit/'.$u['id']); ?>" class="btn btn-info btn-xs"><span class="fa fa-pencil"></span> Editar</a>
