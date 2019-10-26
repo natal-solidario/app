@@ -1,9 +1,4 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Registro_log_acao extends CI_Controller{
     function __construct()
     {

@@ -1,9 +1,4 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Envio_Email extends CI_Controller{
     function __construct()
     {

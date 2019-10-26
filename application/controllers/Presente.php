@@ -1,6 +1,6 @@
-<?php
- 
-class Presente extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed'); 
+class Presente extends CI_Controller
+{
     
     function __construct()
     {

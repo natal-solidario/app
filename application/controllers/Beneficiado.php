@@ -1,26 +1,11 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
-class Beneficiado extends CI_Controller
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Beneficiado extends MY_Controller
 {
     function __construct()
     {
         parent::__construct();
         $this->load->model('Beneficiado_model');
-
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'You must be an admin to view this page');
-            redirect('login');
-        }
-        else
-        {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
-        }
+        $this->load->model('Responsavel_model');
     } 
 
     /*
@@ -62,7 +47,6 @@ class Beneficiado extends CI_Controller
         }
         else
         {
-			$this->load->model('Responsavel_model');
 			$data['all_responsaveis'] = $this->Responsavel_model->get_all_responsaveis();
             
             $data['js_scripts'] = array('beneficiado/add.js');
@@ -100,7 +84,6 @@ class Beneficiado extends CI_Controller
             }
             else
             {
-				$this->load->model('Responsavel_model');
 				$data['all_responsaveis'] = $this->Responsavel_model->get_all_responsaveis();
 
                 $data['_view'] = 'beneficiado/edit';

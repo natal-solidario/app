@@ -1,6 +1,6 @@
-<?php
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
-class Instituicao_Model extends CI_Model
+class Instituicao_model extends CI_Model
 {
     function __construct()
     {

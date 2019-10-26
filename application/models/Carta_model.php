@@ -1,9 +1,4 @@
 <?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
 class Carta_model extends CI_Model
 {
     function __construct()

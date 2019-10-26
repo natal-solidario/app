@@ -1,5 +1,5 @@
-<?php
-class Instituicao extends CI_Controller
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Instituicao extends MY_Controller
 {
     const GRUPO_REPRESENTANTE_COMUNIDADE = 3;
 
@@ -12,13 +12,10 @@ class Instituicao extends CI_Controller
         $this->load->model('Campanha_model');
         $this->load->model('NatalSolidario_model');
         
-        if (!$this->ion_auth->in_group('admin'))
-        {
-            $this->session->set_flashdata('message', 'Você deve ser um administrador para acessar esta funcionalidade!');
+		if (!$this->ion_auth_acl->has_permission('permite_acessar_campanha'))
+		{
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar esta funcionalidade!');
             redirect(site_url());
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
         }
     } 
 

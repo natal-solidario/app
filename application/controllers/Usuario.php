@@ -1,10 +1,7 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
-class Usuario extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+
+class Usuario extends MY_Controller
+{
 
     const ACAO_AUTENTICACAO = 1;
     const ACAO_INCLUSAO = 2;
@@ -14,17 +11,12 @@ class Usuario extends CI_Controller{
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Usuario_model');
-        $this->load->model('Usuario_perfil_model');
+        $this->load->model(array('Usuario_model', 'Usuario_perfil_model', 'Registro_log_model'));
 
-        if (!$this->ion_auth->in_group('admin'))
-        {
-            $this->session->set_flashdata('message', 'Você deve ser um administrador para acessar esta funcionalidade!');
+		if (!$this->ion_auth_acl->has_permission('permite_administrar_usuario'))
+		{
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar esta funcionalidade!');
             redirect(site_url());
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
-            
         }
     } 
 
@@ -72,8 +64,6 @@ class Usuario extends CI_Controller{
                 $usuario_id = $this->ion_auth->register($username, $password, $email, $additional_data, $group);
 
                 //inicio auditoria
-                $this->load->model('Registro_log_model');
-
                 $paramsLog1 = array(
                                 'username' => $username,
                                 'email' => $email,
@@ -154,8 +144,6 @@ class Usuario extends CI_Controller{
                     }
 
                     //inicio auditoria
-                    $this->load->model('Registro_log_model');
-
                     $paramsAudit = array(
                         'data_cadastro' => date('Y-m-d H:i:s'),
                         'usuario' => $this->ion_auth->user()->row()->id,
@@ -218,8 +206,6 @@ class Usuario extends CI_Controller{
                     $this->session->set_flashdata('message_ok', 'Senha alterada com sucesso.');
 
                     //inicio auditoria
-                    $this->load->model('Registro_log_model');
-
                     $paramsAudit = array(
                         'data_cadastro' => date('Y-m-d H:i:s'),
                         'usuario' => $this->ion_auth->user()->row()->id,

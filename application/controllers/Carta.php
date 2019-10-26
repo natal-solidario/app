@@ -1,10 +1,6 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
-class Carta extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Carta extends MY_Controller
+{
 
     const GRUPO_CARTEIROS = 5;
     const GRUPO_REPRESENTANTE_COMUNIDADE = 3;

@@ -1,9 +1,4 @@
 <?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
 class Registro_log_acao_model extends CI_Model
 {
     function __construct()

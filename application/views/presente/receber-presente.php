@@ -122,7 +122,6 @@
                         <tr>
                             <td>Local de entrega</td>
                             <td><?php echo $dados['nomeLocalEntrega'] . " <br/> Sala: " . $dados['numeroSalaEntrega']; ?></td>
-
                         </tr>
                     </table>
                     <div class="panel-footer"><a href="<?php echo site_url('presente/gerarEtiqueta/'.$dados['numeroCarta']."/". $dados['responsavel_nome'] . "/" . $dados['beneficiado_nome'] . "/" . $dados['nomeLocalEntrega']. "/" . $dados['numeroSalaEntrega']); ?>" class="btn btn-success" target="_blank">Visualizar etiqueta</a></div>
