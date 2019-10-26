@@ -11,15 +11,15 @@ class Carta_model extends CI_Model
         return $this->db->get_where('carta',array('id'=>$id))->row_array();
     }
         
-    function get_all_cartas($limit, $start)
+    function get_all_cartas($limit, $start, $ordem, $direcao)
     {
         $this->db->limit($limit, $start);
-        $this->db->select('carta.*, beneficiado.nome as beneficiado_nome, r.nome as responsavel_nome, a.nome as adotante_nome');
+        $this->db->select('carta.*, beneficiado.nome as beneficiado_nome, responsavel.nome as responsavel_nome, adotante.nome as adotante_nome');
         $this->db->join('beneficiado', 'carta.beneficiado = beneficiado.id');
-        $this->db->join('responsavel r', 'beneficiado.responsavel = r.id');
-        $this->db->join('adotante a', 'carta.adotante = a.id', 'left');
+        $this->db->join('responsavel', 'beneficiado.responsavel = responsavel.id');
+        $this->db->join('adotante', 'carta.adotante = adotante.id', 'left');
         $this->db->like('carta.removida', false);
-        $this->db->order_by('carta.numero', 'desc');
+        $this->db->order_by(($ordem ? $ordem : 'id'), ($direcao ? $direcao : 'desc'));
         return $this->db->get('carta')->result_array();
     }
     
@@ -27,12 +27,12 @@ class Carta_model extends CI_Model
     {
         $this->db->select(
             'nome as regiao_administrativa, COUNT(1) as total FROM ('
-	           . ' SELECT ra.nome, r.id FROM carta c' 
+	           . ' SELECT ra.nome, responsavel.id FROM carta c' 
 	           . ' JOIN beneficiado b ON b.id = c.beneficiado' 
-	           . ' JOIN responsavel r ON r.id=b.responsavel' 
+	           . ' JOIN responsavel ON responsavel.id=b.responsavel' 
 	           . ' JOIN regiao_administrativa ra ON ra.id=c.regiao_administrativa'
                . ' WHERE c.removida=0'
-	           . ' GROUP BY ra.nome, r.id) AS TBL'
+	           . ' GROUP BY ra.nome, responsavel.id) AS TBL'
             . ' GROUP BY nome'
             . ' ORDER BY nome', FALSE);
         return $this->db->get()->result_array();
@@ -112,13 +112,13 @@ class Carta_model extends CI_Model
         return $this->db->delete('carta',array('id'=>$id));
     }
     
-    function get_cartas_por_parametros($limit, $start, $numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao, $campanha, $instituicao)
+    function get_cartas_por_parametros($limit, $start, $numero_carta, $idCarteiro, $idRegiaoAdministrativa, $idMobilizador, $nomeCrianca, $nomeResponsavel, $situacao, $campanha, $instituicao, $ordem, $direcao)
     {
         $this->db->limit($limit, $start);
-        $this->db->select('carta.*, beneficiado.nome as beneficiado_nome, r.nome as responsavel_nome, a.nome as adotante_nome');
+        $this->db->select('carta.*, beneficiado.nome as beneficiado_nome, responsavel.nome as responsavel_nome, adotante.nome as adotante_nome');
         $this->db->join('beneficiado', 'carta.beneficiado = beneficiado.id');
-        $this->db->join('responsavel r', 'beneficiado.responsavel = r.id');
-        $this->db->join('adotante a', 'carta.adotante = a.id', 'left');
+        $this->db->join('responsavel', 'beneficiado.responsavel = responsavel.id');
+        $this->db->join('adotante', 'carta.adotante = adotante.id', 'left');
         $this->db->where('carta.removida', false);
         if ($idCarteiro) {
             $this->db->where('carteiro_associado', $idCarteiro);
@@ -127,7 +127,7 @@ class Carta_model extends CI_Model
             $this->db->like('beneficiado.nome', $nomeCrianca);
         }
         if ($nomeResponsavel) {
-            $this->db->like('r.nome', $nomeResponsavel);
+            $this->db->like('responsavel.nome', $nomeResponsavel);
         }
         if ($idMobilizador) {
             $this->db->where('carta.mobilizador', $idMobilizador);
@@ -154,7 +154,9 @@ class Carta_model extends CI_Model
             $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'carta.NU_TBC02 = TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02', 'INNER');
             $this->db->where('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01', $instituicao);
         }
-        $this->db->order_by('id', 'desc');
+
+        $this->db->order_by(($ordem ? $ordem : 'id'), ($direcao ? $direcao : 'desc'));
+
         return $this->db->get('carta')->result_array();
     }
     
@@ -163,7 +165,7 @@ class Carta_model extends CI_Model
         $this->db->select('*');
         $this->db->from('carta');
         $this->db->join('beneficiado', 'carta.beneficiado = beneficiado.id');
-        $this->db->join('responsavel r', 'beneficiado.responsavel = r.id');
+        $this->db->join('responsavel', 'beneficiado.responsavel = responsavel.id');
         $this->db->where('carta.removida', false);
         if ($idCarteiro) {
             $this->db->where('carteiro_associado', $idCarteiro);
@@ -172,7 +174,7 @@ class Carta_model extends CI_Model
             $this->db->like('beneficiado.nome', $nomeCrianca);
         }
         if ($nomeResponsavel) {
-            $this->db->like('r.nome', $nomeResponsavel);
+            $this->db->like('responsavel.nome', $nomeResponsavel);
         }
         if ($idMobilizador) {
             $this->db->where('mobilizador', $idMobilizador);
@@ -248,11 +250,11 @@ class Carta_model extends CI_Model
     }
     
     function get_total_cartas_por_regiao() {
-        $this->db->select('r.id, r.nome, COUNT(1) as total');
-        $this->db->join('regiao_administrativa r', 'r.id=carta.regiao_administrativa');
-        $this->db->group_by('r.id');
-        $this->db->group_by('r.nome');
-        $this->db->order_by('r.nome', 'asc');
+        $this->db->select('ra.id, ra.nome, COUNT(1) as total');
+        $this->db->join('regiao_administrativa ra', 'ra.id=carta.regiao_administrativa');
+        $this->db->group_by('ra.id');
+        $this->db->group_by('ra.nome');
+        $this->db->order_by('ra.nome', 'asc');
         $this->db->where('carta.removida', false);
         return $this->db->get('carta')->result_array();
     }

@@ -60,6 +60,8 @@ class Carta extends MY_Controller
         $data['situacao']                   = $this->input->get('situacao');
         $data['campanha']                   = $this->input->get('campanha');
         $data['instituicao']                = $this->input->get('instituicao');
+        $data['ordem']                      = $this->input->get('ordem');
+        $data['direcao']                    = $this->input->get('direcao');
         
         $data['isAdmin'] = (in_array('admin', $this->grupos, true) ? true : false);
         $data['isRepComu'] = (in_array("representante-comunidade", $this->grupos, true) ? true : false);
@@ -83,23 +85,29 @@ class Carta extends MY_Controller
             || $data['mobilizador_selecionado'] != null
             || $data['situacao'] != null
             || $data['campanha'] != null
-            || $data['instituicao'] != null) {
+            || $data['instituicao'] != null)
+        {
             
             $total_records = $this->Carta_model->contar_cartas_por_parametros($data['numero']
                 , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
                 , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
             
             $data['cartas'] = null;
-            if ($total_records > 0) {
+            if ($total_records > 0)
+            {
                 $data['cartas'] = $this->Carta_model->get_cartas_por_parametros($limit_per_page, $start_index, $data['numero']
-                    , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
-                    , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
+                                , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
+                                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha']
+                                , $data['instituicao'], $data['ordem'], $data['direcao']);
             }
-        } else {
+        }
+        else
+        {
             $total_records = $this->Carta_model->contar_todas_cartas();
             $data['cartas'] = null;
-            if ($total_records > 0) {
-                $data['cartas'] = $this->Carta_model->get_all_cartas($limit_per_page, $start_index);
+            if ($total_records > 0)
+            {
+                $data['cartas'] = $this->Carta_model->get_all_cartas($limit_per_page, $start_index, $data['ordem'], $data['direcao']);
             }
         }
         $data['total_registros'] = $total_records;

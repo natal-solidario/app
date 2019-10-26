@@ -25,6 +25,8 @@
                 <div class="panel panel-primary">
                     <div class="panel-heading">Filtrar</div>
                     <div class="panel-body">
+                        <input type="hidden" id="ordem" name="ordem" value="<?php echo $ordem ? $ordem : "carta.id"; ?>" class="form-control" onblur="myform.submit();" />
+                        <input type="hidden" id="direcao" name="direcao" value="<?php echo $direcao ? $direcao : "desc"; ?>" class="form-control" onblur="myform.submit();" />
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label>Número da carta</label>
@@ -187,12 +189,12 @@
                 <table class="table table-striped">
                     <tr>
                         <th width="1%"><input type="checkbox" class="selecionar-todas" /></th>
-                        <th>Número</th>
-                        <th>Beneficiado</th>
-                        <th>Responsável</th>
-                        <th>Adotante</th>
-                        <th>Data Cadastro</th>
-                        <th>Credenciado</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.numero" data-direcao="<?php echo $ordem == "carta.numero" && $direcao == "asc" ? "desc" : "asc"; ?>">Número</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="beneficiado.nome" data-direcao="<?php echo $ordem == "beneficiado.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Beneficiado</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="responsavel.nome" data-direcao="<?php echo $ordem == "responsavel.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Responsável</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="adotante.nome" data-direcao="<?php echo $ordem == "adotante.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">Adotante</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.data_cadastro" data-direcao="<?php echo $ordem == "carta.data_cadastro" && $direcao == "asc" ? "desc" : "asc"; ?>">Data Cadastro</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.credenciado" data-direcao="<?php echo $ordem == "carta.credenciado" && $direcao == "asc" ? "desc" : "asc"; ?>">Credenciado</th>
                         <th>Ação</th>
                     </tr>
                     <?php

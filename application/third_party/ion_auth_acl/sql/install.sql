@@ -23,10 +23,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups_permissions`
+-- Table structure for table `x_perfil_atributo`
 --
 
-CREATE TABLE IF NOT EXISTS `groups_permissions` (
+CREATE TABLE IF NOT EXISTS `x_perfil_atributo` (
   `id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
   `perm_id` int(11) NOT NULL,
@@ -38,10 +38,10 @@ CREATE TABLE IF NOT EXISTS `groups_permissions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permissions`
+-- Table structure for table `atributo`
 --
 
-CREATE TABLE IF NOT EXISTS `permissions` (
+CREATE TABLE IF NOT EXISTS `atributo` (
   `id` int(11) NOT NULL,
   `perm_key` varchar(30) NOT NULL,
   `perm_name` varchar(100) NOT NULL
@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS `permissions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users_permissions`
+-- Table structure for table `x_usuario_atributo`
 --
 
-CREATE TABLE IF NOT EXISTS `users_permissions` (
+CREATE TABLE IF NOT EXISTS `x_usuario_atributo` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `perm_id` int(11) NOT NULL,
@@ -67,23 +67,23 @@ CREATE TABLE IF NOT EXISTS `users_permissions` (
 --
 
 --
--- Indexes for table `groups_permissions`
+-- Indexes for table `x_perfil_atributo`
 --
-ALTER TABLE `groups_permissions`
+ALTER TABLE `x_perfil_atributo`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `roleID_2` (`group_id`,`perm_id`);
 
 --
--- Indexes for table `permissions`
+-- Indexes for table `atributo`
 --
-ALTER TABLE `permissions`
+ALTER TABLE `atributo`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `permKey` (`perm_key`);
 
 --
--- Indexes for table `users_permissions`
+-- Indexes for table `x_usuario_atributo`
 --
-ALTER TABLE `users_permissions`
+ALTER TABLE `x_usuario_atributo`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `userID` (`user_id`,`perm_id`);
 
@@ -92,19 +92,19 @@ ALTER TABLE `users_permissions`
 --
 
 --
--- AUTO_INCREMENT for table `groups_permissions`
+-- AUTO_INCREMENT for table `x_perfil_atributo`
 --
-ALTER TABLE `groups_permissions`
+ALTER TABLE `x_perfil_atributo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `permissions`
+-- AUTO_INCREMENT for table `atributo`
 --
-ALTER TABLE `permissions`
+ALTER TABLE `atributo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `users_permissions`
+-- AUTO_INCREMENT for table `x_usuario_atributo`
 --
-ALTER TABLE `users_permissions`
+ALTER TABLE `x_usuario_atributo`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
