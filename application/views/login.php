@@ -49,6 +49,7 @@
                     </div>
                 </div>
             </div>
+            <label for="rememberMe"><?php echo form_checkbox('remember', 1, FALSE, 'class="rememberMe"'); ?> Lembrar Usuário</label>
             <div class="row clearfix">
                 <div class="col-md-12">
                     <div class="form-group">

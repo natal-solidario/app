@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <?php $grupos_usuario = $this->session->userdata('grupos_usuario'); ?>
+                <?php $permissoes_usuario = $this->session->userdata('permissoes_usuario'); ?>
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
                     <li class="header">MENU</li>
@@ -105,6 +105,9 @@
                         </a>
                     </li>
 
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_responsavel", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-user-o"></i> <span>Responsável</span>
@@ -118,6 +121,10 @@
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_beneficiado", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-child"></i> <span>Beneficiado</span>
@@ -131,6 +138,10 @@
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_carta", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-envelope-open-o"></i> <span>Carta</span>
@@ -143,14 +154,14 @@
                                 <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i>Listar</a>
                             </li>
                             <?php 
-                                if (in_array("admin", $grupos_usuario, true) /*|| in_array("carteiro", $grupos_usuario, true)*/):
+                                if (array_key_exists("permite_acessar_upload_lote", $permissoes_usuario)):
                             ?>
                             <li>
                                 <a href="<?php echo site_url('carta/upload'); ?>"><i class="fa fa-upload"></i>Upload em Lote</a>
                             </li>
                             <?php endif; ?>
                             <?php 
-                                if (in_array("admin", $grupos_usuario, true)):
+                                if (array_key_exists("permite_acessar_acompanhamento_carta", $permissoes_usuario)):
                             ?>
                             <li>
                                 <a href="<?php echo site_url('entrega/listagem_local_entrega'); ?>"><i class="fa fa-list-ul"></i> Acompanhamento</a>
@@ -158,14 +169,10 @@
                             <?php endif; ?>
                         </ul>
                     </li>
-
+                    <?php endif; ?>
                     <?php
-                        if($grupos_usuario)
-                            if (in_array("admin", $grupos_usuario, true) ||
-                                in_array("representante-comunidade", $grupos_usuario, true) ||
-                                in_array("representante-ong", $grupos_usuario, true) ||
-                                in_array("mobilizador", $grupos_usuario, true)):
-                        ?>
+                        if (array_key_exists("permite_acessar_menu_presente", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-gift"></i> <span>Presente</span>
@@ -182,14 +189,11 @@
                             </li>
                         </ul>
                     </li>
-                    <?php
-                            endif;
-                        ?>
+                    <?php endif; ?>
 
                     <?php
-                        if($grupos_usuario)
-                            if (in_array("admin", $grupos_usuario, true)):
-                        ?>
+                        if (array_key_exists("acesso_admin", $permissoes_usuario)):
+                    ?>
                     <li class="header">ADMINISTRAÇÃO</li>
                     <li>
                         <a href="#">
@@ -244,9 +248,8 @@
                         </ul>
                     </li>
                     <?php
-                            endif;
-                        ?>
-
+                        endif;
+                    ?>
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -254,7 +257,7 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <?php if($this->session->flashdata('message')): ?>
+            <?php if ($this->session->flashdata('message')): ?>
             <div class="alert alert-danger" role="alert">
                 <strong><?php echo $this->session->flashdata('message'); ?> </strong>
                 <!-- <?php echo $this->session->flashdata('teste'); ?> -->
@@ -262,7 +265,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <?php elseif($this->session->flashdata('message_ok')): ?>
+            <?php elseif ($this->session->flashdata('message_ok')): ?>
             <div class="alert alert-success" role="alert">
                 <strong><?php echo $this->session->flashdata('message_ok'); ?> </strong>
                 <!-- <?php echo $this->session->flashdata('teste'); ?> -->
@@ -274,7 +277,7 @@
             <!-- Main content -->
             <section class="content">
                 <?php                    
-                    if(isset($_view) && $_view)
+                    if (isset($_view) && $_view)
                         $this->load->view($_view);
                     ?>
             </section>

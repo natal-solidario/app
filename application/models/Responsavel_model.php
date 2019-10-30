@@ -79,10 +79,12 @@ class Responsavel_model extends CI_Model
     function check_unique_cpf($id = '', $cpf) {
         $sql = "REPLACE(REPLACE(`documento_numero`, '-', ''), '.', '') = " . preg_replace("/[^0-9A-Za-z]/", "", $cpf) . "";
         $this->db->where($sql);
+        $this->db->from('responsavel');
 
         if ($id) {
             $this->db->where_not_in('id', $id);
         }
-        return $this->db->get('responsavel')->num_rows();
+        // echo "<pre>" . $this->db->get_compiled_select(); exit();
+        return $this->db->get()->num_rows();
     }
 }

@@ -1,31 +1,21 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
-class Dashboard extends CI_Controller{
+class Dashboard extends MY_Controller
+{
     function __construct()
     {
-        parent::__construct();
-
-		if (!$this->ion_auth->logged_in())
-		{
-			$this->session->set_flashdata('message', 'You must be an admin to view this page');
-			redirect('login');
-		} else {
-			$user = $this->ion_auth->user()->row();
-			$user_groups = $this->ion_auth->get_users_groups()->result();
-
-			$grupos = array();
-	        foreach ($user_groups as $grupo) {
-	            array_push($grupos, $grupo->name);
-	        }
-	        $this->session->set_userdata('grupos_usuario', $grupos);
-			$this->session->set_userdata('usuario_logado', $user->email);
-			
-		}
-        
+        parent::__construct();        
 		$this->load->model('Carta_model');
+		$this->load->model('Campanha_model');
     }
 
     function index()
     {
+        $data['all_campanhas'] = $this->Campanha_model->get_all();
+
+        $data['campanha'] = $this->input->get('campanha');
+        if (!array_key_exists('campanha', $this->input->get()))
+            $data['campanha'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+
         $data['total_cartas'] = $this->Carta_model->contar_todas_cartas();
         
         $data['total_responsaveis'] = $this->Carta_model->get_total_responsaveis_por_regiao();
