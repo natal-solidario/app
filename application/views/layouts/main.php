@@ -247,6 +247,9 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="<?php echo site_url('admin'); ?>"><i class="fa fa-list-ul"></i> Perfis e Atributos</a>
+                    </li>
                     <?php
                         endif;
                     ?>

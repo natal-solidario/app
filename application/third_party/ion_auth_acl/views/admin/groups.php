@@ -16,7 +16,7 @@
         <tr>
             <td><?php echo $group->description; ?></td>
             <td>
-                <a href="/admin/group_permissions/<?php echo $group->id; ?>">Manage Permissions</a>
+                <a href="<?php echo site_url("/admin/group_permissions/" . $group->id); ?>">Manage Permissions</a>
             </td>
         </tr>
     <?php endforeach; ?>

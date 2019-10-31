@@ -1,7 +1,7 @@
 <h1>Dashboard</h1>
 
 <a href="/logout">Logout</a>
-<?php if($this->ion_auth_acl->has_permission('acesso_admin')) : ?><a href="/admin">Admin</a><?php endif; ?>
+<?php if($this->ion_auth_acl->has_permission('acesso_admin')) : ?><a href="<?php echo site_url('admin'); ?>">Admin</a><?php endif; ?>
 
 <h3>User Groups</h3>
 <ul>

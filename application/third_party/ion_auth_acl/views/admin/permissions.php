@@ -19,8 +19,8 @@
             <td><?php echo $permission['key']; ?></td>
             <td><?php echo $permission['name']; ?></td>
             <td>
-                <a href="/admin/update_permission/<?php echo $permission['id']; ?>">Edit</a>
-                <a href="/admin/delete_permission/<?php echo $permission['id']; ?>">Delete</a>
+                <a href="<?php echo site_url("/admin/update_permission/". $permission['id']); ?>">Edit</a>
+                <?php /*<a href="<?php echo site_url("/admin/delete_permission/". $permission['id']); ?>">Delete</a>*/ ?>
             </td>
         </tr>
         <?php endforeach; ?>

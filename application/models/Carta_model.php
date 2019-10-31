@@ -300,4 +300,8 @@ class Carta_model extends CI_Model
     {
         return $this->db->get_where('galeria', array('carta_id'=>$id))->row_array();
     }
+    public function get_categorias_galeria()
+    {
+        return $this->db->get('categoria_galeria')->result_array();
+    }
 }

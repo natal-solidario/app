@@ -21,7 +21,7 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                 </div>
             </div>
             <div class="box-body">
-                <?php echo form_open('carta/index', array('method'=>'get','id'=>'myform')); ?>
+                <?php echo form_open('carta/index/' . ($pagina > 0 ? ($total_registros > $pagina ? '' : $pagina) : ''), array('method'=>'get','id'=>'myform')); ?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">Filtrar</div>
                     <div class="panel-body">
@@ -33,8 +33,8 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label for="numero">Número da carta</label>
-                                <input type="text" id="numero" name="numero" value="<?php echo $numero;?>" class="form-control"
-                                    onblur="myform.submit();" />
+                                <input type="text" id="numero" name="numero" value="<?php echo $numero;?>"
+                                    class="form-control" onblur="myform.submit();" />
                             </div>
                             <div class="col-md-4">
                                 <label for="nome_crianca">Nome da criança</label>
@@ -132,8 +132,11 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                             <div class="col-md-4">
                                 <label>Status</label>
                                 <select name="removida" class="form-control" onchange="myform.submit();">
-                                    <option value="0"<?php echo ($removida == "0" || is_null($removida) ? " selected" : ""); ?>>Ativas</option>
-                                    <option value="1"<?php echo ($removida == "1" ? " selected" : ""); ?>>Excluídas</option>
+                                    <option value="0"
+                                        <?php echo ($removida == "0" || is_null($removida) ? " selected" : ""); ?>>
+                                        Ativas</option>
+                                    <option value="1" <?php echo ($removida == "1" ? " selected" : ""); ?>>Excluídas
+                                    </option>
                                 </select>
                             </div>
                             <?php } ?>
@@ -143,11 +146,17 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                             <div class="col-md-4">
                                 <label for="limite">Quantidade de Registros</label>
                                 <select id="limite" name="limite" class="form-control" onchange="myform.submit();">
-                                    <option value="50"<?php echo ($limite == "50" || is_null($limite) ? " selected" : ""); ?>>50 registros</option>
-                                    <option value="100"<?php echo ($limite == "100" ? " selected" : ""); ?>>100 registros</option>
-                                    <option value="150"<?php echo ($limite == "150" ? " selected" : ""); ?>>150 registros</option>
-                                    <option value="200"<?php echo ($limite == "200" ? " selected" : ""); ?>>200 registros</option>
-                                    <option value="250"<?php echo ($limite == "250" ? " selected" : ""); ?>>250 registros</option>
+                                    <option value="50"
+                                        <?php echo ($limite == "50" || is_null($limite) ? " selected" : ""); ?>>50
+                                        registros</option>
+                                    <option value="100" <?php echo ($limite == "100" ? " selected" : ""); ?>>100
+                                        registros</option>
+                                    <option value="150" <?php echo ($limite == "150" ? " selected" : ""); ?>>150
+                                        registros</option>
+                                    <option value="200" <?php echo ($limite == "200" ? " selected" : ""); ?>>200
+                                        registros</option>
+                                    <option value="250" <?php echo ($limite == "250" ? " selected" : ""); ?>>250
+                                        registros</option>
                                 </select>
                             </div>
                             <?php } ?>
@@ -263,7 +272,17 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                         <td><?php echo ($c['credenciado']) ? 'Sim' : 'Não'; ?></td>
                         <td>
                             <div class="btn-group btn-group-toggle" role="group" aria-label="Grupo de Ações">
-                                <?php                            
+                                <?php
+                                if ($c['removida'] == 1) {
+                                    if (array_key_exists('permite_excluir_carta', $permissoes_usuario) && $c['removida'] == 1) {
+                                ?>
+                                <a href="<?php echo site_url('carta/reativar/'.$c['id']); ?>"
+                                    class="btn btn-success btn-xs"
+                                    onclick="return confirm('Confirma a reativação da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                        class="fa fa-check"></span> Reativar</a>
+                                <?php
+                                    }
+                                } else {
                                 if (array_key_exists("permite_editar_carta", $permissoes_usuario)):
                                 ?>
                                 <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>"
@@ -287,8 +306,8 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                                 ?>
 
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown"
-                                        aria-haspopup="false" aria-expanded="false">
+                                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
@@ -297,25 +316,26 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                                         ?>
                                         <li>
                                             <a href="<?php echo site_url('carta/credenciar/'.$c['id']); ?>"
-                                            onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
-                                                class="fa fa-pencil"></span> Credenciar</a>
+                                                onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                                    class="fa fa-pencil"></span> Credenciar</a>
                                         </li>
                                         <?php
                                         }
                                         ?>
                                         <?php
-                                        if (array_key_exists('permite_excluir_carta', $permissoes_usuario) && $c['adotante_nome'] == '') {
+                                        if (array_key_exists('permite_excluir_carta', $permissoes_usuario) && $c['adotante_nome'] == '' && $c['removida'] == 0) {
                                         ?>
                                         <li>
                                             <a href="<?php echo site_url('carta/excluir/'.$c['id']); ?>"
-                                            onclick="return confirm('Confirma a exclusão da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
-                                                class="fa fa-times"></span> Excluir</a>
+                                                onclick="return confirm('Confirma a exclusão da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                                    class="fa fa-times"></span> Excluir</a>
                                         </li>
                                         <?php
                                         }
                                         ?>
                                     </ul>
                                 </div>
+                                    <?php } ?>
                             </div>
                         </td>
                     </tr>

@@ -26,11 +26,11 @@ class Carta extends MY_Controller
     /*
      * Listing of cartas
      */
-    function index()
+    function index($id = '')
     {
         $total_records = 0;
         $limit_per_page = 50;
-        $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : ($id != '' && $id > 0 ? $id : 0);
 
         $data['limite']                     = $this->input->get('limite');
         $data['carteiro_selecionado']       = $this->input->get('carteiro');
@@ -140,7 +140,9 @@ class Carta extends MY_Controller
         $this->pagination->initialize($config);
         
         $data["links"] = $this->pagination->create_links();
-                
+        
+        $data['pagina'] = $start_index;
+        
         $data['js_scripts'] = array('carta/index.js');
         $data['_view'] = 'carta/index';
         $this->load->view('layouts/main',$data);
@@ -842,6 +844,16 @@ class Carta extends MY_Controller
         }
     }
 
+    function reativar($id)
+    {
+        if ($this->ion_auth_acl->has_permission('permite_excluir_carta'))
+        {
+            $this->Carta_model->update_carta_pedido($id, array('removida' => 0));
+            $this->session->set_flashdata('message_ok', 'A carta foi reativada com sucesso!');
+            redirect('carta');
+        }
+    }
+
     function upload()
     {
         if(!empty($_FILES['imagens']['name']))
@@ -885,17 +897,20 @@ class Carta extends MY_Controller
                     $uploadData[$i]['tamanho'] = $fileData['file_size'];
                     $uploadData[$i]['enviado_por'] = $this->user->id;
                     $uploadData[$i]['status'] = '0';
+                    $uploadData[$i]['categoria_id'] = $this->input->post('categoria');
 
                     if (substr($uploadData[$i]['nome'], 0, 4) >= 2019)
                     {
                         $numero_carta = substr($uploadData[$i]['nome'], 0, 14);
                     }
-                    else {
+                    else
+                    {
                         if (strpos($uploadData[$i]['nome'], '_') === false)
                         {
                             $numero_carta = $uploadData[$i]['nome'];
                         }
-                        else {
+                        else
+                        {
                             $teste = explode($uploadData[$i]['nome'], "_");
                             $numero_carta = $teste[0];
                         }
@@ -908,21 +923,7 @@ class Carta extends MY_Controller
                         {
                             mkdir('./uploads/' . $curYear, 0777, true);
                         }
-                        
-                        $newName = 'CARTA_NUMERO_' . trim($fileData['raw_name']) . $fileData['file_ext'];
-                        
                         $uploadData[$i]['carta_id'] = $carta['id'];
-
-                        /*if (rename($uploadData[$i]['caminho'] . '/' . $fileData['file_name'], './uploads/'.$curYear .'/'. $newName))
-                        {
-                            // Atualizar a carta com o arquivo enviado
-                            // $params = array(
-                            //     'arquivo' => ($curYear .'/'. $newName)
-                            // );
-                            // $this->Carta_model->update_carta_pedido($carta['id'], $params);
-                            // Remover o arquivo do array da galeria
-                            // unset($uploadData[$i]);
-                        }*/
                     }
                     else {
                         $uploadData[$i]['carta_id'] = NULL;
@@ -930,9 +931,6 @@ class Carta extends MY_Controller
                 }
             }
 
-            // echo "<pre>";
-            // print_r($uploadData);
-            // exit();
             if (!empty($uploadData))
             {
                 $insert = $this->Carta_model->inserir_galeria($uploadData);
@@ -944,6 +942,7 @@ class Carta extends MY_Controller
 
         $retorno = $this->Carta_model->get_galeria($this->user->id);
         $data['galeria'] = $retorno ? $retorno : array();
+        $data['categorias'] = $this->Carta_model->get_categorias_galeria();
 
         $data['js_scripts'] = array('carta/upload.js');
         $data['_view'] = 'carta/upload';
