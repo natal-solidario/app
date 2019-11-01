@@ -958,10 +958,8 @@ class Carta extends MY_Controller
         else
             $id = '';
 
-        
         $cpf = preg_replace("/\D/", "", $cpf);
         $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
-        // echo $id . " - " . $cpf . " - " . $result; exit();
         if ($result == 0)
         {
             $response = true;

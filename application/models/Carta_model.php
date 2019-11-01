@@ -162,7 +162,6 @@ class Carta_model extends CI_Model
         
         $this->db->order_by(($ordem ? $ordem : 'id'), ($direcao ? $direcao : 'desc'));
 
-        // echo "<pre>" . $this->db->get_compiled_select() . "\r\n"; exit();
         return $this->db->get()->result_array();
     }
     
@@ -208,7 +207,6 @@ class Carta_model extends CI_Model
         }
         $this->db->where('carta.removida', $removida);
 
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -216,7 +214,6 @@ class Carta_model extends CI_Model
     function contar_todas_cartas() {
         $this->db->where('removida', false);
         $this->db->from('carta');
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->count_all_results();
     }
     

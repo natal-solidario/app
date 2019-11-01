@@ -43,12 +43,6 @@ class Login extends CI_Controller
 		$this->form_validation->set_rules('email', 'Email', 'required');
 		if ($this->form_validation->run())
 		{
-			// echo "<pre>";
-			// print_r($this->ion_auth->forgotten_password($this->input->post('email')));
-			// print_r($this->ion_auth->messages());
-			// print_r($this->input->post());
-			// exit();
-			
 			// run the forgotten password method to email an activation code to the user
 			$forgotten = $this->ion_auth->forgotten_password($this->input->post('email'));
 

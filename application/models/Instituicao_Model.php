@@ -21,7 +21,6 @@ class Instituicao_model extends CI_Model
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
         $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'LEFT');
         $this->db->where(array('TBP01_INSTITUICAO.NU_TBP01' => $id));
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->get()->row_array();
     }
         
@@ -37,7 +36,6 @@ class Instituicao_model extends CI_Model
         $this->db->join('regiao_administrativa', 'regiao_administrativa.id = TBP01_INSTITUICAO.ID_REGIAO_ADMINISTRATIVA', 'INNER');
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
         $this->db->order_by('TBP01_INSTITUICAO.NU_TBP01', 'desc');
-        // echo $this->db->get_compiled_select();
         return $this->db->get()->result_array();
     }
 
@@ -49,7 +47,6 @@ class Instituicao_model extends CI_Model
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
         $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'LEFT');
         $this->db->where(array('TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO' => $usuario_id));
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->get()->row_array();
     }
 
@@ -162,7 +159,6 @@ class Instituicao_model extends CI_Model
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'LEFT');
         $this->db->join('usuario', 'usuario.id = TBP02_RESPONSAVEL_INSTITUICAO.ID_USUARIO', 'LEFT');
         $this->db->where(array('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC02' => $id));
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->get()->row_array();
 
     }

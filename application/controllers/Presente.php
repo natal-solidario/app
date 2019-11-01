@@ -331,26 +331,6 @@ class Presente extends CI_Controller
         $this->load->view('layouts/main',$data);
     }
 
-    function teste()
-    {
-        $this->testar_envio('dyegoav@gmail.com');
-    }
-
-    function testar_envio($emailTo)
-    {
-        $sysconfig = $this->NatalSolidario_model->get_all_config();
-
-        $this->email->from($sysconfig['email_from'], $sysconfig['nome_from']);
-        $this->email->to($emailTo);
-
-        $this->email->subject('mail send demonstration');
-        $this->email->message('this is testing');
-
-        $this->email->send();
-
-        print_r($this->email->print_debugger());
-    }
-
     private function send_mail($body, $emailTo)
     {
         $sysconfig = $this->NatalSolidario_model->get_all_config();
@@ -359,10 +339,10 @@ class Presente extends CI_Controller
         {
             $config = Array(
                 'protocol' => '',
-                'smtp_host' => '',
-                'smtp_port' => 587,
-                'smtp_user' => '',
-                'smtp_pass' => '',
+                'smtp_host' => $sysconfig['smtp_host'],
+                'smtp_port' => (isset($sysconfig['smtp_port']) ? $sysconfig['smtp_port'] : 587),
+                'smtp_user' => $sysconfig['smtp_user'],
+                'smtp_pass' => $sysconfig['smtp_pass'],
                 'mailtype'  => 'html',
                 'charset'   => 'utf-8',
                 'smtp_crypto' => 'ssl'

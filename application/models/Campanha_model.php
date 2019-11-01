@@ -35,14 +35,12 @@ class Campanha_model extends CI_Model
         $this->db->join('TBC02_ABRANGENCIA_INSTITUICAO', 'TBC02_ABRANGENCIA_INSTITUICAO.NU_TBP01 = TBP01_INSTITUICAO.NU_TBP01', 'INNER');
         $this->db->order_by('TBP01_INSTITUICAO.NU_TBP01', 'desc');
         $this->db->where(array('TBC02_ABRANGENCIA_INSTITUICAO.NU_TBC01' => $id));
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->get()->result_array();
     }
 
     function add($params)
     {
         $this->db->insert($this->campanhaTbl, $params);
-        // echo "<pre>" . $this->db->get_compiled_select(); exit();
         return $this->db->insert_id();
     }
 
