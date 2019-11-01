@@ -244,7 +244,6 @@ class Carta_model extends CI_Model
         return $this->db->get('carta')->row_array();
     }
     
-    
     function pesquisar_por_regiao($idRegiaoAdministrativa) {
         $this->db->select('carta.numero, carta.removida, beneficiado.nome as beneficiado_nome, responsavel.nome as responsavel_nome'.
             ', carta.adotante, carta.credenciado, presente.situacao as presente_situacao');
@@ -291,16 +290,19 @@ class Carta_model extends CI_Model
         }
         return !empty($result) ? $result : false;
     }
-    public function inserir_galeria($data = array())
+
+    function inserir_galeria($data = array())
     {
         $insert = $this->db->insert_batch('galeria', $data);
         return $insert ? true : false;
     }
-    public function get_galeria_by_carta($id)
+
+    function get_galeria_by_carta($id)
     {
-        return $this->db->get_where('galeria', array('carta_id'=>$id))->row_array();
+        return $this->db->get_where('galeria', array('carta_id'=>$id))->result_array();
     }
-    public function get_categorias_galeria()
+
+    function get_categorias_galeria()
     {
         return $this->db->get('categoria_galeria')->result_array();
     }

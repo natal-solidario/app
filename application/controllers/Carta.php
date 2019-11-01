@@ -141,11 +141,11 @@ class Carta extends MY_Controller
         
         $data["links"] = $this->pagination->create_links();
         
-        $data['pagina'] = $start_index;
+        $data['pagina'] = ($total_records < $start_index ? 0 : $start_index);
         
         $data['js_scripts'] = array('carta/index.js');
         $data['_view'] = 'carta/index';
-        $this->load->view('layouts/main',$data);
+        $this->load->view('layouts/main', $data);
     }
 
     function add()
@@ -247,7 +247,7 @@ class Carta extends MY_Controller
         // check if the carta_pedido exists before trying to edit it
         $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
         $data['carta_imagens'] = $this->Carta_model->get_galeria_by_carta($id);
-        
+
         $data['instituicao'] = $this->Instituicao_model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
         $data['beneficiado']  = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
         
@@ -532,7 +532,7 @@ class Carta extends MY_Controller
                     
                     //CONFIGURACAO UPLOAD
                     $config['upload_path']      = './uploads/'.$curYear;
-                    $config['allowed_types']    = 'gif|jpg|jpeg|png';
+                    $config['allowed_types']    = 'gif|jpg|jpeg|png|pdf';
                     $config['file_name']        = $newName;
                     #$config['max_size']    	= '100';
                     #$config['max_width']       = '1024';
@@ -861,9 +861,9 @@ class Carta extends MY_Controller
             $campanha_atual = $this->Campanha_model->get_campanha_atual();
             $curYear = $campanha_atual['AA_CAMPANHA'];
 
-            if (!is_dir('galeria/' . $curYear . '/' . $this->user->id))
+            if (!is_dir('galeria/' . $curYear))
             {
-                mkdir('./galeria/' . $curYear . '/' . $this->user->id, 0777, true);
+                mkdir('./galeria/' . $curYear, 0777, true);
             }
 
             $qtdFiles = sizeof($_FILES['imagens']['name']);
@@ -877,8 +877,8 @@ class Carta extends MY_Controller
                 $_FILES['imagem']['size'] = $_FILES['imagens']['size'][$i];
 
                 // CONFIGURACAO UPLOAD
-                $config['upload_path']      = './galeria/' . $curYear . '/' . $this->user->id;
-                $config['allowed_types']    = 'gif|jpg|jpeg|png';
+                $config['upload_path']      = './galeria/' . $curYear;
+                $config['allowed_types']    = 'gif|jpg|jpeg|png|pdf';
                 $this->load->library('upload', $config);
                 $this->upload->overwrite = true;
                 $this->upload->initialize($config);
@@ -890,7 +890,7 @@ class Carta extends MY_Controller
                     $fileData = $this->upload->data();
                     $uploadData[$i]['nome_arquivo'] = $fileData['file_name'];
                     $uploadData[$i]['nome'] = trim($fileData['raw_name']);
-                    $uploadData[$i]['caminho'] = './galeria/' . $curYear . '/' . $this->user->id;
+                    $uploadData[$i]['caminho'] = './galeria/' . $curYear;
                     $uploadData[$i]['enviado_em'] = date("Y-m-d H:i:s");
                     $uploadData[$i]['extensao'] = $fileData['file_ext'];
                     $uploadData[$i]['tipo'] = $fileData['file_type'];
@@ -917,7 +917,7 @@ class Carta extends MY_Controller
                     }
 
                     $carta = $this->Carta_model->get_carta_by_numeroCarta($numero_carta);
-                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || $this->ion_auth_acl->has_permission('acesso_admin')))
+                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || $this->ion_auth_acl->has_permission('permite_upload_lote_geral')))
                     {
                         if (!is_dir('uploads/' . $curYear))
                         {
@@ -940,7 +940,7 @@ class Carta extends MY_Controller
             }
         }
 
-        $retorno = $this->Carta_model->get_galeria($this->user->id);
+        $retorno = $this->Carta_model->get_galeria($this->ion_auth_acl->has_permission('permite_upload_lote_geral') ? '' : $this->user->id);
         $data['galeria'] = $retorno ? $retorno : array();
         $data['categorias'] = $this->Carta_model->get_categorias_galeria();
 

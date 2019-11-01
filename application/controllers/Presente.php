@@ -1,7 +1,6 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed'); 
 class Presente extends CI_Controller
-{
-    
+{    
     function __construct()
     {
         parent::__construct();
@@ -15,6 +14,7 @@ class Presente extends CI_Controller
         $this->load->model('Local_entrega_regiao_model');
         $this->load->model('Local_entrega_model');
         $this->load->model('Presente_historico_situacao_model');
+        $this->load->model('NatalSolidario_model');
         
         $this->session->set_userdata('nomeAdotante', '');
         $this->session->set_userdata('cartasAdotante', []);
@@ -319,7 +319,7 @@ class Presente extends CI_Controller
                 $infoEmail['beneficiado'] = $dadosPresente['beneficiado_nome'];
                 $infoEmail['imagem_entrega'] = $params['imagem_entrega'];
                 
-                $body = $this->load->view('email/modelo_email_entrega_presente.php',$infoEmail,TRUE);
+                $body = $this->load->view('email/modelo_email_entrega_presente.php', $infoEmail, TRUE);
                 
                 if ($dadosPresente['adotante_email']) {
                     $params2['email_entrega_enviado'] = $this->send_mail($body, $dadosPresente['adotante_email']);
@@ -330,26 +330,49 @@ class Presente extends CI_Controller
         $data['_view'] = 'presente/entrega';
         $this->load->view('layouts/main',$data);
     }
-    
-    
-    private function send_mail($body, $emailTo) {
-        
-        $from_email = "";
-        $config = Array(
-            'protocol' => '',
-            'smtp_host' => '',
-            'smtp_port' => 587,
-            'smtp_user' => '',
-            'smtp_pass' => '',
-            'mailtype'  => 'html',
-            'charset'   => 'utf-8',
-            'smtp_crypto' => 'ssl'
-            );
-        
-        $this->email->initialize($config);
+
+    function teste()
+    {
+        $this->testar_envio('dyegoav@gmail.com');
+    }
+
+    function testar_envio($emailTo)
+    {
+        $sysconfig = $this->NatalSolidario_model->get_all_config();
+
+        $this->email->from($sysconfig['email_from'], $sysconfig['nome_from']);
+        $this->email->to($emailTo);
+
+        $this->email->subject('mail send demonstration');
+        $this->email->message('this is testing');
+
+        $this->email->send();
+
+        print_r($this->email->print_debugger());
+    }
+
+    private function send_mail($body, $emailTo)
+    {
+        $sysconfig = $this->NatalSolidario_model->get_all_config();
+
+        if ($sysconfig['smtp_host'] && $sysconfig['smtp_user'] && $sysconfig['smtp_pass'])
+        {
+            $config = Array(
+                'protocol' => '',
+                'smtp_host' => '',
+                'smtp_port' => 587,
+                'smtp_user' => '',
+                'smtp_pass' => '',
+                'mailtype'  => 'html',
+                'charset'   => 'utf-8',
+                'smtp_crypto' => 'ssl'
+                );
+            
+            $this->email->initialize($config);
+        }
         $this->email->set_mailtype("html");
         $this->email->set_newline("\r\n");
-        $this->email->from($from_email, 'Heróis de Verdade');
+        $this->email->from($sysconfig['email_from'], $sysconfig['nome_from']);
         $this->email->to($emailTo);
         $this->email->subject('Natal Solidário - Entrega do presente');
         $this->email->message($body);

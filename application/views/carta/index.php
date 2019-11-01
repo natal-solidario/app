@@ -21,7 +21,7 @@ $permissoes_usuario = $this->session->userdata('permissoes_usuario');
                 </div>
             </div>
             <div class="box-body">
-                <?php echo form_open('carta/index/' . ($pagina > 0 ? ($total_registros > $pagina ? '' : $pagina) : ''), array('method'=>'get','id'=>'myform')); ?>
+                <?php echo form_open('carta/index/' . ($pagina > 0 ? $pagina : ''), array('method'=>'get','id'=>'myform')); ?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">Filtrar</div>
                     <div class="panel-body">

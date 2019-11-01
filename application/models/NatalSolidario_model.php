@@ -21,6 +21,20 @@ class NatalSolidario_model extends CI_Model
         return $this->db->get('uf')->result_array();
     }
 
+    function get_all_config()
+    {
+
+        $config = $this->db->get('config')->result_array();
+
+        $retorno = array();
+        foreach($config as $c)
+        {
+            $retorno[$c['chave']] = $c['valor'];
+        }
+
+        return $retorno;
+    }
+
     function validar_cpf($cpf) {
         $cpf = preg_replace('/[^0-9]/', '', (string) $cpf);
 

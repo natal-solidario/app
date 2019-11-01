@@ -43,6 +43,20 @@
                                 required />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <p>Instruções para envio:</p>
+                            <p>1) Salvar a imagem com o Número da Carta + _ + Ordem da Foto (a carta pode ter mais de uma foto)</p>
+
+                            <p>Exemplo:</p>
+
+                            <p>1.1) A carta 20190120030076 tem uma imagem. Então o nome do arquivo será 20190120030076.jpg</p>
+
+                            <p>1.2) A carta 20190120040080 tem duas imagens. Então o nome dos arquivos serão 20190120040080_1.jpg e 20190120040080_2.jpg</p>
+
+                            <p>2) As extensões dos arquivos de imagens poderão ser: .jpg, .jpeg, .png, .gif, .pdf</p>
+                        </div>
+                    </div>
                 </div>
                 <?php echo form_close(); ?>
             </div>
