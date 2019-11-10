@@ -102,3 +102,16 @@ var habilitarAcoes = function(habilitar_acoes) {
         $(".acoes").prop("disabled", true);
     }
 }
+
+
+var sendMyForm = function() {
+    $(".skin-blue").loading({
+        stoppable: false,
+        message: 'Por favor aguarde...',
+        theme: 'dark',
+        zIndex: 9999
+    });
+    $("#myform").submit();
+}
+
+

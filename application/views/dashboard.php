@@ -3,10 +3,6 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Dashboard</h3>
-                <div class="box-tools">
-                    <?php /*<a href="<?php echo site_url('carta/new'); ?>" class="btn btn-success">Incluir Carta</a>*/
-                    ?>
-                </div>
             </div>
             <div class="box-body">
                 <?php
@@ -15,8 +11,7 @@
 					if (array_key_exists("acesso_admin", $permissoes_usuario)):
 				?>
 
-
-                <?php /*echo form_open('', array('method'=>'get', 'id'=>'myform')); ?>
+                <?php echo form_open('', array('method'=>'get', 'id'=>'myform')); ?>
                 <div class="panel panel-primary">
                     <div class="panel-body">
                         <div class="col-md-4">
@@ -33,8 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <?php echo form_close();*/ ?>
-
+                <?php echo form_close(); ?>
 
                 <div class="panel panel-primary">
                     <div class="panel-heading">Total de cartas</div>
@@ -52,7 +46,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Região administrativa</th>
+                                <th scope="col">Região Administrativa</th>
                                 <th scope="col" width="40%">Total</th>
                             </tr>
                         </thead>

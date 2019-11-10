@@ -1,5 +1,4 @@
-<?php
-
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Local_entrega_regiao_model extends CI_Model
 {
     function __construct()
@@ -50,9 +49,8 @@ class Local_entrega_regiao_model extends CI_Model
         $this->db->where('l.local_entrega_familias', true);
         $this->db->order_by('r.nome', 'asc');
         $this->db->order_by('l.nome', 'asc');
-        
-        $retorno = $this->db->get('local_entrega_regiao')->result_array();
-        
-        return $retorno;
+
+        return $this->db->get('local_entrega_regiao')->result_array();
     }
 }
+?>

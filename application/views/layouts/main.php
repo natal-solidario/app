@@ -147,9 +147,13 @@
                             <i class="fa fa-envelope-open-o"></i> <span>Carta</span>
                         </a>
                         <ul class="treeview-menu">
+                            <?php
+                                if (array_key_exists("permite_incluir_carta", $permissoes_usuario)):
+                            ?>
                             <li>
                                 <a href="<?php echo site_url('carta/new'); ?>"><i class="fa fa-plus"></i>Pré-Cadastro</a>
                             </li>
+                            <?php endif; ?>
                             <li>
                                 <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i>Listar</a>
                             </li>
@@ -329,6 +333,7 @@
     <script src="<?php echo site_url('resources/libs/datatables/js/jquery.dataTables.min.js'); ?>"></script>
     <script src="<?php echo site_url('resources/libs/select2/js/select2.min.js'); ?>"></script>
     <script src="<?php echo site_url('resources/libs/sweetalert2/js/sweetalert2.all.min.js'); ?>"></script>
+    <script src="<?php echo site_url('resources/libs/jquery-loading/jquery.loading.min.js'); ?>"></script>
 
     <?php if (isset($js_scripts)): ?>
     <?php  foreach($js_scripts as $script): ?>

@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <label for="rememberMe"><?php echo form_checkbox('remember', 1, FALSE, 'class="rememberMe"'); ?> Lembrar Usuário</label>
+            <?php /*<label for="remember"><?php echo form_checkbox('remember', 1, FALSE, 'class="remember"'); ?> Lembrar Usuário</label>*/ ?>
             <div class="row clearfix">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -78,6 +78,13 @@
                     <?php endif; ?>
                 </div>
             </div>
+            <?php /*<div class="row clearfix">
+                <div class="col-md-12 text-right">
+                    <div class="form-group">
+                        <a href="<?php echo base_url('login/lembrarsenha'); ?>">Esqueceu sua senha?</a>
+                    </div>
+                </div>
+            </div>*/ ?>
         </form>
     </div> <!-- /container -->
     <script src="<?php echo site_url('resources/js/jquery-2.2.3.min.js'); ?>"></script>

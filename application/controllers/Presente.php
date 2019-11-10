@@ -1,10 +1,9 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed'); 
-class Presente extends CI_Controller
-{    
+class Presente extends MY_Controller
+{
     function __construct()
     {
         parent::__construct();
-
         $this->load->library('email');
         
         $this->load->model('Carta_model');
@@ -87,16 +86,19 @@ class Presente extends CI_Controller
                 $this->Presente_model->add($params);
             }
             
-            if($data['origem'] == 'recebimentoPresente'){
+            if($data['origem'] == 'recebimentoPresente')
+            {
                 $carta = $this->Carta_model->get_carta_pedido($idCarta);
                 redirect('presente/receberPresente/'.$carta['numero']);
-            } else {
+            }
+            else
+            {
                 redirect('presente/index/'.$this->session->userdata('idAdotante').'/'.$this->session->userdata('tokenAdotante'), 'location');
             }
-        } else {
-            
-            $this->carregarMenu($this->session->userdata('idAdotante')
-                , $this->session->userdata('tokenAdotante'));
+        }
+        else
+        {
+            $this->carregarMenu($this->session->userdata('idAdotante'), $this->session->userdata('tokenAdotante'));
             
             $data['descricaoPresente'] = ($presente) ? $presente['brinquedo_descricao'] : '';
             $data['valorBrinquedo'] = ($presente) ? $presente['valor'] : '';
@@ -105,13 +107,6 @@ class Presente extends CI_Controller
             
             $data['brinquedo_classificacoes'] = $this->Brinquedo_classificacao_model->get_all_classificacao_brinquedo();
             
-            
-            foreach ($this->session->userdata('cartasAdotante') as $carta) {
-                if ($carta['id'] == $idCarta) {
-                    $data['cartaSelecionada'] = $carta;
-                    break;
-                }
-            }
             if(isset($idCarta)) {
                 $data['cartaSelecionada'] = $this->Carta_model->get_dados_complementares_carta_por_id($idCarta);
             }
@@ -131,10 +126,19 @@ class Presente extends CI_Controller
             $data['nomeLocalEntrega'] = urlencode($dadosPresente['nomeLocalEntrega']);
             $data['numeroSalaEntrega'] = $dadosPresente['numeroSalaEntrega'];
             
+
+            // echo "<pre>";
+            // print_r($data);
+            // print_r($this->session->userdata());
+            // exit();
+
             $data['_view'] = 'presente/add';
-            if($data['origem'] == 'recebimentoPresente'){
+            if($data['origem'] == 'recebimentoPresente')
+            {
                 $this->load->view('layouts/main',$data);
-            } else {
+            }
+            else
+            {
                 $this->load->view('layouts/main_presente',$data);    
             }
             
@@ -142,13 +146,12 @@ class Presente extends CI_Controller
     }
 
     function gerarEtiqueta() {
-        
-
         $data = Array(
             'numeroCarta' => urldecode($this->uri->segment(3)),
             'nomeResponsavel' => urldecode($this->uri->segment(4)),
             'nomeCrianca' => urldecode($this->uri->segment(5)),
-            'localEntrega' => urldecode($this->uri->segment(6)) . "<br/> Sala: " . urldecode($this->uri->segment(7)),
+            'localEntrega' => urldecode($this->uri->segment(6)) . "<br /> Data Limite: " . urldecode($this->uri->segment(7)),
+            'localEvento' => urldecode($this->uri->segment(8)) . "<br /> Sala: " . urldecode($this->uri->segment(9)),
             'urlQrcode' => urlencode(site_url().'presente/receberPresente/'.$this->uri->segment(3))
         );
 
@@ -157,36 +160,19 @@ class Presente extends CI_Controller
     }
 
     function receberPresente($numeroCarta = null) {
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'You must be an admin to view this page');
-            redirect('login');
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $user_groups = $this->ion_auth->get_users_groups()->result();
-
-            $grupos = array();
-            foreach ($user_groups as $grupo) {
-                array_push($grupos, $grupo->name);
-            }
-
-            $this->session->set_userdata('usuario_logado', $user->email);
-            $this->session->set_userdata('grupos_usuario', $grupos);
-            $this->session->set_userdata('usuario_logado_id', $user->id);
-        }
-
-        if($this->input->post('numeroCarta') || isset($numeroCarta)) {
+        if ($this->input->post('numeroCarta') || isset($numeroCarta)) {
             $numeroCarta = isset($numeroCarta) ? $numeroCarta : $this->input->post('numeroCarta');
 
-            $usuario = $this->ion_auth->user()->row();
+            $usuario = $this->user;
+
+            $carta = $this->Carta_model->get_carta_by_numeroCarta($numeroCarta);
+            $data['idCarta'] = $carta['id'];
             
             $dadosPresente = $this->Presente_model->get_dados_presente($numeroCarta);
             
-            if(is_null($dadosPresente['idPresente'])) {
+            if(is_null($dadosPresente['idPresente']))
+            {
                 $this->session->set_flashdata('message', 'Não existe presente cadastrado para a carta número ' . $numeroCarta);
-                $this->session->set_flashdata('idCarta', $dadosPresente['idCarta']);
-            } else {
-                $this->session->set_flashdata('message', '');
             }
 
             $data['allLocaisArmazenamento'] = $this->Local_entrega_model->get_locais_armazenamento();
@@ -214,7 +200,6 @@ class Presente extends CI_Controller
                     'data_situacao' => date('Y-m-d H:i:s')
                 );
                 $this->Presente_historico_situacao_model->add($paramsSituacao);
-
             }
 
             $dadosPresenteAposAtualizacao = $this->Presente_model->get_dados_presente($numeroCarta);
@@ -234,34 +219,16 @@ class Presente extends CI_Controller
             $data['_view'] = 'presente/receber-presente';
             $data['dados'] = $dados;
 
-
             $this->load->view('layouts/main',$data);
-        } else {
+        }
+        else
+        {
             $data['_view'] = 'presente/receber-presente';
             $this->load->view('layouts/main',$data);
         }
-
     }
     
     function entrega($idPresente = null) {
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'O conteúdo da página é restrito para usuários autenticados');
-            redirect('login');
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $user_groups = $this->ion_auth->get_users_groups()->result();
-            
-            $grupos = array();
-            foreach ($user_groups as $grupo) {
-                array_push($grupos, $grupo->name);
-            }
-            
-            $this->session->set_userdata('usuario_logado', $user->email);
-            $this->session->set_userdata('grupos_usuario', $grupos);
-            $this->session->set_userdata('usuario_logado_id', $user->id);
-        }
-        
         $data['imagem_entrega'] = null;
         
         if($this->input->post('numeroCarta')) {
@@ -331,6 +298,10 @@ class Presente extends CI_Controller
         $this->load->view('layouts/main',$data);
     }
 
+    public function send_teste() {
+        $this->send_mail("Mensagem de corpo do e-mail", "dyegoav@gmail.com");
+    }
+
     private function send_mail($body, $emailTo)
     {
         $sysconfig = $this->NatalSolidario_model->get_all_config();
@@ -338,14 +309,16 @@ class Presente extends CI_Controller
         if ($sysconfig['smtp_host'] && $sysconfig['smtp_user'] && $sysconfig['smtp_pass'])
         {
             $config = Array(
-                'protocol' => '',
+                'protocol' => 'smtp', // 'mail', 'sendmail', 'smtp'
                 'smtp_host' => $sysconfig['smtp_host'],
                 'smtp_port' => (isset($sysconfig['smtp_port']) ? $sysconfig['smtp_port'] : 587),
                 'smtp_user' => $sysconfig['smtp_user'],
                 'smtp_pass' => $sysconfig['smtp_pass'],
-                'mailtype'  => 'html',
+                'mailtype'  => 'html', // 'text', 'html'
                 'charset'   => 'utf-8',
-                'smtp_crypto' => 'ssl'
+                'smtp_crypto' => 'ssl', // 'ssl', 'tls'
+                'validate' => TRUE,
+                'newline' => "\r\n"
                 );
             
             $this->email->initialize($config);

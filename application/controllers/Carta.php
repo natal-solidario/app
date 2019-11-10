@@ -1,4 +1,5 @@
 <?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+
 class Carta extends MY_Controller
 {
 
@@ -21,7 +22,7 @@ class Carta extends MY_Controller
         $this->load->model('Responsavel_model');
         $this->load->model('Beneficiado_model');
         $this->load->model('NatalSolidario_model');
-    } 
+    }
 
     /*
      * Listing of cartas
@@ -183,7 +184,7 @@ class Carta extends MY_Controller
             {
                 $instituicao = $this->Instituicao_model->get_instituicao($this->input->post('representante'));
             }
-            if ($this->ion_auth_acl->has_permission('permite_acessar_campanha_local'))
+            elseif ($this->ion_auth_acl->has_permission('permite_acessar_campanha_local'))
             {
                 $instituicao = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
             }
@@ -484,7 +485,7 @@ class Carta extends MY_Controller
                     'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoBeneficiado)),
                     'sexo' => $this->input->post('sexo'),
                     'responsavel_adicional' => $idResponsavelAdicional,
-                    'pais_separados' => $this->input->post('paisSeparados')
+                    'pais_separados' => (int)$this->input->post('paisSeparados')
                 );
                 $this->Beneficiado_model->update_beneficiado($data['beneficiado']['id'], $params);
                 
@@ -705,6 +706,12 @@ class Carta extends MY_Controller
 
     function new()
     {
+        if (!$this->ion_auth_acl->has_permission('permite_incluir_carta'))
+        {
+            $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
+            redirect('carta/index');
+        }
+
 		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
         $this->form_validation->set_rules('nome','Nome','required');
         $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
@@ -978,5 +985,56 @@ class Carta extends MY_Controller
             $response = false;
         }
         return $response;
+    }
+
+    public function baixarExcel()
+    {
+        if ($this->ion_auth_acl->has_permission('acesso_admin'))
+        {
+            $data['numero']                     = $this->input->get('numero');
+            $data['carteiro_selecionado']       = $this->input->get('carteiro');
+            $data['regiao_administrativa']      = $this->input->get('regiao_administrativa');
+            $data['mobilizador_selecionado']    = $this->input->get('mobilizador');
+            $data['nome_crianca']               = $this->input->get('nome_crianca');
+            $data['nome_responsavel']           = $this->input->get('nome_responsavel');
+            $data['situacao']                   = $this->input->get('situacao');
+            $data['campanha']                   = $this->input->get('campanha');
+            $data['instituicao']                = $this->input->get('instituicao');
+            $data['removida']                   = $this->input->get('removida');
+            $data['ordem']                      = $this->input->get('ordem');
+            $data['direcao']                    = $this->input->get('direcao');
+
+            if (!array_key_exists('campanha', $this->input->get()))
+                $data['campanha'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+            if (!array_key_exists('removida', $this->input->get()))
+                $data['removida'] = 0;
+            
+            $limit_per_page = 5000;
+            $start_index = 0;
+
+            $fileName = 'cartas.csv';
+            $cartas = $this->Carta_model->get_cartas_por_parametros($limit_per_page, $start_index, $data['numero']
+                                , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
+                                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha']
+                                , $data['instituicao'], $data['removida'], $data['ordem'], $data['direcao']);
+            
+            $cabecalho = array('Número','Data de Cadastro','Beneficiado','Data de Nascimento','Responsável 1','Carteiro','Mobilizador','Adotante');
+
+            $fp = fopen("uploads/" . $fileName, 'w');
+            fputs($fp, $bom=(chr(0xEF).chr(0xBB).chr(0xBF)));
+            fputcsv($fp, $cabecalho, ";");
+            foreach ($cartas as $val) {
+                $linha = array($val['numero'],date("d/m/Y", strtotime($val['data_cadastro'])),trim($val['beneficiado_nome']),date("d/m/Y", strtotime($val['beneficiado_data'])),$val['responsavel_nome'],$val['carteiro_nome'],$val['mobilizador_nome'],$val['adotante_nome']);
+                fputcsv($fp, $linha, ";");
+            }
+            fclose($fp);
+
+            header("Content-Type: application/vnd.ms-excel");
+            redirect(base_url()."uploads/".$fileName);
+        }
+        else {
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar essa funcionalidade!');
+            redirect(base_url());
+        }
     }
 }

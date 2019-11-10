@@ -134,7 +134,7 @@
         <?php echo form_open('presente/receberPresente'); ?>
             <?php $this->session->set_userdata('origem', 'recebimentoPresente'); ?>
             <div class="panel-footer">
-                <a href="<?php echo site_url('presente/add/'.$this->session->flashdata('idCarta')); ?>" class="btn btn-success">Cadastrar Presente</a>
+                <a href="<?php echo site_url('presente/add/'.$idCarta); ?>" class="btn btn-success">Cadastrar Presente</a>
             </div>
 	    <?php echo form_close(); ?>
         <?php endif?>

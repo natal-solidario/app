@@ -16,7 +16,10 @@ class Login extends CI_Controller
 	{
 		$usuario = $this->input->post("usuario");
 		$senha = $this->input->post("senha");
-		$remember = ($this->input->post('rememberMe')=='on');
+		$remember = 0;
+		
+		if (array_key_exists('remember', $this->input->post()))
+			$remember = 1;
 
 		if ($this->ion_auth->login($usuario, $senha, $remember))
 		{
