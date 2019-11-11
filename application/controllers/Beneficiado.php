@@ -31,7 +31,7 @@ class Beneficiado extends MY_Controller
 		$this->form_validation->set_rules('sexo','Sexo','required');
 		
 		if($this->form_validation->run())     
-        {   
+        {
             $date1 = strtr($this->input->post('data_nascimento'), '/', '-');
             $params = array(
 				'responsavel' => $this->input->post('responsavel'),

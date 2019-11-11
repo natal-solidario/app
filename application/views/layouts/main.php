@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Natal Solidário</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" />
+    <link rel="shortcut icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="<?php echo site_url('resources/img/webclip.png'); ?>" />
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css'); ?>">
@@ -30,9 +31,9 @@
             <!-- Logo -->
             <a href="" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">Heróis de Verdade</span>
+                <span class="logo-mini"><img width="75%" src="<?php echo site_url('resources/img/logo2x.png'); ?>" /></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">Heróis de Verdade</span>
+                <span class="logo-lg"><img width="75%" src="<?php echo site_url('resources/img/logo2x.png'); ?>" /></span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">

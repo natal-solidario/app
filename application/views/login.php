@@ -11,8 +11,8 @@
 
     <title>Natal Solidário</title>
 
-    <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
-    <link href="<?php echo base_url('assets/css/signin.css'); ?>" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>" />
+    <link rel="stylesheet" href="<?php echo base_url('resources/css/signin.css'); ?>" />
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
