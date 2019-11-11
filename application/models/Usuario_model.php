@@ -1,9 +1,4 @@
 <?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
 class Usuario_model extends CI_Model
 {
     function __construct()
@@ -25,7 +20,7 @@ class Usuario_model extends CI_Model
      */
     function get_all_usuarios()
     {
-        $this->db->order_by('id', 'desc');
+        $this->db->order_by('first_name', 'asc');
         return $this->db->get('usuario')->result_array();
     }
 

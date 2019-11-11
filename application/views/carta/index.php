@@ -9,43 +9,51 @@
 <?php endif; ?>
 
 <?php
-    $grupos_usuario = $this->session->userdata('grupos_usuario');
+$permissoes_usuario = $this->session->userdata('permissoes_usuario');
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Cartas</h3>
+                <?php
+                    if (array_key_exists("permite_incluir_carta", $permissoes_usuario)):
+                ?>
                 <div class="box-tools">
                     <a href="<?php echo site_url('carta/new'); ?>" class="btn btn-success">Incluir Carta</a>
                 </div>
+                <?php endif; ?>
             </div>
             <div class="box-body">
-            <?php echo form_open('carta/index', array('method'=>'get','id'=>'myform')); ?>
+                <?php echo form_open('carta/index/' . ($pagina > 0 ? $pagina : ''), array('method'=>'get','id'=>'myform')); ?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">Filtrar</div>
                     <div class="panel-body">
+                        <input type="hidden" id="ordem" name="ordem" value="<?php echo $ordem ? $ordem : "carta.id"; ?>"
+                            class="form-control" onblur="sendMyForm();" />
+                        <input type="hidden" id="direcao" name="direcao"
+                            value="<?php echo $direcao ? $direcao : "desc"; ?>" class="form-control" onblur="sendMyForm();" />
                         <div class="row clearfix">
                             <div class="col-md-4">
-                                <label>Número da carta</label>
-                                <input type="text" name="numero" value="<?php echo $numero;?>" class="form-control"
-                                    onblur="myform.submit();" />
+                                <label for="numero">Número da carta</label>
+                                <input type="text" id="numero" name="numero" value="<?php echo $numero;?>"
+                                    class="form-control" onblur="sendMyForm();" />
                             </div>
                             <div class="col-md-4">
-                                <label>Nome da criança</label>
+                                <label for="nome_crianca">Nome da criança</label>
                                 <input type="text" name="nome_crianca" value="<?php echo $nome_crianca;?>"
-                                    class="form-control" onblur="myform.submit();" />
+                                    class="form-control" onblur="sendMyForm();" />
                             </div>
                             <div class="col-md-4">
                                 <label>Nome do responsável</label>
                                 <input type="text" name="nome_responsavel" value="<?php echo $nome_responsavel;?>"
-                                    class="form-control" onblur="myform.submit();" />
+                                    class="form-control" onblur="sendMyForm();" />
                             </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label>Carteiro</label>
-                                <select name="carteiro" class="form-control" onchange="myform.submit();">
+                                <select name="carteiro" class="form-control" onchange="sendMyForm();">
                                     <option value="">Todos</option>
                                     <?php 
                                     foreach($carteiros as $carteiro) {
@@ -57,7 +65,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Mobilizador</label>
-                                <select name="mobilizador" class="form-control" onchange="myform.submit();">
+                                <select name="mobilizador" class="form-control" onchange="sendMyForm();">
                                     <option value="">Todos</option>
                                     <?php 
                                     foreach($mobilizadores as $mobilizador) {
@@ -69,7 +77,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Região administrativa </label>
-                                <select name="regiao_administrativa" class="form-control" onchange="myform.submit();">
+                                <select name="regiao_administrativa" class="form-control" onchange="sendMyForm();">
                                     <option value="">Todas</option>
                                     <?php 
                     				foreach($all_regioes as $ra) {
@@ -81,7 +89,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Situação </label>
-                                <select name="situacao" class="form-control" onchange="myform.submit();">
+                                <select name="situacao" class="form-control" onchange="sendMyForm();">
                                     <option value="">Todas</option>
                                     <option value="SEM_CARTEIRO_VINCULADO"
                                         <?php echo ($situacao == 'SEM_CARTEIRO_VINCULADO') ? 'selected' : '' ?>>Sem
@@ -97,7 +105,7 @@
                             <?php $isEditable = (($isRepComu && !$isAdmin) ? false : true); ?>
                             <div class="col-md-4">
                                 <label>Campanha</label>
-                                <select name="campanha" class="form-control" onchange="myform.submit();"
+                                <select name="campanha" class="form-control" onchange="sendMyForm();"
                                     <?php echo !$isEditable ? " readonly" : ""; ?>>
                                     <option value="">Todas</option>
                                     <?php 
@@ -108,10 +116,9 @@
                     				?>
                                 </select>
                             </div>
-                            <?php // if (in_array("admin", $grupos_usuario, true)) { ?>
                             <div class="col-md-4">
                                 <label>Instituição</label>
-                                <select name="instituicao" class="form-control" onchange="myform.submit();"
+                                <select name="instituicao" class="form-control" onchange="sendMyForm();"
                                     <?php echo !$isEditable ? " readonly" : ""; ?>>
                                     <option value="">Todas</option>
                                     <?php 
@@ -122,21 +129,53 @@
                     				?>
                                 </select>
                             </div>
-                            <?php // } ?>
+                            <?php
+                            if (array_key_exists("permite_excluir_carta", $permissoes_usuario)) {
+                            ?>
+                            <div class="col-md-4">
+                                <label>Status</label>
+                                <select name="removida" class="form-control" onchange="sendMyForm();">
+                                    <option value="0"
+                                        <?php echo ($removida == "0" || is_null($removida) ? " selected" : ""); ?>>
+                                        Ativas</option>
+                                    <option value="1" <?php echo ($removida == "1" ? " selected" : ""); ?>>Excluídas
+                                    </option>
+                                </select>
+                            </div>
+                            <?php } ?>
+                            <?php
+                            if (array_key_exists("acesso_admin", $permissoes_usuario)) {
+                            ?>
+                            <div class="col-md-4">
+                                <label for="limite">Quantidade de Registros</label>
+                                <select id="limite" name="limite" class="form-control" onchange="sendMyForm();">
+                                    <option value="50"
+                                        <?php echo ($limite == "50" || is_null($limite) ? " selected" : ""); ?>>50
+                                        registros</option>
+                                    <option value="100" <?php echo ($limite == "100" ? " selected" : ""); ?>>100
+                                        registros</option>
+                                    <option value="150" <?php echo ($limite == "150" ? " selected" : ""); ?>>150
+                                        registros</option>
+                                    <option value="200" <?php echo ($limite == "200" ? " selected" : ""); ?>>200
+                                        registros</option>
+                                    <option value="250" <?php echo ($limite == "250" ? " selected" : ""); ?>>250
+                                        registros</option>
+                                </select>
+                            </div>
+                            <?php } ?>
                         </div>
                     </div>
-                <?php echo form_close(); ?>
+                    <?php echo form_close(); ?>
                 </div>
-                <?php                            
-                if($grupos_usuario)
-                    if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true) || in_array("carteiro", $grupos_usuario, true)):
+                <?php
+                if (array_key_exists("permite_vincular_cartas_em_lote_carteiro", $permissoes_usuario) || array_key_exists("permite_vincular_cartas_em_lote_mobilizador", $permissoes_usuario)):
                 ?>
                 <div class="panel panel-primary">
                     <div class="panel-heading">Ação</div>
                     <div class="panel-body">
                         <div class="row clearfix">
                             <?php
-                            if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true)) {
+                            if (array_key_exists("permite_vincular_cartas_em_lote_carteiro", $permissoes_usuario)) {
                             ?>
                             <div class="col-md-5">
                                 <label>Carteiro</label>
@@ -151,7 +190,7 @@
                             </div>
                             <?php } ?>
                             <?php
-                            if (in_array("admin", $grupos_usuario, true) || in_array("carteiro", $grupos_usuario, true)) {
+                            if (array_key_exists("permite_vincular_cartas_em_lote_mobilizador", $permissoes_usuario)) {
                             ?>
                             <div class="col-md-5">
                                 <label>Mobilizador</label>
@@ -166,7 +205,8 @@
                             </div>
                             <?php } ?>
                             <div class="col-md-2">
-                                <button class="btn btn-primary acoes" style="margin-top:25px;" id="aplicar-acao" disabled>Aplicar</button>
+                                <button class="btn btn-primary acoes" style="margin-top:25px;" id="aplicar-acao"
+                                    disabled>Aplicar</button>
                             </div>
                         </div>
                     </div>
@@ -176,71 +216,158 @@
                 ?>
             </div>
             <div class="box-body">
-                <div style="font-weight: bold;">Total de cartas encontradas: <?php echo $total_registros;?></div>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination">
-                        <?php if (isset($links)) { ?>
-                        <?php echo $links ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div style="font-weight: bold;">Total de cartas encontradas: <?php echo $total_registros;?>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <?php if (array_key_exists("acesso_admin", $permissoes_usuario)) { ?>
+                        <a href="<?php echo site_url('carta/baixarExcel'); ?>" class="btn btn-xs btn-default">Baixar
+                            Planilha</a>
                         <?php } ?>
-                    </ul>
-                </nav>
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <?php if (isset($links)) { ?>
+                            <?php echo $links ?>
+                            <?php } ?>
+                        </ul>
+                    </nav>
+                </div>
                 <table class="table table-striped">
                     <tr>
                         <th width="1%"><input type="checkbox" class="selecionar-todas" /></th>
-                        <th>Número</th>
-                        <th>Beneficiado</th>
-                        <th>Responsável</th>
-                        <th>Adotante</th>
-                        <th>Data Cadastro</th>
-                        <th>Credenciado</th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.numero"
+                            data-direcao="<?php echo $ordem == "carta.numero" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Número
+                            <?php echo (($ordem == "carta.numero" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.numero" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.data_cadastro"
+                            data-direcao="<?php echo $ordem == "carta.data_cadastro" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Data Cadastro
+                            <?php echo (($ordem == "carta.data_cadastro" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.data_cadastro" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="beneficiado.nome"
+                            data-direcao="<?php echo $ordem == "beneficiado.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Beneficiado
+                            <?php echo (($ordem == "beneficiado.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "beneficiado.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="beneficiado.data_nascimento"
+                            data-direcao="<?php echo $ordem == "beneficiado.data_nascimento" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Data Nascimento
+                            <?php echo (($ordem == "beneficiado.data_nascimento" && $direcao == "asc") ? "&uparrow;" : (($ordem == "beneficiado.data_nascimento" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="responsavel.nome"
+                            data-direcao="<?php echo $ordem == "responsavel.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Responsável 1
+                            <?php echo (($ordem == "responsavel.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "responsavel.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carteiro.first_name"
+                            data-direcao="<?php echo $ordem == "carteiro.first_name" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Carteiro
+                            <?php echo (($ordem == "carteiro.first_name" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carteiro.first_name" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="mobilizador.first_name"
+                            data-direcao="<?php echo $ordem == "mobilizador.first_name" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Mobilizador
+                            <?php echo (($ordem == "mobilizador.first_name" && $direcao == "asc") ? "&uparrow;" : (($ordem == "mobilizador.first_name" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="adotante.nome"
+                            data-direcao="<?php echo $ordem == "adotante.nome" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Adotante
+                            <?php echo (($ordem == "adotante.nome" && $direcao == "asc") ? "&uparrow;" : (($ordem == "adotante.nome" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
+                        <th class="ordenar" style="cursor:pointer;" data-coluna="carta.credenciado"
+                            data-direcao="<?php echo $ordem == "carta.credenciado" && $direcao == "asc" ? "desc" : "asc"; ?>">
+                            Credenciado
+                            <?php echo (($ordem == "carta.credenciado" && $direcao == "asc") ? "&uparrow;" : (($ordem == "carta.credenciado" && $direcao == "desc") ? "&downarrow;" : "")); ?>
+                        </th>
                         <th>Ação</th>
                     </tr>
                     <?php
-                    if($cartas) {
-                    foreach($cartas as $c){ 
+                    if ($cartas) {
+                    foreach ($cartas as $c) {
                     ?>
                     <tr>
-                        <td><input type="checkbox" class="selecao" data-carta="<?php echo $c["id"]; ?>"<?php echo ($c['carteiro_associado'] && $c['mobilizador'] ? " disabled" : ""); ?> /></td>
+                        <td><input type="checkbox" class="selecao" data-carta="<?php echo $c["id"]; ?>"
+                                <?php echo ($c['carteiro_associado'] && $c['mobilizador'] ? " disabled" : ""); ?> />
+                        </td>
                         <td><?php echo $c['numero']; ?></td>
-                        <td><?php echo $c['beneficiado_nome']; ?></td>
-                        <td><?php echo $c['responsavel_nome']; ?></td>
-                        <td><?php echo $c['adotante_nome']; ?></td>
                         <td><?php echo date("d/m/Y", strtotime($c['data_cadastro'])); ?></td>
+                        <td><?php echo $c['beneficiado_nome']; ?></td>
+                        <td><?php echo date("d/m/Y", strtotime($c['beneficiado_data'])); ?></td>
+                        <td><?php echo $c['responsavel_nome']; ?></td>
+                        <td><?php echo $c['carteiro_nome']; ?></td>
+                        <td><?php echo $c['mobilizador_nome']; ?></td>
+                        <td><?php echo $c['adotante_nome']; ?></td>
                         <td><?php echo ($c['credenciado']) ? 'Sim' : 'Não'; ?></td>
                         <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <?php                            
-                                if($grupos_usuario)
-                                    if (in_array("admin", $grupos_usuario, true) || in_array("representante-ong", $grupos_usuario, true) || in_array("representante-comunidade", $grupos_usuario, true)):
+                            <div class="btn-group btn-group-toggle" role="group" aria-label="Grupo de Ações">
+                                <?php
+                                if ($c['removida'] == 1) {
+                                    if (array_key_exists('permite_excluir_carta', $permissoes_usuario) && $c['removida'] == 1) {
+                                ?>
+                                <a href="<?php echo site_url('carta/reativar/'.$c['id']); ?>"
+                                    class="btn btn-success btn-xs"
+                                    onclick="return confirm('Confirma a reativação da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                        class="fa fa-check"></span> Reativar</a>
+                                <?php
+                                    }
+                                } else {
+                                if (array_key_exists("permite_editar_carta", $permissoes_usuario)):
                                 ?>
                                 <a href="<?php echo site_url('carta/edit/'.$c['id']); ?>"
                                     class="btn btn-info btn-xs"><span class="fa fa-pencil"></span> Editar</a>
                                 <?php 
                                 endif;
                                 
-                                if (in_array("admin", $grupos_usuario, true) || $this->session->userdata('usuario_logado_id') == $c['carteiro_associado']):
+                                if (array_key_exists("permite_preencher_formulario_carta", $permissoes_usuario)):
                                 ?>
                                 <a href="<?php echo site_url('carta/formulario/'.$c['id']); ?>"
                                     class="btn btn-success btn-xs"><span class="fa fa-pencil"></span> Formulário</a>
                                 <?php 
                                 endif;
                                 
-                                if (in_array("admin", $grupos_usuario, true) || $this->session->userdata('usuario_logado_id') == $c['mobilizador']):
+                                if (array_key_exists("permite_vincular_adotante", $permissoes_usuario) || $this->session->userdata('usuario_logado_id') == $c['mobilizador']):
                                 ?>
                                 <a href="<?php echo site_url('carta/adotante/'.$c['id']); ?>"
                                     class="btn btn-warning btn-xs"><span class="fa fa-pencil"></span> Adotante</a>
                                 <?php
                                 endif;
+                                ?>
 
-                                if ((in_array("admin", $grupos_usuario, true) || in_array("representante-comunidade", $grupos_usuario, true)) && !$c['credenciado']) {
-                                ?>
-                                <a href="<?php echo site_url('carta/credenciar/'.$c['id']); ?>"
-                                    class="btn btn-danger btn-xs"
-                                    onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
-                                        class="fa fa-pencil"></span> Credenciar</a>
-                                <?php
-                                }
-                                ?>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-primary btn-xs dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <?php
+                                        if (array_key_exists("permite_credenciar_carta", $permissoes_usuario) && !$c['credenciado']) {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo site_url('carta/credenciar/'.$c['id']); ?>"
+                                                onclick="return confirm('Confirma o credenciamento da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                                    class="fa fa-pencil"></span> Credenciar</a>
+                                        </li>
+                                        <?php
+                                        }
+                                        ?>
+                                        <?php
+                                        if (array_key_exists('permite_excluir_carta', $permissoes_usuario) && $c['adotante_nome'] == '' && $c['removida'] == 0) {
+                                        ?>
+                                        <li>
+                                            <a href="<?php echo site_url('carta/excluir/'.$c['id']); ?>"
+                                                onclick="return confirm('Confirma a exclusão da carta <?php echo $c['numero'] . " - " . $c['beneficiado_nome']; ?>?');"><span
+                                                    class="fa fa-times"></span> Excluir</a>
+                                        </li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                                <?php } ?>
                             </div>
                         </td>
                     </tr>

@@ -1,6 +1,5 @@
-<?php
-
-class Entrega extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Entrega extends MY_Controller{
     function __construct()
     {
         parent::__construct();
@@ -10,15 +9,6 @@ class Entrega extends CI_Controller{
         $this->load->model('Local_entrega_regiao_model');
         $this->load->model('Carta_model');
         $this->load->model('Regiao_administrativa_model');
-
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'You must be an admin to view this page');
-            redirect('login');
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
-        }
     }
     
     /*

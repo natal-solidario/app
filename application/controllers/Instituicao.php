@@ -1,24 +1,21 @@
-<?php
-class Instituicao extends CI_Controller
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Instituicao extends MY_Controller
 {
     const GRUPO_REPRESENTANTE_COMUNIDADE = 3;
 
     function __construct()
     {
         parent::__construct();
-        $this->load->model('Instituicao_Model');
+        $this->load->model('Instituicao_model');
         $this->load->model('Regiao_administrativa_model');
         $this->load->model('Usuario_model');
         $this->load->model('Campanha_model');
         $this->load->model('NatalSolidario_model');
         
-        if (!$this->ion_auth->in_group('admin'))
-        {
-            $this->session->set_flashdata('message', 'Você deve ser um administrador para acessar esta funcionalidade!');
+		if (!$this->ion_auth_acl->has_permission('permite_acessar_campanha'))
+		{
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar esta funcionalidade!');
             redirect(site_url());
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
         }
     } 
 
@@ -27,7 +24,7 @@ class Instituicao extends CI_Controller
      */
     function index()
     {
-        $data['instituicoes'] = $this->Instituicao_Model->get_all_instituicoes();
+        $data['instituicoes'] = $this->Instituicao_model->get_all_instituicoes();
 
         $data['_view'] = 'instituicao/index';
         $this->load->view('layouts/main',$data);
@@ -59,7 +56,7 @@ class Instituicao extends CI_Controller
                 'NO_CIDADE' => $this->input->post('NO_CIDADE'),
                 'SG_UF' => $this->input->post('SG_UF'),
             );
-            $endereco_id = $this->Instituicao_Model->add_endereco($params_endereco);
+            $endereco_id = $this->Instituicao_model->add_endereco($params_endereco);
             
             // Adicionar o telefone            
             $telefone = preg_replace("/\D/", "", $this->input->post('DE_TELEFONE'));
@@ -68,7 +65,7 @@ class Instituicao extends CI_Controller
                 'NU_TELEFONE' => substr($telefone, 2),
             );
             if ($telefone > 0)
-                $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
+                $telefone_id = $this->Instituicao_model->add_telefone($params_telefone);
 
             // Adicionar a Instituição
             $params_instituicao = array(
@@ -78,14 +75,14 @@ class Instituicao extends CI_Controller
                 'NU_TBH01' => $endereco_id,
                 'NU_TBH02' => $telefone_id
             );
-            $instituicao_id = $this->Instituicao_Model->add_instituicao($params_instituicao);
+            $instituicao_id = $this->Instituicao_model->add_instituicao($params_instituicao);
 
             // Vincular responsável com a instituição
             $params_vinculo_instituicao_usuario = array(
                 'NU_TBP01' => $instituicao_id,
                 'ID_USUARIO' => $this->input->post('ID_USUARIO'),
             );
-            $vinculo_responsavel_id = $this->Instituicao_Model->add_vinculo_instituicao_usuario($params_vinculo_instituicao_usuario);
+            $vinculo_responsavel_id = $this->Instituicao_model->add_vinculo_instituicao_usuario($params_vinculo_instituicao_usuario);
 
             // Vincular instituição com a campanha atual
             if ($this->input->post('vinculo-campanha-atual') == 1) {
@@ -94,7 +91,7 @@ class Instituicao extends CI_Controller
                     'NU_TBC01' => $campanha_atual['NU_TBC01'],
                     'NU_TBP01' => $instituicao_id,
                 );
-                $vinculo_campanha_id = $this->Instituicao_Model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
+                $vinculo_campanha_id = $this->Instituicao_model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
             }
 
             redirect('instituicao/index');
@@ -116,7 +113,7 @@ class Instituicao extends CI_Controller
     function edit($id)
     {   
         // verifica se a instituição já existe antes de atualizar
-        $data['instituicao'] = $this->Instituicao_Model->get_instituicao($id);
+        $data['instituicao'] = $this->Instituicao_model->get_instituicao($id);
 
        if(isset($data['instituicao']['NU_TBP01']))
         {
@@ -142,7 +139,7 @@ class Instituicao extends CI_Controller
                     'SG_UF' => $this->input->post('SG_UF'),
                 );
 
-                $endereco_id = $this->Instituicao_Model->update_endereco($data['instituicao']['NU_TBH01'], $params_endereco);
+                $endereco_id = $this->Instituicao_model->update_endereco($data['instituicao']['NU_TBH01'], $params_endereco);
 
                 // Adicionar o telefone            
                 $telefone = preg_replace("/\D/", "", $this->input->post('DE_TELEFONE'));
@@ -153,10 +150,10 @@ class Instituicao extends CI_Controller
                 );
 
                 if ($data['instituicao']['NU_TBH02'] == 0 && $telefone > 0) {
-                    $telefone_id = $this->Instituicao_Model->add_telefone($params_telefone);
+                    $telefone_id = $this->Instituicao_model->add_telefone($params_telefone);
                 }
                 else {
-                    $telefone_id = $this->Instituicao_Model->update_telefone($data['instituicao']['NU_TBH02'], $params_telefone);
+                    $telefone_id = $this->Instituicao_model->update_telefone($data['instituicao']['NU_TBH02'], $params_telefone);
                 }
 
                 // Adicionar a Instituição
@@ -167,13 +164,13 @@ class Instituicao extends CI_Controller
                     'NU_TBH01' => $endereco_id,
                     'NU_TBH02' => $telefone_id,
                 );
-                $instituicao_id = $this->Instituicao_Model->update_instituicao($data['instituicao']['NU_TBP01'], $params_instituicao);
+                $instituicao_id = $this->Instituicao_model->update_instituicao($data['instituicao']['NU_TBP01'], $params_instituicao);
 
                 $params_vinculo_instituicao_usuario = array(
                     'NU_TBP01' => $instituicao_id,
                     'ID_USUARIO' => $this->input->post('ID_USUARIO'),
                 );
-                $vinculo_responsavel_id = $this->Instituicao_Model->update_vinculo_instituicao_usuario($data['instituicao']['NU_TBP01'], $params_vinculo_instituicao_usuario);
+                $vinculo_responsavel_id = $this->Instituicao_model->update_vinculo_instituicao_usuario($data['instituicao']['NU_TBP01'], $params_vinculo_instituicao_usuario);
 
                 // Vincular instituição com a campanha atual
                 if ($this->input->post('vinculo-campanha-atual') == 1) 
@@ -184,11 +181,11 @@ class Instituicao extends CI_Controller
                             'NU_TBC01' => $campanha_atual['NU_TBC01'],
                             'NU_TBP01' => $instituicao_id,
                         );
-                        $vinculo_campanha_id = $this->Instituicao_Model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
+                        $vinculo_campanha_id = $this->Instituicao_model->add_abrangencia_instituicao($params_vinculo_instituicao_campanha);
                     }
                 }
                 else {
-                    $vinculo_campanha_id = $this->Instituicao_Model->delete_abrangencia_instituicao($instituicao_id);
+                    $vinculo_campanha_id = $this->Instituicao_model->delete_abrangencia_instituicao($instituicao_id);
                 }
                 redirect('instituicao/index');
             }
@@ -197,7 +194,7 @@ class Instituicao extends CI_Controller
                 $data['ras'] = $this->Regiao_administrativa_model->get_all();
                 $data['usuarios'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_REPRESENTANTE_COMUNIDADE);
 
-                $data['instituicao']['vinculo_campanha_atual'] = $this->Instituicao_Model->checar_instituicao_vinculo_campanha_atual($id);
+                $data['instituicao']['vinculo_campanha_atual'] = $this->Instituicao_model->checar_instituicao_vinculo_campanha_atual($id);
 
                 $data['js_scripts'] = array('instituicao/edit.js');
                 $data['_view'] = 'instituicao/edit';
@@ -216,7 +213,7 @@ class Instituicao extends CI_Controller
             $id = $this->input->post('NU_TBP01');
         else
             $id = '';
-        $result = $this->Instituicao_Model->check_unique_cnpj($id, $cnpj);
+        $result = $this->Instituicao_model->check_unique_cnpj($id, $cnpj);
         if($result == 0) {
             $response = true;
             $result = $this->NatalSolidario_model->validar_cnpj($cnpj);

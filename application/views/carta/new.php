@@ -7,7 +7,7 @@
             <div class="box-body">
                 <?php echo form_open('carta/new', array('id'=>'form-carta')); ?>
                 <h4>Responsável</h4>
-                <input type="hidden" id="responsavel_id" name="responsavel_id" value="" />
+                <input type="hidden" id="responsavel_id" name="responsavel_id" value="<?php echo $this->input->post('responsavel_id'); ?>" />
                 <input type="hidden" id="metodo_busca" name="metodo_busca" value="" />
                 <div class="row clearfix">
                     <div class="col-md-3">
@@ -210,10 +210,9 @@
                 </div>
 
                 <?php
-                $grupos_usuario = $this->session->userdata('grupos_usuario');
-                if ($grupos_usuario) {
-                    $isAdmin = in_array("admin", $grupos_usuario, true);
-                    $isRepresentanteComunidade = in_array("representante-comunidade", $grupos_usuario, true);
+                $permissoes_usuario = $this->session->userdata('permissoes_usuario');
+                $isAdmin = array_key_exists("acesso_admin", $permissoes_usuario);
+                $isRepresentanteComunidade = array_key_exists("permite_acessar_campanha_local", $permissoes_usuario);
                 ?>
                 <h4>Instituição</h4>
                 <div class="row clearfix" id="select-instituicao">
@@ -244,9 +243,6 @@
                         </div>
                     </div>
                 </div>
-                <?php
-                }
-                ?>
                 <?php echo form_close(); ?>
             </div>
             <div class="box-footer">

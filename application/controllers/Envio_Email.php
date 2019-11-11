@@ -1,9 +1,4 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 class Envio_Email extends CI_Controller{
     function __construct()
     {
@@ -81,22 +76,27 @@ class Envio_Email extends CI_Controller{
     }
 
     private function send_mail($body, $emailTo) {
-        $from_email = "";
 
-        $config = Array(
-		    'protocol' => 'mail',
-		    'smtp_host' => '',
-		    'smtp_port' => 587,
-		    'smtp_user' => '',
-		    'smtp_pass' => '',
-		    'mailtype'  => 'html', 
-		    'charset'   => 'utf-8',
-            'smtp_crypto' => 'ssl'
-		);
-		$this->email->initialize($config);
-		$this->email->set_mailtype("html");
-		$this->email->set_newline("\r\n");
-        $this->email->from($from_email, 'Heróis de Verdade');
+        $sysconfig = $this->NatalSolidario_model->get_all_config();
+
+        if ($sysconfig['smtp_host'] && $sysconfig['smtp_user'] && $sysconfig['smtp_pass'])
+        {
+            $config = Array(
+                'protocol' => 'smtp', // 'mail', 'sendmail', 'smtp'
+                'smtp_host' => $sysconfig['smtp_host'],
+                'smtp_port' => (isset($sysconfig['smtp_port']) ? $sysconfig['smtp_port'] : 587),
+                'smtp_user' => $sysconfig['smtp_user'],
+                'smtp_pass' => $sysconfig['smtp_pass'],
+                'mailtype'  => 'html', // 'text', 'html'
+                'charset'   => 'utf-8',
+                'smtp_crypto' => 'ssl', // 'ssl', 'tls'
+                'validate' => TRUE,
+                'newline' => "\r\n"
+                );
+            
+            $this->email->initialize($config);
+		}
+        $this->email->from($sysconfig['email_from'], $sysconfig['nome_from']);
         $this->email->to($emailTo);
         $this->email->subject('Natal Solidário - Informações sobre carta(s) adotada(s)');
         $this->email->message($body);

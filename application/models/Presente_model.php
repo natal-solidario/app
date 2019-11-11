@@ -8,7 +8,7 @@ class Presente_model extends CI_Model
     }
     
     function pesquisar_por_carta($idCarta) {
-        return $this->db->get_where('presente',array('carta'=>$idCarta))->row_array();
+        return $this->db->get_where('presente', array('carta'=>$idCarta))->row_array();
     }
     
     function add($params)
@@ -49,11 +49,12 @@ class Presente_model extends CI_Model
         return $this->db->get('presente_situacao')->result_array();
     }
     
-    function get_presentes_por_local_entrega() {
+    function get_presentes_por_local_entrega($campanha=0) {
         $query = $this->db->query('SELECT c.regiao_administrativa as carta_destino, r.nome as presente_nome_regiao_entrega
             , l.nome as presente_nome_local_entrega, COUNT(p.id) AS total 
             FROM local_entrega l
-            JOIN regiao_administrativa r ON r.id = l.regiao_administrativa
+            INNER JOIN local_entrega_regiao lr ON lr.local_entrega = l.id
+            INNER JOIN regiao_administrativa r ON r.id = lr.regiao_administrativa
             LEFT JOIN presente p ON p.local_entrega = l.id AND p.situacao >= 4
             LEFT JOIN carta c ON c.id = p.carta
             GROUP BY l.nome, r.nome, c.regiao_administrativa

@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
 
 class Login extends CI_Controller
 {
@@ -16,7 +16,10 @@ class Login extends CI_Controller
 	{
 		$usuario = $this->input->post("usuario");
 		$senha = $this->input->post("senha");
-		$remember = ($this->input->post('remember')=='on');
+		$remember = 0;
+		
+		if (array_key_exists('remember', $this->input->post()))
+			$remember = 1;
 
 		if ($this->ion_auth->login($usuario, $senha, $remember))
 		{
@@ -24,33 +27,35 @@ class Login extends CI_Controller
 		}
 		else
 		{
-			//caso a senha/usuário estejam incorretos, então mando o usuário novamente para a tela de login com uma mensagem de erro.
-			$dados['erro'] = "Usuário/Senha incorretos";
-			$this->load->view("login", $dados);
+			// Caso a senha/usuário estejam incorretos, então mando o usuário novamente para a tela de login com uma mensagem de erro.
+			$this->session->set_flashdata('message', $this->ion_auth->errors());
+			$this->load->view("login");
 		}
 	}
 	
 	public function logout()
 	{
 		$this->ion_auth->logout();
-		redirect(base_url());
+		$this->session->set_flashdata('message_ok', $this->ion_auth->messages());
+		redirect("login", 'refresh');
 	}
 
 	//Working code for this example is in the example Auth controller in the github repo
-	function forgot_password()
+	function lembrarsenha()
 	{
-		$this->form_validation->set_rules('email', 'Email Address', 'required');
-		if ($this->form_validation->run()) {
-			//run the forgotten password method to email an activation code to the user
+		$this->form_validation->set_rules('email', 'Email', 'required');
+		if ($this->form_validation->run())
+		{
+			// run the forgotten password method to email an activation code to the user
 			$forgotten = $this->ion_auth->forgotten_password($this->input->post('email'));
 
 			if ($forgotten) { //if there were no errors
-				$this->session->set_flashdata('message', $this->ion_auth->messages());
-				redirect("auth/login", 'refresh'); //we should display a confirmation page here instead of the login page
+				$this->session->set_flashdata('message_ok', $this->ion_auth->messages());
+				redirect("login", 'refresh'); //we should display a confirmation page here instead of the login page
 			}
 			else {
 				$this->session->set_flashdata('message', $this->ion_auth->errors());
-				redirect("auth/forgot_password", 'refresh');
+				redirect("login/lembrarsenha", 'refresh');
 			}
 		}
 		else
@@ -60,10 +65,18 @@ class Login extends CI_Controller
 				'name'    => 'email',
 				'id'      => 'email',
 			);
+			$this->data['identity_label'] = "TESTE";
+			$this->data['type'] = "email";
+			$this->data['identity'] = "email";
 			//set any errors and display the form
 			$this->data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
-			$this->load->view('auth/forgot_password', $this->data);
+			$this->load->view('lembrarsenha', $this->data);
 		}
 	}
+	
+	
+	
+	
+	
 	  
 }

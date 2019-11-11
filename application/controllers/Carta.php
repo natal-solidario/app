@@ -1,10 +1,7 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
-class Carta extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+
+class Carta extends MY_Controller
+{
 
     const GRUPO_CARTEIROS = 5;
     const GRUPO_REPRESENTANTE_COMUNIDADE = 3;
@@ -20,41 +17,23 @@ class Carta extends CI_Controller{
         parent::__construct();
         $this->load->model('Carta_model');
         $this->load->model('Usuario_model');
-        $this->load->model('Instituicao_Model');
+        $this->load->model('Instituicao_model');
         $this->load->model('Campanha_model');
         $this->load->model('Responsavel_model');
         $this->load->model('Beneficiado_model');
         $this->load->model('NatalSolidario_model');
-
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'You must be an admin to view this page');
-            redirect('login');
-        } else {
-            $this->user = $this->ion_auth->user()->row();
-            $user_groups = $this->ion_auth->get_users_groups()->result();
-
-            $this->grupos = array();
-            foreach ($user_groups as $grupo) {
-                array_push($this->grupos, $grupo->name);
-            }
-
-            $this->session->set_userdata('usuario_logado', $this->user->email);
-            $this->session->set_userdata('grupos_usuario', $this->grupos);
-            $this->session->set_userdata('usuario_logado_id', $this->user->id);
-        }
-
-    } 
+    }
 
     /*
      * Listing of cartas
      */
-    function index()
+    function index($id = '')
     {
         $total_records = 0;
         $limit_per_page = 50;
-        $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
+        $start_index = ($this->uri->segment(3)) ? $this->uri->segment(3) : ($id != '' && $id > 0 ? $id : 0);
 
+        $data['limite']                     = $this->input->get('limite');
         $data['carteiro_selecionado']       = $this->input->get('carteiro');
         $data['mobilizador_selecionado']    = $this->input->get('mobilizador');
         $data['regiao_administrativa']      = $this->input->get('regiao_administrativa');
@@ -64,21 +43,27 @@ class Carta extends CI_Controller{
         $data['situacao']                   = $this->input->get('situacao');
         $data['campanha']                   = $this->input->get('campanha');
         $data['instituicao']                = $this->input->get('instituicao');
+        $data['removida']                   = $this->input->get('removida');
+        $data['ordem']                      = $this->input->get('ordem');
+        $data['direcao']                    = $this->input->get('direcao');
         
-        $data['isAdmin'] = (in_array('admin', $this->grupos, true) ? true : false);
-        $data['isRepComu'] = (in_array("representante-comunidade", $this->grupos, true) ? true : false);
+        $data['isAdmin'] = $this->ion_auth_acl->has_permission('permite_acessar_campanha_geral');
+        $data['isRepComu'] = $this->ion_auth_acl->has_permission('permite_acessar_campanha_local');
 
-        if (!$data['isAdmin']) {
-            $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
-            if ($data['isRepComu'])
-                $data['instituicao'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id)['NU_TBP01'];
-        }
-        else {
-            if (!array_key_exists('campanha', $this->input->get()))
-                $data['campanha'] = $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+        if ($this->ion_auth_acl->has_permission('permite_acessar_campanha_local'))
+        {
+            $data['instituicao'] = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id)['NU_TBP01'];
         }
 
-        $data['cartas'] = null; 
+        if (!array_key_exists('campanha', $this->input->get()))
+            $data['campanha'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+        if (!array_key_exists('removida', $this->input->get()))
+            $data['removida'] = 0;
+        
+        if ($data['limite'] > 0)
+            $limit_per_page = $data['limite'];
+
+        $data['cartas'] = null;
         if ($data['carteiro_selecionado'] != null
             || strlen($data['numero']) > 0
             || strlen($data['nome_crianca']) > 0
@@ -87,25 +72,32 @@ class Carta extends CI_Controller{
             || $data['mobilizador_selecionado'] != null
             || $data['situacao'] != null
             || $data['campanha'] != null
-            || $data['instituicao'] != null) {
-            
+            || $data['instituicao'] != null
+            || $data['removida'] != null)
+        {
             $total_records = $this->Carta_model->contar_cartas_por_parametros($data['numero']
                 , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
-                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
+                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao'], $data['removida']);
             
             $data['cartas'] = null;
-            if ($total_records > 0) {
+            if ($total_records > 0)
+            {
                 $data['cartas'] = $this->Carta_model->get_cartas_por_parametros($limit_per_page, $start_index, $data['numero']
-                    , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
-                    , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha'], $data['instituicao']);
-            }
-        } else {
-            $total_records = $this->Carta_model->contar_todas_cartas();
-            $data['cartas'] = null;
-            if ($total_records > 0) {
-                $data['cartas'] = $this->Carta_model->get_all_cartas($limit_per_page, $start_index);
+                                , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
+                                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha']
+                                , $data['instituicao'], $data['removida'], $data['ordem'], $data['direcao']);
             }
         }
+        else
+        {
+            $total_records = $this->Carta_model->contar_todas_cartas();
+            $data['cartas'] = null;
+            if ($total_records > 0)
+            {
+                $data['cartas'] = $this->Carta_model->get_all_cartas($limit_per_page, $start_index, $data['ordem'], $data['direcao']);
+            }
+        }
+
         $data['total_registros'] = $total_records;
         
         $data['carteiros'] = $this->Usuario_model->get_all_usuarios_by_perfil(self::GRUPO_CARTEIROS);
@@ -115,7 +107,7 @@ class Carta extends CI_Controller{
         $data['all_regioes'] = $this->NatalSolidario_model->get_all_regiao_administrativa();
 
         $data['all_campanhas'] = $this->Campanha_model->get_all();
-        $data['all_instituicoes'] = $this->Instituicao_Model->get_all_instituicoes();
+        $data['all_instituicoes'] = $this->Instituicao_model->get_all_instituicoes();
         
         $config['enable_query_strings'] = TRUE;
         $config['reuse_query_string'] = TRUE;
@@ -149,10 +141,12 @@ class Carta extends CI_Controller{
         $this->pagination->initialize($config);
         
         $data["links"] = $this->pagination->create_links();
-                
+        
+        $data['pagina'] = ($total_records < $start_index ? 0 : $start_index);
+        
         $data['js_scripts'] = array('carta/index.js');
         $data['_view'] = 'carta/index';
-        $this->load->view('layouts/main',$data);
+        $this->load->view('layouts/main', $data);
     }
 
     function add()
@@ -186,13 +180,16 @@ class Carta extends CI_Controller{
 
             $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
 
-            if (in_array('admin', $this->grupos, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+            if ($this->ion_auth_acl->has_permission('acesso_admin'))
+            {
+                $instituicao = $this->Instituicao_model->get_instituicao($this->input->post('representante'));
             }
-            elseif (in_array("representante-comunidade", $this->grupos, true)) {
-                $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            elseif ($this->ion_auth_acl->has_permission('permite_acessar_campanha_local'))
+            {
+                $instituicao = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
             }
-            else {
+            else
+            {
                 $this->session->set_flashdata('message', 'Você não tem permissão para editar cartas no sistema.');
                 redirect('carta/index');
             }
@@ -235,7 +232,7 @@ class Carta extends CI_Controller{
                 $data['responsavel'] = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
 
                 $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
-                $data['instituicao'] = $this->Instituicao_Model->get_instituicao_by_usuario($data['carta_pedido']['representante_comunidade']);
+                $data['instituicao'] = $this->Instituicao_model->get_instituicao_by_usuario($data['carta_pedido']['representante_comunidade']);
 
                 $data['js_scripts'] = array('carta/edit.js');
                 $data['_view'] = 'carta/edit';
@@ -246,35 +243,42 @@ class Carta extends CI_Controller{
             show_error('The carta_pedido you are trying to edit does not exist.');
     }
     
-    function formulario($id) {
+    function formulario($id)
+    {
         // check if the carta_pedido exists before trying to edit it
         $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
-        
-        $data['instituicao'] = $this->Instituicao_Model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
+        $data['carta_imagens'] = $this->Carta_model->get_galeria_by_carta($id);
+
+        $data['instituicao'] = $this->Instituicao_model->get_instituicao_vinculo_campanha($data['carta_pedido']['NU_TBC02']);
         $data['beneficiado']  = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
         
-        if ($data['beneficiado']['data_nascimento'] != null) {
+        if ($data['beneficiado']['data_nascimento'] != null)
+        {
             $data['beneficiado']['data_nascimento'] = date("d/m/Y", strtotime($data['beneficiado']['data_nascimento']));
         }
         
         $data['responsavel']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel']);
         $data['responsavel']['telefone_whatsapp'] = ($data['responsavel']['telefone_whatsapp'] == "0" ? 0 : 1);
-        if ($data['responsavel']['data_nascimento'] != null) {
+        if ($data['responsavel']['data_nascimento'] != null)
+        {
             $data['responsavel']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel']['data_nascimento']));
         }
 
         $data['responsavel_adicional']  = null;
-        if ($data['beneficiado']['responsavel_adicional'] != null) {
+        if ($data['beneficiado']['responsavel_adicional'] != null)
+        {
             $data['responsavel_adicional']  = $this->Responsavel_model->get_responsavel($data['beneficiado']['responsavel_adicional']);
             $data['responsavel_adicional']['telefone_whatsapp'] = ($data['responsavel_adicional']['telefone_whatsapp'] == "0" ? 0 : 1);
         }
-        if ($data['responsavel_adicional']['data_nascimento'] != null) {
+        if ($data['responsavel_adicional']['data_nascimento'] != null)
+        {
             $data['responsavel_adicional']['data_nascimento'] = date("d/m/Y", strtotime($data['responsavel_adicional']['data_nascimento']));
         }
         
         $this->load->model('Beneficiado_familia_model');
         $familiares = $this->Beneficiado_familia_model->get_familia_beneficiado($data['beneficiado']['id']);
-        if (!empty($familiares)) {
+        if (!empty($familiares))
+        {
             $data['familiares'] = array_column($familiares, 'familiar');
         }
         
@@ -325,10 +329,6 @@ class Carta extends CI_Controller{
                 $this->form_validation->set_rules('responsavel2TelefoneWhatsapp','Responsável 2 Whatsapp','required');
             }
 
-            // echo "<pre>";
-            // print_r($this->input->post());
-            // exit();
-
             if($this->form_validation->run())
             {                    
                 $this->db->trans_start();
@@ -343,13 +343,17 @@ class Carta extends CI_Controller{
                     'prioridade' => 1,
                 );
                 
-                if ($this->input->post('brinquedo1Id')) {
+                if ($this->input->post('brinquedo1Id'))
+                {
                     $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo1Id'), $params);
-                } else {
+                }
+                else
+                {
                     $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                 }
                 
-                if ($this->input->post('brinquedo2') && $this->input->post('brinquedo2Tipo')) {
+                if ($this->input->post('brinquedo2') && $this->input->post('brinquedo2Tipo'))
+                {
                     $params = array(
                         'carta' => $id,
                         'classificacao' => $this->input->post('brinquedo2Tipo'),
@@ -357,14 +361,18 @@ class Carta extends CI_Controller{
                         'prioridade' => 2,
                     );
                     
-                    if ($this->input->post('brinquedo2Id')) {
+                    if ($this->input->post('brinquedo2Id'))
+                    {
                         $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo2Id'), $params);
-                    } else {
+                    }
+                    else
+                    {
                         $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                     }
                 }
                 
-                if ($this->input->post('brinquedo3') && $this->input->post('brinquedo3Tipo')) {
+                if ($this->input->post('brinquedo3') && $this->input->post('brinquedo3Tipo'))
+                {
                     $params = array(
                         'carta' => $id,
                         'classificacao' => $this->input->post('brinquedo3Tipo'),
@@ -372,9 +380,12 @@ class Carta extends CI_Controller{
                         'prioridade' => 3,
                     );
                     
-                    if ($this->input->post('brinquedo3Id')) {
+                    if ($this->input->post('brinquedo3Id'))
+                    {
                         $this->Carta_brinquedo_model->update_carta_brinquedo($this->input->post('brinquedo3Id'), $params);
-                    } else {
+                    }
+                    else
+                    {
                         $this->Carta_brinquedo_model->add_carta_brinquedo($params);
                     }
                 }
@@ -443,18 +454,22 @@ class Carta extends CI_Controller{
                         // Buscar pelo CPF
                         $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_cpf($params['documento_numero']);
 
-                        if ($responsavel_adicional) {
+                        if ($responsavel_adicional)
+                        {
                             $idResponsavelAdicional = $responsavel_adicional['id'];
                             $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
                         }
-                        else {
+                        else
+                        {
                             // Buscar por nome e data de nascimento
                             $responsavel_adicional = $this->Responsavel_model->get_responsavel_by_nome_data_nascimento($params['nome'], $params['data_nascimento']);
-                            if ($responsavel_adicional) {
+                            if ($responsavel_adicional)
+                            {
                                 $idResponsavelAdicional = $responsavel_adicional['id'];
                                 $this->Responsavel_model->update_responsavel($idResponsavelAdicional, $params);
                             }
-                            else {
+                            else
+                            {
                                 $idResponsavelAdicional = $this->Responsavel_model->add_responsavel($params);
                             }
                         }
@@ -470,14 +485,16 @@ class Carta extends CI_Controller{
                     'data_nascimento' => date('Y-m-d', strtotime($dataNascimentoBeneficiado)),
                     'sexo' => $this->input->post('sexo'),
                     'responsavel_adicional' => $idResponsavelAdicional,
-                    'pais_separados' => $this->input->post('paisSeparados')
+                    'pais_separados' => (int)$this->input->post('paisSeparados')
                 );
                 $this->Beneficiado_model->update_beneficiado($data['beneficiado']['id'], $params);
                 
                 $this->Beneficiado_familia_model->delete_por_beneficiado($data['beneficiado']['id']);
                 
-                if ($this->input->post('familia')) {
-                    foreach($this->input->post('familia') as $familiar) {
+                if ($this->input->post('familia'))
+                {
+                    foreach($this->input->post('familia') as $familiar)
+                    {
                         $params = array(
                             'beneficiado' => $data['beneficiado']['id'],
                             'familiar' => $familiar,
@@ -497,18 +514,17 @@ class Carta extends CI_Controller{
                     'moradia' => $this->input->post('moradia'),
                 );
                 
-                if(is_uploaded_file($_FILES['imagem']['tmp_name'])) {
-                    
+                if (is_uploaded_file($_FILES['imagem']['tmp_name']))
+                {
                     $curYear = date('Y'); 
                     
-                    if (!is_dir('uploads')) {
+                    if (!is_dir('uploads'))
+                    {
                         mkdir('./uploads', 0777, true);
-                    } else {
                     }
-                    $dir_exist = true; // flag for checking the directory exist or not
-                    if (!is_dir('uploads/' . $curYear)) {
+                    if (!is_dir('uploads/' . $curYear))
+                    {
                         mkdir('./uploads/' . $curYear, 0777, true);
-                        //$dir_exist = false; // dir not exist
                     }
                     
                     $path = $_FILES['imagem']['name'];
@@ -517,7 +533,7 @@ class Carta extends CI_Controller{
                     
                     //CONFIGURACAO UPLOAD
                     $config['upload_path']      = './uploads/'.$curYear;
-                    $config['allowed_types']    = 'gif|jpg|jpeg|png';
+                    $config['allowed_types']    = 'gif|jpg|jpeg|png|pdf';
                     $config['file_name']        = $newName;
                     #$config['max_size']    	= '100';
                     #$config['max_width']       = '1024';
@@ -535,11 +551,13 @@ class Carta extends CI_Controller{
                 
                 //Optional
                 
-                if ($this->db->trans_status() === FALSE) {
+                if ($this->db->trans_status() === FALSE)
+                {
                     # Something went wrong.
                     $this->db->trans_rollback();
                 }
-                else {
+                else
+                {
                     # Everything is Perfect.
                     # Committing data to the database.
                     $this->db->trans_commit();
@@ -568,20 +586,24 @@ class Carta extends CI_Controller{
                 $this->load->view('layouts/main',$data);
             }
         }
-        else {
+        else
+        {
             show_error('The carta_pedido you are trying to edit does not exist.');
         }
     }
     
-    function adotante($id) {
-        if(isset($id)) {
+    function adotante($id)
+    {
+        if(isset($id))
+        {
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             
             $data['beneficiado'] = $this->Beneficiado_model->get_beneficiado($data['carta_pedido']['beneficiado']);
             
             $this->load->model('Adotante_model');
             $data['adotante'] = null;
-            if ($data['carta_pedido']['adotante']) {
+            if ($data['carta_pedido']['adotante'])
+            {
                 $data['adotante'] = $this->Adotante_model->get_adotante_por_id($data['carta_pedido']['adotante']);
             }
             
@@ -591,7 +613,8 @@ class Carta extends CI_Controller{
                 $this->form_validation->set_rules('celular','Celular','required');
                 $this->form_validation->set_rules('email','E-mail pessoal','required|max_length[300]');
                 
-                if($this->form_validation->run()) {
+                if($this->form_validation->run())
+                {
                     
                     $email = trim($this->input->post('email'));
                     $adotante = $this->Adotante_model->get_adotante_por_email($email);
@@ -604,10 +627,13 @@ class Carta extends CI_Controller{
                     
                     $token = $data['carta_pedido']['token_acesso'];
                     
-                    if ($adotante) {
+                    if ($adotante)
+                    {
                         $this->Adotante_model->update_adotante($adotante['id'], $params);
                         $adotante_id = $adotante['id'];
-                    } else {
+                    }
+                    else
+                    {
                         $params['data_cadastro'] = date('Y-m-d H:i:s');
                         $params['mobilizador'] = $this->session->userdata('usuario_logado_id');
                         
@@ -627,14 +653,17 @@ class Carta extends CI_Controller{
             }
             $data['_view'] = 'carta/adotante';
             $this->load->view('layouts/main',$data);
-        } else {
+        }
+        else
+        {
             redirect('carta/index');
         }
     }
     
     function credenciar($id)
     {
-        if(isset($id)) {
+        if(isset($id))
+        {
             $data['carta_pedido'] = $this->Carta_model->get_carta_pedido($id);
             $params = array(
                 'credenciado' => true,
@@ -651,7 +680,8 @@ class Carta extends CI_Controller{
         $cartas = $this->input->post('cartas');
         if (sizeof($cartas) > 0) 
         {
-            foreach ($cartas as $carta) {
+            foreach ($cartas as $carta)
+            {
                 $id = $carta['carta'];
                 $carteiro = $carta['carteiro'];
                 $mobilizador = $carta['mobilizador'];
@@ -676,6 +706,12 @@ class Carta extends CI_Controller{
 
     function new()
     {
+        if (!$this->ion_auth_acl->has_permission('permite_incluir_carta'))
+        {
+            $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
+            redirect('carta/index');
+        }
+
 		$this->form_validation->set_rules('documento_numero','CPF','required|callback_check_cpf_unique');
         $this->form_validation->set_rules('nome','Nome','required');
         $this->form_validation->set_rules('data_nascimento','Data de Nascimento','required');
@@ -691,13 +727,16 @@ class Carta extends CI_Controller{
         
         $data['campanha_atual'] = $this->Campanha_model->get_campanha_atual();
 
-        if (in_array('admin', $this->grupos, true)) {
-            $instituicao = $this->Instituicao_Model->get_instituicao($this->input->post('representante'));
+        if ($this->ion_auth_acl->has_permission('acesso_admin'))
+        {
+            $instituicao = $this->Instituicao_model->get_instituicao($this->input->post('representante'));
         }
-        elseif (in_array("representante-comunidade", $this->grupos, true)) {
-            $instituicao = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+        elseif ($this->ion_auth_acl->has_permission('permite_acessar_campanha_local'))
+        {
+            $instituicao = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
         }
-        else {
+        else
+        {
             $this->session->set_flashdata('message', 'Você não tem permissão para inclusão de cartas no sistema.');
             redirect('carta/index');
         }
@@ -727,15 +766,18 @@ class Carta extends CI_Controller{
                 'cep' => str_replace('-', '', $this->input->post('cep'))
             );
 
-            if (in_array($this->input->post('metodo_busca'), array("0", "2"))) {
+            if (in_array($this->input->post('metodo_busca'), array("0", "2")))
+            {
                 $params_responsavel['documento_numero'] = $this->input->post('documento_numero');
             }
 
             $responsavel_id = $this->input->post('responsavel_id');
-            if ($responsavel_id) {
+            if ($responsavel_id)
+            {
                 $responsavel_id = $this->Responsavel_model->update_responsavel($responsavel_id, $params_responsavel);
             }
-            else {
+            else
+            {
                 $params_responsavel['data_cadastro'] = date('Y-m-d H:i:s');
                 $responsavel_id = $this->Responsavel_model->add_responsavel($params_responsavel);
             }
@@ -750,11 +792,13 @@ class Carta extends CI_Controller{
             );
 
             $beneficiado_id = $this->input->post('select_beneficiado');
-            if ($beneficiado_id == 'outro') {
+            if ($beneficiado_id == 'outro')
+            {
                 $params_beneficiado['data_cadastro'] = date('Y-m-d H:i:s');
                 $beneficiado_id = $this->Beneficiado_model->add_beneficiado($params_beneficiado);
             }
-            elseif ($beneficiado_id > 0) {
+            elseif ($beneficiado_id > 0)
+            {
                 $beneficiado_id = $this->Beneficiado_model->update_beneficiado($beneficiado_id, $params_beneficiado);
             }
 
@@ -781,11 +825,12 @@ class Carta extends CI_Controller{
         else
         {
             $data['instituicoes'] = $this->Campanha_model->get_instituicoes($data['campanha_atual']['NU_TBC01']);
-            $data['instituicao_usuario'] = $this->Instituicao_Model->get_instituicao_by_usuario($this->user->id);
+            $data['instituicao_usuario'] = $this->Instituicao_model->get_instituicao_by_usuario($this->user->id);
 
-            $isAdmin = in_array("admin", $this->grupos, true);
-            $isRepresentanteComunidade = in_array("representante-comunidade", $this->grupos, true);
-            if (($isRepresentanteComunidade && !$isAdmin) && !$this->Instituicao_Model->checar_instituicao_vinculo_campanha_atual($data['instituicao_usuario']['NU_TBP01'])) {
+            $isAdmin = $this->ion_auth_acl->has_permission('acesso_admin');
+            $isRepresentanteComunidade = $this->ion_auth_acl->has_permission('permite_acessar_campanha_local');
+            if (($isRepresentanteComunidade && !$isAdmin) && !$this->Instituicao_model->checar_instituicao_vinculo_campanha_atual($data['instituicao_usuario']['NU_TBP01']))
+            {
                 $this->session->set_flashdata('message', 'A sua instituição não está habilitada à participar da campanha atual "' . $data['campanha_atual']['NO_CAMPANHA'] . '".');
                 redirect('');
             }
@@ -796,6 +841,26 @@ class Carta extends CI_Controller{
         }
     }
 
+    function excluir($id)
+    {
+        if ($this->ion_auth_acl->has_permission('permite_excluir_carta'))
+        {
+            $this->Carta_model->delete_carta_pedido($id);
+            $this->session->set_flashdata('message', 'A carta foi excluída com sucesso!');
+            redirect('carta');
+        }
+    }
+
+    function reativar($id)
+    {
+        if ($this->ion_auth_acl->has_permission('permite_excluir_carta'))
+        {
+            $this->Carta_model->update_carta_pedido($id, array('removida' => 0));
+            $this->session->set_flashdata('message_ok', 'A carta foi reativada com sucesso!');
+            redirect('carta');
+        }
+    }
+
     function upload()
     {
         if(!empty($_FILES['imagens']['name']))
@@ -803,17 +868,10 @@ class Carta extends CI_Controller{
             $campanha_atual = $this->Campanha_model->get_campanha_atual();
             $curYear = $campanha_atual['AA_CAMPANHA'];
 
-            /*if (!is_dir('uploads')) {
-                mkdir('./uploads', 0777, true);
-            }*/
-            if (!is_dir('galeria/' . $curYear . '/' . $this->user->id)) {
-                mkdir('./galeria/' . $curYear . '/' . $this->user->id, 0777, true);
+            if (!is_dir('galeria/' . $curYear))
+            {
+                mkdir('./galeria/' . $curYear, 0777, true);
             }
-
-
-            // echo "<pre>";
-            // print_r($_FILES);
-            // exit();
 
             $qtdFiles = sizeof($_FILES['imagens']['name']);
 
@@ -826,9 +884,10 @@ class Carta extends CI_Controller{
                 $_FILES['imagem']['size'] = $_FILES['imagens']['size'][$i];
 
                 // CONFIGURACAO UPLOAD
-                $config['upload_path']      = './galeria/' . $curYear . '/' . $this->user->id;
-                $config['allowed_types']    = 'gif|jpg|jpeg|png';
+                $config['upload_path']      = './galeria/' . $curYear;
+                $config['allowed_types']    = 'gif|jpg|jpeg|png|pdf';
                 $this->load->library('upload', $config);
+                $this->upload->overwrite = true;
                 $this->upload->initialize($config);
                 
                 // Upload file to server
@@ -837,32 +896,44 @@ class Carta extends CI_Controller{
                     // Uploaded file data
                     $fileData = $this->upload->data();
                     $uploadData[$i]['nome_arquivo'] = $fileData['file_name'];
-                    $uploadData[$i]['nome'] = $fileData['raw_name'];
-                    $uploadData[$i]['caminho'] = './galeria/' . $curYear . '/' . $this->user->id;
+                    $uploadData[$i]['nome'] = trim($fileData['raw_name']);
+                    $uploadData[$i]['caminho'] = './galeria/' . $curYear;
                     $uploadData[$i]['enviado_em'] = date("Y-m-d H:i:s");
                     $uploadData[$i]['extensao'] = $fileData['file_ext'];
                     $uploadData[$i]['tipo'] = $fileData['file_type'];
                     $uploadData[$i]['tamanho'] = $fileData['file_size'];
                     $uploadData[$i]['enviado_por'] = $this->user->id;
                     $uploadData[$i]['status'] = '0';
+                    $uploadData[$i]['categoria_id'] = $this->input->post('categoria');
 
-                    $carta = $this->Carta_model->get_carta_by_numeroCarta(trim($fileData['raw_name']));
-                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || in_array('admin', $this->grupos, true))) {
-                        if (!is_dir('uploads/' . $curYear)) {
+                    if (substr($uploadData[$i]['nome'], 0, 4) >= 2019)
+                    {
+                        $numero_carta = substr($uploadData[$i]['nome'], 0, 14);
+                    }
+                    else
+                    {
+                        if (strpos($uploadData[$i]['nome'], '_') === false)
+                        {
+                            $numero_carta = $uploadData[$i]['nome'];
+                        }
+                        else
+                        {
+                            $teste = explode($uploadData[$i]['nome'], "_");
+                            $numero_carta = $teste[0];
+                        }
+                    }
+
+                    $carta = $this->Carta_model->get_carta_by_numeroCarta($numero_carta);
+                    if ($carta['id'] && ($carta['carteiro_associado'] == $this->user->id || $this->ion_auth_acl->has_permission('permite_upload_lote_geral')))
+                    {
+                        if (!is_dir('uploads/' . $curYear))
+                        {
                             mkdir('./uploads/' . $curYear, 0777, true);
                         }
-                        
-                        $newName = 'CARTA_NUMERO_' . trim($fileData['raw_name']) . $fileData['file_ext'];
-                        
-                        if (rename($uploadData[$i]['caminho'] . '/' . $fileData['file_name'], './uploads/'.$curYear .'/'. $newName)) {
-                            // Atualizar a carta com o arquivo enviado
-                            $params = array(
-                                'arquivo' => ($curYear .'/'. $newName)
-                            );
-                            $this->Carta_model->update_carta_pedido($carta['id'], $params);
-                            // Remover o arquivo do array da galeria
-                            unset($uploadData[$i]);
-                        }
+                        $uploadData[$i]['carta_id'] = $carta['id'];
+                    }
+                    else {
+                        $uploadData[$i]['carta_id'] = NULL;
                     }
                 }
             }
@@ -874,42 +945,96 @@ class Carta extends CI_Controller{
                 $statusMsg = $insert ? 'Arquivos enviados com sucesso.' : 'Algum problema ocorreu, por favor tente novamente.';
                 $this->session->set_flashdata('message_ok', $statusMsg);
             }
-
-            // exit();
         }
 
-        $retorno = $this->Carta_model->get_galeria($this->user->id);
+        $retorno = $this->Carta_model->get_galeria($this->ion_auth_acl->has_permission('permite_upload_lote_geral') ? '' : $this->user->id);
         $data['galeria'] = $retorno ? $retorno : array();
+        $data['categorias'] = $this->Carta_model->get_categorias_galeria();
 
         $data['js_scripts'] = array('carta/upload.js');
         $data['_view'] = 'carta/upload';
         $this->load->view('layouts/main', $data);
     }
     
-    function check_cpf_unique($cpf) {
+    function check_cpf_unique($cpf)
+    {
         if ($this->input->post('responsavel_id') && ($this->input->post('documento_numero') == $cpf || $this->input->post('responsavel1NumeroDocumento') == $cpf))
             $id = $this->input->post('responsavel_id');
         elseif ($this->input->post('responsavel2_id') && $this->input->post('responsavel2NumeroDocumento') == $cpf)
             $id = $this->input->post('responsavel2_id');
         else
             $id = '';
-        
+
         $cpf = preg_replace("/\D/", "", $cpf);
         $result = $this->Responsavel_model->check_unique_cpf($id, $cpf);
-        if($result == 0) {
+        if ($result == 0)
+        {
             $response = true;
             $result = $this->NatalSolidario_model->validar_cpf($cpf);
             if ($result == 1)
                 $response = true;
-            else {
+            else
+            {
                 $this->form_validation->set_message('check_cpf_unique', 'CPF inválido.');
                 $response = false;
             }
         }
-        else {
+        else
+        {
             $this->form_validation->set_message('check_cpf_unique', 'CPF já existe na base de dados.');
             $response = false;
         }
         return $response;
+    }
+
+    public function baixarExcel()
+    {
+        if ($this->ion_auth_acl->has_permission('acesso_admin'))
+        {
+            $data['numero']                     = $this->input->get('numero');
+            $data['carteiro_selecionado']       = $this->input->get('carteiro');
+            $data['regiao_administrativa']      = $this->input->get('regiao_administrativa');
+            $data['mobilizador_selecionado']    = $this->input->get('mobilizador');
+            $data['nome_crianca']               = $this->input->get('nome_crianca');
+            $data['nome_responsavel']           = $this->input->get('nome_responsavel');
+            $data['situacao']                   = $this->input->get('situacao');
+            $data['campanha']                   = $this->input->get('campanha');
+            $data['instituicao']                = $this->input->get('instituicao');
+            $data['removida']                   = $this->input->get('removida');
+            $data['ordem']                      = $this->input->get('ordem');
+            $data['direcao']                    = $this->input->get('direcao');
+
+            if (!array_key_exists('campanha', $this->input->get()))
+                $data['campanha'] = $this->Campanha_model->get_campanha_atual()['AA_CAMPANHA'];
+            if (!array_key_exists('removida', $this->input->get()))
+                $data['removida'] = 0;
+            
+            $limit_per_page = 5000;
+            $start_index = 0;
+
+            $fileName = 'cartas.csv';
+            $cartas = $this->Carta_model->get_cartas_por_parametros($limit_per_page, $start_index, $data['numero']
+                                , $data['carteiro_selecionado'], $data['regiao_administrativa'], $data['mobilizador_selecionado']
+                                , $data['nome_crianca'], $data['nome_responsavel'], $data['situacao'], $data['campanha']
+                                , $data['instituicao'], $data['removida'], $data['ordem'], $data['direcao']);
+            
+            $cabecalho = array('Número','Data de Cadastro','Beneficiado','Data de Nascimento','Responsável 1','Carteiro','Mobilizador','Adotante');
+
+            $fp = fopen("uploads/" . $fileName, 'w');
+            fputs($fp, $bom=(chr(0xEF).chr(0xBB).chr(0xBF)));
+            fputcsv($fp, $cabecalho, ";");
+            foreach ($cartas as $val) {
+                $linha = array($val['numero'],date("d/m/Y", strtotime($val['data_cadastro'])),trim($val['beneficiado_nome']),date("d/m/Y", strtotime($val['beneficiado_data'])),$val['responsavel_nome'],$val['carteiro_nome'],$val['mobilizador_nome'],$val['adotante_nome']);
+                fputcsv($fp, $linha, ";");
+            }
+            fclose($fp);
+
+            header("Content-Type: application/vnd.ms-excel");
+            redirect(base_url()."uploads/".$fileName);
+        }
+        else {
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar essa funcionalidade!');
+            redirect(base_url());
+        }
     }
 }

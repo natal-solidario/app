@@ -76,6 +76,20 @@ $(function() {
             });
         }
     });
+
+    $(".ordenar").click(function() {
+        console.log($(this).data());
+
+        $("#ordem").val($(this).data("coluna"));
+        $("#direcao").val($(this).data("direcao"));
+
+        if ($(this).data("direcao") == "asc")
+            $(this).data("direcao", "desc");
+        else if ($(this).data("direcao") == "desc")
+            $(this).data("direcao", "asc");
+
+        $("#myform").submit();
+    });
 });
 
 var habilitarAcoes = function(habilitar_acoes) {
@@ -88,3 +102,16 @@ var habilitarAcoes = function(habilitar_acoes) {
         $(".acoes").prop("disabled", true);
     }
 }
+
+
+var sendMyForm = function() {
+    $(".skin-blue").loading({
+        stoppable: false,
+        message: 'Por favor aguarde...',
+        theme: 'dark',
+        zIndex: 9999
+    });
+    $("#myform").submit();
+}
+
+

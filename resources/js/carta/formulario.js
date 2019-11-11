@@ -14,6 +14,8 @@ $(function() {
     $('#responsavel1DataNascimento').mask('00/00/0000');
     $('#responsavel2DataNascimento').mask('00/00/0000');
 
+    // $('input[name ="preferencial"]').change(function() { console.log($(this).val()) });
+
     $("#mesmoEndereco").click(function() {
         if($(this).prop("checked")) {
             $("#responsavel2Endereco").val($("#responsavel1Endereco").val());

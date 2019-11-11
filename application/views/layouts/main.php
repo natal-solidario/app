@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Natal Solidário</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" />
+    <link rel="shortcut icon" href="<?php echo site_url('resources/img/favicon.png'); ?>" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="<?php echo site_url('resources/img/webclip.png'); ?>" />
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/font-awesome.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo site_url('resources/css/bootstrap-datetimepicker.min.css'); ?>">
@@ -30,9 +31,9 @@
             <!-- Logo -->
             <a href="" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">Heróis de Verdade</span>
+                <span class="logo-mini"><img width="75%" src="<?php echo site_url('resources/img/logo2x.png'); ?>" /></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">Heróis de Verdade</span>
+                <span class="logo-lg"><img width="75%" src="<?php echo site_url('resources/img/logo2x.png'); ?>" /></span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -95,7 +96,7 @@
                     </div>
                 </div>
 
-                <?php $grupos_usuario = $this->session->userdata('grupos_usuario'); ?>
+                <?php $permissoes_usuario = $this->session->userdata('permissoes_usuario'); ?>
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu">
                     <li class="header">MENU</li>
@@ -105,6 +106,9 @@
                         </a>
                     </li>
 
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_responsavel", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-user-o"></i> <span>Responsável</span>
@@ -118,6 +122,10 @@
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_beneficiado", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-child"></i> <span>Beneficiado</span>
@@ -131,26 +139,34 @@
                             </li>
                         </ul>
                     </li>
+                    <?php endif; ?>
+                    <?php
+                        if (array_key_exists("permite_acessar_menu_carta", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-envelope-open-o"></i> <span>Carta</span>
                         </a>
                         <ul class="treeview-menu">
+                            <?php
+                                if (array_key_exists("permite_incluir_carta", $permissoes_usuario)):
+                            ?>
                             <li>
                                 <a href="<?php echo site_url('carta/new'); ?>"><i class="fa fa-plus"></i>Pré-Cadastro</a>
                             </li>
+                            <?php endif; ?>
                             <li>
                                 <a href="<?php echo site_url('carta/index'); ?>"><i class="fa fa-list-ul"></i>Listar</a>
                             </li>
                             <?php 
-                                if (in_array("admin", $grupos_usuario, true) /*|| in_array("carteiro", $grupos_usuario, true)*/):
+                                if (array_key_exists("permite_acessar_upload_lote", $permissoes_usuario)):
                             ?>
                             <li>
                                 <a href="<?php echo site_url('carta/upload'); ?>"><i class="fa fa-upload"></i>Upload em Lote</a>
                             </li>
                             <?php endif; ?>
                             <?php 
-                                if (in_array("admin", $grupos_usuario, true)):
+                                if (array_key_exists("permite_acessar_acompanhamento_carta", $permissoes_usuario)):
                             ?>
                             <li>
                                 <a href="<?php echo site_url('entrega/listagem_local_entrega'); ?>"><i class="fa fa-list-ul"></i> Acompanhamento</a>
@@ -158,14 +174,10 @@
                             <?php endif; ?>
                         </ul>
                     </li>
-
+                    <?php endif; ?>
                     <?php
-                        if($grupos_usuario)
-                            if (in_array("admin", $grupos_usuario, true) ||
-                                in_array("representante-comunidade", $grupos_usuario, true) ||
-                                in_array("representante-ong", $grupos_usuario, true) ||
-                                in_array("mobilizador", $grupos_usuario, true)):
-                        ?>
+                        if (array_key_exists("permite_acessar_menu_presente", $permissoes_usuario)):
+                    ?>
                     <li>
                         <a href="#">
                             <i class="fa fa-gift"></i> <span>Presente</span>
@@ -182,14 +194,11 @@
                             </li>
                         </ul>
                     </li>
-                    <?php
-                            endif;
-                        ?>
+                    <?php endif; ?>
 
                     <?php
-                        if($grupos_usuario)
-                            if (in_array("admin", $grupos_usuario, true)):
-                        ?>
+                        if (array_key_exists("acesso_admin", $permissoes_usuario)):
+                    ?>
                     <li class="header">ADMINISTRAÇÃO</li>
                     <li>
                         <a href="#">
@@ -243,10 +252,12 @@
                             </li>
                         </ul>
                     </li>
+                    <li>
+                        <a href="<?php echo site_url('admin'); ?>"><i class="fa fa-list-ul"></i> Perfis e Atributos</a>
+                    </li>
                     <?php
-                            endif;
-                        ?>
-
+                        endif;
+                    ?>
                 </ul>
             </section>
             <!-- /.sidebar -->
@@ -254,7 +265,7 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <?php if($this->session->flashdata('message')): ?>
+            <?php if ($this->session->flashdata('message')): ?>
             <div class="alert alert-danger" role="alert">
                 <strong><?php echo $this->session->flashdata('message'); ?> </strong>
                 <!-- <?php echo $this->session->flashdata('teste'); ?> -->
@@ -262,7 +273,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <?php elseif($this->session->flashdata('message_ok')): ?>
+            <?php elseif ($this->session->flashdata('message_ok')): ?>
             <div class="alert alert-success" role="alert">
                 <strong><?php echo $this->session->flashdata('message_ok'); ?> </strong>
                 <!-- <?php echo $this->session->flashdata('teste'); ?> -->
@@ -274,7 +285,7 @@
             <!-- Main content -->
             <section class="content">
                 <?php                    
-                    if(isset($_view) && $_view)
+                    if (isset($_view) && $_view)
                         $this->load->view($_view);
                     ?>
             </section>
@@ -323,6 +334,7 @@
     <script src="<?php echo site_url('resources/libs/datatables/js/jquery.dataTables.min.js'); ?>"></script>
     <script src="<?php echo site_url('resources/libs/select2/js/select2.min.js'); ?>"></script>
     <script src="<?php echo site_url('resources/libs/sweetalert2/js/sweetalert2.all.min.js'); ?>"></script>
+    <script src="<?php echo site_url('resources/libs/jquery-loading/jquery.loading.min.js'); ?>"></script>
 
     <?php if (isset($js_scripts)): ?>
     <?php  foreach($js_scripts as $script): ?>

@@ -1,9 +1,4 @@
 <?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
 class Usuario_perfil_model extends CI_Model
 {
     function __construct()

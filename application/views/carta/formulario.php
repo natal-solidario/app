@@ -5,6 +5,9 @@
     font-weight: normal;
 }
 </style>
+
+<?php echo validation_errors('<div class="alert alert-danger" role="alert">', '</div>'); ?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
@@ -178,16 +181,25 @@
                                 <div class="form-group">
                                     <input type="file" name="imagem" class="form-control" />
                                 </div>
-                                <?php 
-        						if ($carta_pedido['arquivo']) {
-        						?>
                                 <div class="form-group">
+                                    <?php 
+                                    if ($carta_pedido['arquivo']) {
+                                    ?>
                                     <a href="<?php echo site_url('uploads/'.$carta_pedido['arquivo']);?>"
                                         target="_blank">Visualizar imagem</a>
+                                    <?php
+                                    }
+                                    ?>
+                                    <?php if (sizeof($carta_imagens) > 0) {
+                                        foreach ($carta_imagens as $imagem) {
+                                    ?>
+                                    <a href="<?php echo site_url($imagem['caminho'] . '/' . $imagem['nome_arquivo']);?>"
+                                        target="_blank">Visualizar imagem</a>
+                                    <?php
+                                        }
+                                    ?>
+                                    <?php } ?>
                                 </div>
-                                <?php
-        						}
-        						?>
                             </div>
                             <div class="col-md-6">
                                 Um aplicativo muito prático para tirar as fotos das cartas é o CamScanner. Links para
@@ -209,106 +221,6 @@
                     </div>
                 </div>
                 <div class="panel panel-primary">
-                    <div class="panel-heading">Brinquedos</div>
-                    <div class="panel-body">
-                        <div class="row clearfix">
-                            <div class="col-md-8" style="color:red;">
-                                <label>Informe a descrição dos brinquedos conforme a carta:</label>
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <label for="brinquedo1" class="control-label"><span class="text-danger">*</span>1ª
-                                    opção:</label>
-                                <div class="form-group">
-                                    <input type="text" name="brinquedo1"
-                                        value="<?php echo ($this->input->post('brinquedo1') ? $this->input->post('brinquedo1') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['descricao'] : "")); ?>"
-                                        class="form-control" required />
-                                    <input type="hidden" name="brinquedo1Id"
-                                        value="<?php echo ($this->input->post('brinquedo1Id') ? $this->input->post('brinquedo1Id') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['id'] : "")); ?>"
-                                        class="form-control" />
-                                    <span class="text-danger"><?php echo form_error('brinquedo1');?></span>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="brinquedo1Tipo" class="control-label"><span
-                                        class="text-danger">*</span>Classificação:</label>
-                                <div class="form-group">
-                                    <select name="brinquedo1Tipo" class="form-control" required>
-                                        <option value="">Selecione</option>
-                                        <?php 
-        								    foreach($brinquedo_classificacoes as $classificacao) {
-        								        $selected = ((($this->input->post('brinquedo1Tipo') ? $this->input->post('brinquedo1Tipo') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
-        										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
-        									} 
-        								?>
-                                    </select>
-                                    <span class="text-danger"><?php echo form_error('brinquedo1Tipo');?></span>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <label for="brinquedo2" class="control-label">2ª opção:</label>
-                                <div class="form-group">
-                                    <input type="text" name="brinquedo2"
-                                        value="<?php echo ($this->input->post('brinquedo2') ? $this->input->post('brinquedo2') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['descricao'] : "")); ?>"
-                                        class="form-control" />
-                                    <input type="hidden" name="brinquedo2Id"
-                                        value="<?php echo ($this->input->post('brinquedo2Id') ? $this->input->post('brinquedo2Id') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['id'] : "")); ?>"
-                                        class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="brinquedo2Tipo" class="control-label">Classificação:</label>
-                                <div class="form-group">
-                                    <select name="brinquedo2Tipo" class="form-control">
-                                        <option value="">Selecione</option>
-                                        <?php 
-        								    foreach($brinquedo_classificacoes as $classificacao)
-        									{
-                                                $selected = ((($this->input->post('brinquedo2Tipo') ? $this->input->post('brinquedo2Tipo') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
-           										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
-        									} 
-        								?>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                <label for="brinquedo3" class="control-label">3ª opção:</label>
-                                <div class="form-group">
-                                    <input type="text" name="brinquedo3"
-                                        value="<?php echo ($this->input->post('brinquedo3') ? $this->input->post('brinquedo3') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['descricao'] : "")); ?>"
-                                        class="form-control" />
-                                    <input type="hidden" name="brinquedo3Id"
-                                        value="<?php echo ($this->input->post('brinquedo3Id') ? $this->input->post('brinquedo3Id') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['id'] : "")); ?>"
-                                        class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="brinquedo3Tipo" class="control-label">Classificação:</label>
-                                <div class="form-group">
-                                    <select name="brinquedo3Tipo" class="form-control">
-                                        <option value="">Selecione</option>
-                                        <?php 
-        								    foreach($brinquedo_classificacoes as $classificacao)
-        									{
-                                                $selected = ((($this->input->post('brinquedo3Tipo') ? $this->input->post('brinquedo3Tipo') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
-        										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
-        									} 
-        								?>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-primary">
                     <div class="panel-heading">Pai/Mãe/Responsável 1</div>
                     <div class="panel-body">
                         <input type="hidden" name="responsavel_id" value="<?php echo $responsavel['id']; ?>"
@@ -318,7 +230,7 @@
                                 <label for="responsavel1Nome" class="control-label"><span
                                         class="text-danger">*</span>Nome:</label>
                                 <div class="form-group">
-                                    <input type="text" name="responsavel1Nome"  id="responsavel1Nome"
+                                    <input type="text" name="responsavel1Nome" id="responsavel1Nome"
                                         value="<?php echo ($this->input->post('responsavel1Nome') ? $this->input->post('responsavel1Nome') : $responsavel['nome']); ?>"
                                         class="form-control" required />
                                     <span class="text-danger"><?php echo form_error('responsavel1Nome');?></span>
@@ -359,7 +271,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4">
-                                <label for="responsavel1Endereco" class="control-label"><span class="text-danger">*</span>Logradouro:</label>
+                                <label for="responsavel1Endereco" class="control-label"><span
+                                        class="text-danger">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel1Endereco" id="responsavel1Endereco"
                                         value="<?php echo ($this->input->post('responsavel1Endereco') ? $this->input->post('responsavel1Endereco') : $responsavel['endereco']); ?>"
@@ -445,7 +358,8 @@
                                 <label for="responsavel1TelefoneOperadora" class="control-label"><span
                                         class="text-danger">*</span>Operadora:</label>
                                 <div class="form-group">
-                                    <select class="form-control" name="responsavel1TelefoneOperadora" id="responsavel1TelefoneOperadora" required>
+                                    <select class="form-control" name="responsavel1TelefoneOperadora"
+                                        id="responsavel1TelefoneOperadora" required>
                                         <option value="">Selecione</option>
                                         <option value="Claro"
                                             <?php echo (($this->input->post('responsavel1TelefoneOperadora') ? $this->input->post('responsavel1TelefoneOperadora') : $responsavel['telefone_operadora']) == 'Claro') ? 'selected' : ''; ?>>
@@ -463,7 +377,8 @@
                                             <?php echo (($this->input->post('responsavel1TelefoneOperadora') ? $this->input->post('responsavel1TelefoneOperadora') : $responsavel['telefone_operadora']) == 'Vivo') ? 'selected' : ''; ?>>
                                             Vivo</option>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('responsavel1TelefoneOperadora');?></span>
+                                    <span
+                                        class="text-danger"><?php echo form_error('responsavel1TelefoneOperadora');?></span>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -490,7 +405,8 @@
                             value="<?php echo $responsavel_adicional['id']; ?>" class="form-control" />
                         <div class="row clearfix">
                             <div class="col-md-5">
-                                <label for="responsavel2Nome" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Nome:</label>
+                                <label for="responsavel2Nome" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Nome:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Nome" id="responsavel2Nome"
                                         value="<?php echo ($this->input->post('responsavel2Nome') ? $this->input->post('responsavel2Nome') : $responsavel_adicional['nome']); ?>"
@@ -499,7 +415,8 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="responsavel2DataNascimento" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Data de
+                                <label for="responsavel2DataNascimento" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Data de
                                     Nascimento:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2DataNascimento" id="responsavel2DataNascimento"
@@ -510,7 +427,8 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="responsavel2NumeroDocumento" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>CPF:</label>
+                                <label for="responsavel2NumeroDocumento" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>CPF:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2NumeroDocumento"
                                         id="responsavel2NumeroDocumento"
@@ -539,7 +457,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-4 mesmo-endereco">
-                                <label for="responsavel2Endereco" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Logradouro:</label>
+                                <label for="responsavel2Endereco" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Logradouro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Endereco" id="responsavel2Endereco"
                                         value="<?php echo ($this->input->post('responsavel2Endereco') ? $this->input->post('responsavel2Endereco') : $responsavel_adicional['endereco']); ?>"
@@ -564,7 +483,8 @@
                                 </div>
                             </div>
                             <div class="col-md-3 mesmo-endereco">
-                                <label for="responsavel2Bairro" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Bairro:</label>
+                                <label for="responsavel2Bairro" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Bairro:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Bairro" id="responsavel2Bairro"
                                         value="<?php echo ($this->input->post('responsavel2Bairro') ? $this->input->post('responsavel2Bairro') : $responsavel_adicional['bairro']); ?>"
@@ -575,7 +495,8 @@
                         </div>
                         <div class="row clearfix mesmo-endereco">
                             <div class="col-md-4">
-                                <label for="responsavel2Cidade" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Cidade:</label>
+                                <label for="responsavel2Cidade" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Cidade:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Cidade" id="responsavel2Cidade"
                                         value="<?php echo ($this->input->post('responsavel2Cidade') ? $this->input->post('responsavel2Cidade') : $responsavel_adicional['cidade']); ?>"
@@ -584,7 +505,8 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="responsavel2UF" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>UF:</label>
+                                <label for="responsavel2UF" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>UF:</label>
                                 <div class="form-group">
                                     <select name="responsavel2UF" class="form-control" id="responsavel2UF">
                                         <option value="">Selecione</option>
@@ -609,7 +531,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-md-3">
-                                <label for="responsavel2Telefone" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Telefone:</label>
+                                <label for="responsavel2Telefone" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Telefone:</label>
                                 <div class="form-group">
                                     <input type="text" name="responsavel2Telefone" id="responsavel2Telefone"
                                         value="<?php echo ($this->input->post('responsavel2Telefone') ? $this->input->post('responsavel2Telefone') : $responsavel_adicional['telefone']); ?>"
@@ -618,9 +541,11 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <label for="responsavel2TelefoneOperadora" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Operadora:</label>
+                                <label for="responsavel2TelefoneOperadora" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Operadora:</label>
                                 <div class="form-group">
-                                    <select class="form-control" name="responsavel2TelefoneOperadora" id="responsavel2TelefoneOperadora">
+                                    <select class="form-control" name="responsavel2TelefoneOperadora"
+                                        id="responsavel2TelefoneOperadora">
                                         <option value="">Selecione</option>
                                         <option value="Claro"
                                             <?php echo (($this->input->post('responsavel2TelefoneOperadora') ? $this->input->post('responsavel2TelefoneOperadora') : $responsavel_adicional['telefone_operadora']) == 'Claro') ? 'selected' : ''; ?>>
@@ -643,7 +568,8 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="responsavel2TelefoneWhatsapp" class="control-label"><span class="text-danger obrigatorio-resp2">*</span>Whatsapp:</label>
+                                <label for="responsavel2TelefoneWhatsapp" class="control-label"><span
+                                        class="text-danger obrigatorio-resp2">*</span>Whatsapp:</label>
                                 <div class="form-group">
                                     <input type="radio" name="responsavel2TelefoneWhatsapp" value="1"
                                         <?php echo (($this->input->post('responsavel2TelefoneWhatsapp') ? $this->input->post('responsavel2TelefoneWhatsapp') : $responsavel_adicional['telefone_whatsapp']) == 1 ? 'checked' : ''); ?> /><label
@@ -775,6 +701,106 @@
                                         ?>
                                     </select>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Brinquedos</div>
+                    <div class="panel-body">
+                        <div class="row clearfix">
+                            <div class="col-md-8" style="color:red;">
+                                <label>Informe a descrição dos brinquedos conforme a carta:</label>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <label for="brinquedo1" class="control-label"><span class="text-danger">*</span>1ª
+                                    opção:</label>
+                                <div class="form-group">
+                                    <input type="text" name="brinquedo1"
+                                        value="<?php echo ($this->input->post('brinquedo1') ? $this->input->post('brinquedo1') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['descricao'] : "")); ?>"
+                                        class="form-control" required />
+                                    <input type="hidden" name="brinquedo1Id"
+                                        value="<?php echo ($this->input->post('brinquedo1Id') ? $this->input->post('brinquedo1Id') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['id'] : "")); ?>"
+                                        class="form-control" />
+                                    <span class="text-danger"><?php echo form_error('brinquedo1');?></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="brinquedo1Tipo" class="control-label"><span
+                                        class="text-danger">*</span>Classificação:</label>
+                                <div class="form-group">
+                                    <select name="brinquedo1Tipo" class="form-control" required>
+                                        <option value="">Selecione</option>
+                                        <?php 
+        								    foreach($brinquedo_classificacoes as $classificacao) {
+        								        $selected = ((($this->input->post('brinquedo1Tipo') ? $this->input->post('brinquedo1Tipo') : (array_key_exists(0, $brinquedos) ? $brinquedos[0]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
+        										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
+        									} 
+        								?>
+                                    </select>
+                                    <span class="text-danger"><?php echo form_error('brinquedo1Tipo');?></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <label for="brinquedo2" class="control-label">2ª opção:</label>
+                                <div class="form-group">
+                                    <input type="text" name="brinquedo2"
+                                        value="<?php echo ($this->input->post('brinquedo2') ? $this->input->post('brinquedo2') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['descricao'] : "")); ?>"
+                                        class="form-control" />
+                                    <input type="hidden" name="brinquedo2Id"
+                                        value="<?php echo ($this->input->post('brinquedo2Id') ? $this->input->post('brinquedo2Id') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['id'] : "")); ?>"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="brinquedo2Tipo" class="control-label">Classificação:</label>
+                                <div class="form-group">
+                                    <select name="brinquedo2Tipo" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <?php 
+        								    foreach($brinquedo_classificacoes as $classificacao)
+        									{
+                                                $selected = ((($this->input->post('brinquedo2Tipo') ? $this->input->post('brinquedo2Tipo') : (array_key_exists(1, $brinquedos) ? $brinquedos[1]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
+           										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
+        									} 
+        								?>
+                                    </select>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                <label for="brinquedo3" class="control-label">3ª opção:</label>
+                                <div class="form-group">
+                                    <input type="text" name="brinquedo3"
+                                        value="<?php echo ($this->input->post('brinquedo3') ? $this->input->post('brinquedo3') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['descricao'] : "")); ?>"
+                                        class="form-control" />
+                                    <input type="hidden" name="brinquedo3Id"
+                                        value="<?php echo ($this->input->post('brinquedo3Id') ? $this->input->post('brinquedo3Id') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['id'] : "")); ?>"
+                                        class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="brinquedo3Tipo" class="control-label">Classificação:</label>
+                                <div class="form-group">
+                                    <select name="brinquedo3Tipo" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <?php 
+        								    foreach($brinquedo_classificacoes as $classificacao)
+        									{
+                                                $selected = ((($this->input->post('brinquedo3Tipo') ? $this->input->post('brinquedo3Tipo') : (array_key_exists(2, $brinquedos) ? $brinquedos[2]['classificacao'] : "")) == $classificacao['id']) ? ' selected' : '');
+        										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
+        									} 
+        								?>
+                                    </select>
+                                </div>
+
                             </div>
                         </div>
                     </div>

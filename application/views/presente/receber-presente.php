@@ -122,7 +122,6 @@
                         <tr>
                             <td>Local de entrega</td>
                             <td><?php echo $dados['nomeLocalEntrega'] . " <br/> Sala: " . $dados['numeroSalaEntrega']; ?></td>
-
                         </tr>
                     </table>
                     <div class="panel-footer"><a href="<?php echo site_url('presente/gerarEtiqueta/'.$dados['numeroCarta']."/". $dados['responsavel_nome'] . "/" . $dados['beneficiado_nome'] . "/" . $dados['nomeLocalEntrega']. "/" . $dados['numeroSalaEntrega']); ?>" class="btn btn-success" target="_blank">Visualizar etiqueta</a></div>
@@ -135,7 +134,7 @@
         <?php echo form_open('presente/receberPresente'); ?>
             <?php $this->session->set_userdata('origem', 'recebimentoPresente'); ?>
             <div class="panel-footer">
-                <a href="<?php echo site_url('presente/add/'.$this->session->flashdata('idCarta')); ?>" class="btn btn-success">Cadastrar Presente</a>
+                <a href="<?php echo site_url('presente/add/'.$idCarta); ?>" class="btn btn-success">Cadastrar Presente</a>
             </div>
 	    <?php echo form_close(); ?>
         <?php endif?>

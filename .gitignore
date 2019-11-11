@@ -32,3 +32,11 @@ application/logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+_sql/
+.gitignore
+application/config/config.php
+application/config/database.php
+galeria/
+uploads/
+vendor/

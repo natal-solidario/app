@@ -1,24 +1,10 @@
-<?php
-/* 
- * João Paulo
- * jpaulocs@gmail.com
- */
- 
-class Registro_log_acao extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Registro_log_acao extends MY_Controller
+{
     function __construct()
     {
         parent::__construct();
         $this->load->model('Registro_log_acao_model');
-
-        if (!$this->ion_auth->logged_in())
-        {
-            $this->session->set_flashdata('message', 'You must be an admin to view this page');
-            redirect('login');
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
-            
-        }
     } 
 
     /*

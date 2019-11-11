@@ -1,21 +1,19 @@
-<?php
-class Campanha extends CI_Controller{
+<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+class Campanha extends MY_Controller
+{
 
     function __construct()
     {
         parent::__construct();
         $this->load->model('Campanha_model');
-        $this->load->model('Instituicao_Model');
+        $this->load->model('Instituicao_model');
 
-        if (!$this->ion_auth->in_group('admin'))
-        {
-            $this->session->set_flashdata('message', 'Você deve ser um administrador para acessar esta funcionalidade!');
+		if (!$this->ion_auth_acl->has_permission('permite_acessar_campanha'))
+		{
+            $this->session->set_flashdata('message', 'Você não tem permissão para acessar esta funcionalidade!');
             redirect(site_url());
-        } else {
-            $user = $this->ion_auth->user()->row();
-            $this->session->set_userdata('usuario_logado', $user->email);
         }
-    } 
+    }
 
     function index()
     {
@@ -29,7 +27,7 @@ class Campanha extends CI_Controller{
     {
         $data['campanha'] = $this->Campanha_model->get($id);
         $data['instituicoes'] = $this->Campanha_model->get_instituicoes($id);
-        $data['select_instituicoes'] = $this->Instituicao_Model->get_all_instituicoes();
+        $data['select_instituicoes'] = $this->Instituicao_model->get_all_instituicoes();
 
         foreach ($data['select_instituicoes'] as $ks => $si) 
         {

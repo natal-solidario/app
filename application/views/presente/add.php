@@ -40,7 +40,34 @@
 							</select>
             			</div>
             			<div class="col-md-4">
-                        	<label>Valor do brinquedo (opcional) </label>
+							<label>Valor do brinquedo (opcional) </label>
+							
+							<?php
+							$faixas_valor = array(
+								'Até 50,00',
+								'51,00 a 100,00',
+								'101,00 a 200,00',
+								'201,00 a 300,00',
+								'301,00 a 400,00',
+								'401,00 a 500,00',
+								'501,00 a 800,00',
+								'801,00 a 1.000,00',
+								'Acima de 1.000,00'
+							);
+							?>
+							
+                            <select name="valorBrinquedo" class="form-control"
+                            	<?php echo ($situacao == 1) ? '' : 'disabled';?>>
+								<option value="">Selecione</option>
+								<?php 
+								    foreach($faixas_valor as $valor) {
+								        $selected = ($classificacaoBrinquedo == $classificacao['id']) ? ' selected="selected"' : "";
+
+										echo '<option value="'.$classificacao['id'].'" '.$selected.'>'.$classificacao['nome'].'</option>';
+									} 
+								?>
+							</select>
+
                             <input type="text" name="valorBrinquedo" value="<?php echo $valorBrinquedo;?>" class="form-control money"
                             	<?php echo ($situacao == 1) ? '' : 'disabled';?> />
                             <span style="font-style: italic;font-weight:bold;">* O valor do brinquedo é importante para os devidos cuidados com o seu armazenamento.</span>
@@ -59,7 +86,7 @@
 		<div class="box">
             <div class="panel panel-primary">
             	<div class="panel-heading">Orientações para embrulhar o presente</div>
-				<div class="panel-body"><h4>Preencha a etiqueta com as informações:</h4></div>
+				<div class="panel-body"><h4>A etiqueta será preenchida com as seguintes informações:</h4></div>
 				<table class="table">
             		<tr>
             			<td style="width:20%">Número da carta</td> 
@@ -75,7 +102,7 @@
                     </tr>
 				</table>
 				<div class="panel-body">
-					<h4>Colar a etiqueta preferencialmente em <b>dois lugares</b> de forma que fique <b>bem fixado</b> e <b>visível</b>.</h4>
+					<h4>Após a impressão, favor colar a etiqueta preferencialmente em <b>dois lugares</b> de forma que fique <b>bem fixado</b> e <b>visível</b>.</h4>
 				</div>
 				<div class="panel-footer"><a href="<?php echo site_url('presente/gerarEtiqueta/'.$cartaSelecionada['numero']."/". $cartaSelecionada['responsavel_nome'] . "/" . $cartaSelecionada['beneficiado_nome']); ?>" class="btn btn-success" target="_blank">Visualizar etiqueta</a></div>
 			</div>
